@@ -1,7 +1,11 @@
 ---
 title: "AS01_R-Basic"
 author: "你是誰 R09342000 新聞所碩五"
+<<<<<<< HEAD
 date: "2021/03/02"
+=======
+date: "2021/02/22"
+>>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 output:
   html_document:
     number_sections: no
@@ -16,10 +20,13 @@ output:
 knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
 ```
 
+<<<<<<< HEAD
 ## 作業目的: R-Basic
 
 這份作業希望能夠讓你熟習於 R 的基本 data structure，打好地基之後蓋房子才穩，題目包含 variable assignment, vector, list, dataframe 等。其中幾題提供 expected output 讓你對答案，祝你寫作業愉快！
 
+=======
+>>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 ## 作業: R-Basic
 
 滿分共 100 分。
@@ -33,23 +40,38 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 ```{r}
 ### your code
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 ```
 
 ### vector 基礎操作 (15 分)
 
 下方提供 Readr 所開放的[臺灣 COVID-19 確診病例資料](https://github.com/readr-media/readr-data/tree/master/covid-19)，並已經抓出前十位確診者的性別、年齡、狀態。請分別印出這十位患者中
 
+<<<<<<< HEAD
 (1) 第 3 位確診者的性別   
 (2) 第 5 位確診者的年齡   
 (3) 奇數位確診者的狀態
 
 ```{r}
 df <- read.csv("data/AS01/covid19_comfirmed_case_taiwan.csv")
+=======
+- 第 3 位確診者的性別   
+- 第 5 位確診者的年齡   
+- 奇數位確診者的狀態
+
+```{r}
+df <- read.csv("data/covid19_comfirmed_case_taiwan.csv")
+>>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 vector_gender <- df$gender[1:10]
 vector_age <- df$age[1:10]
 vector_state <- df$state[1:10]
 
 ### your code
+<<<<<<< HEAD
 # (1)
 
 # (2)
@@ -60,12 +82,16 @@ vector_state <- df$state[1:10]
 #> [1] "male"
 #> [1] "Above 50"
 #> [1] "released" "isolated" "released" "released" "released"
+=======
+
+>>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 ```
 
 ### vector 與 data frame (20 分) 
 
 同上方資料 
 
+<<<<<<< HEAD
 (1) 請以 `vector_gender_first3_last3` 為名，利用`[]`，創造出一個包含前 3 位患者與末 3 位患者性別的 vector。   
 (2) 請以 `df_first10` 為名，將 `vector_gender`, `vector_age`, `vector_state` 拼成一個 dataframe，並將結果印出。   
 
@@ -85,6 +111,24 @@ vector_state <- df$state[1:10]
 (2) 計算學生人數平均   
 (3) 修改`student_quota`元素，將修課限制人數**加倍**，並將 `list_journalism_sample$student_quota` 印出，造成老師困擾   
 (4) 在 list 中插入新元素 `weekday`，內容為 `c("三","二","五","三")`，並將`list_journalism_sample$weekday`印出
+=======
+- 請以 `vector_gender_first10_last10` 為名，利用`[]`，創造出一個包含前十位患者與末十位患者性別的 vector。   
+- 請以 `df_first10` 為名，將 `vector_gender`, `vector_age`, `vector_state` 拼成一個 dataframe，並將結果印出。   
+
+```{r}
+### your code
+
+```
+
+### lists (20 分) 
+
+下方列出部分新聞所本學期開設課程，包含教師姓氏, 課程名稱, 修課限制人數, 開設單位等。請協助
+
+- 抓出教師姓氏   
+- 計算學生人數平均   
+- 修改`student_quota`元素，將修課限制人數**加倍**，造成老師困擾  
+- 在 list 中插入新元素 `weekday`，內容為 `c("三","二","五","三")`，並將結果印出
+>>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 
 ```{r}
 list_journalism_sample <-
@@ -94,6 +138,7 @@ list_journalism_sample <-
        dept="journalism")
 
 ### your code
+<<<<<<< HEAD
 # (1)
 
 # (2)
@@ -107,12 +152,16 @@ list_journalism_sample <-
 #> [1] 16
 #> [1] 40 30 18 40
 #> [1] "三" "二" "五" "三"
+=======
+
+>>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 ```
 
 ### data frame (35 分) 
 
 在回到臺灣 COVID-19 確診病例資料。
 
+<<<<<<< HEAD
 (1) 請創建一個名為 `df_first20` 的 dataframe，裡面僅有前 20 位確診者   
 (2) 請印出 `df_first20` 中女性(female)的年齡(age)   
 (3) 請印出 `df_first20`    中編號(patient_id)為奇數者的確診日期(released_date)
@@ -139,5 +188,18 @@ df <- read.csv("data/AS01/covid19_comfirmed_case_taiwan.csv")
 #> [1] "2020-02-06"
 #> [1] "released" "isolated" "released" "released" "isolated"
 #>  [1] "Yes" "Yes" "No"  "Yes" "Yes" "Yes" "Yes" "Yes" "Yes" "No"
+=======
+- 請創建一個名為 `df_first20` 的 dataframe，裡面僅有前 20 位確診者  
+- 請印出 `df_first20` 中女性(female)的年齡(age)  
+- 請印出 `df_first20` 中編號(patient_id)為奇數者的確診日期(released_date)
+- 請印出 `df_first20` 中五十歲以上(Above 50)者女性的的狀態(state)
+- 請印出 `df_first20` 中，五十歲以上者**以外**所有人的旅遊史(tourism_history)  
+
+
+```{r}
+df <- read.csv("data/covid19_comfirmed_case_taiwan.csv")
+### your code
+
+>>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 ```
 
