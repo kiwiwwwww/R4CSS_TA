@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="你是誰 R09342000 新聞所碩五" />
+<meta name="author" content="林綺薇 R09342008 新聞所碩一" />
 
 
 <title>AS01_R-Basic</title>
@@ -41,10 +41,6 @@
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
-<<<<<<< HEAD
-.sourceCode { overflow: visible; }
-=======
->>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -349,23 +345,16 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">AS01_R-Basic</h1>
-<h4 class="author">你是誰 R09342000 新聞所碩五</h4>
-<<<<<<< HEAD
+<h4 class="author">林綺薇 R09342008 新聞所碩一</h4>
 <h4 class="date">2021/03/02</h4>
-=======
-<h4 class="date">2021/02/22</h4>
->>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 
 </div>
 
 
-<<<<<<< HEAD
 <div id="作業目的-r-basic" class="section level2">
 <h2>作業目的: R-Basic</h2>
 <p>這份作業希望能夠讓你熟習於 R 的基本 data structure，打好地基之後蓋房子才穩，題目包含 variable assignment, vector, list, dataframe 等。其中幾題提供 expected output 讓你對答案，祝你寫作業愉快！</p>
 </div>
-=======
->>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 <div id="作業-r-basic" class="section level2">
 <h2>作業: R-Basic</h2>
 <p>滿分共 100 分。</p>
@@ -373,162 +362,153 @@ div.tocify {
 <h3>variable (10 分)</h3>
 <p>請創建 3 個變數，<code>var_credits</code>代表你本學期的學分數，<code>var_perhour</code>代表你預計平均每學分的每周投入課業的時間，<code>var_study</code>用前面兩個變數相乘，代表你本學期每周預計投入課業的總時間，最後請將<code>var_study</code>印出。</p>
 <p>助教不會根據投入時間評斷你，請放心填答，謝謝。</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>var_credits <span class="ot">&lt;-</span><span class="dv">12</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>var_perhour <span class="ot">&lt;-</span><span class="dv">3</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>var_study <span class="ot">&lt;-</span>var_credits<span class="sc">*</span>var_perhour</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>var_study</span></code></pre></div>
+<pre><code>#&gt; [1] 36</code></pre>
 </div>
 <div id="vector-基礎操作-15-分" class="section level3">
 <h3>vector 基礎操作 (15 分)</h3>
 <p>下方提供 Readr 所開放的<a href="https://github.com/readr-media/readr-data/tree/master/covid-19">臺灣 COVID-19 確診病例資料</a>，並已經抓出前十位確診者的性別、年齡、狀態。請分別印出這十位患者中</p>
-<<<<<<< HEAD
 <ol style="list-style-type: decimal">
-=======
-<ul>
->>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 <li>第 3 位確診者的性別<br />
 </li>
 <li>第 5 位確診者的年齡<br />
 </li>
 <li>奇數位確診者的狀態</li>
-<<<<<<< HEAD
 </ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/AS01/covid19_comfirmed_case_taiwan.csv&quot;</span>)</span>
-=======
-</ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/covid19_comfirmed_case_taiwan.csv&quot;</span>)</span>
->>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>vector_gender <span class="ot">&lt;-</span> df<span class="sc">$</span>gender[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>vector_age <span class="ot">&lt;-</span> df<span class="sc">$</span>age[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>vector_state <span class="ot">&lt;-</span> df<span class="sc">$</span>state[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<<<<<<< HEAD
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># (2)</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># (3)</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># output should be</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;male&quot;</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Above 50&quot;</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;released&quot; &quot;isolated&quot; &quot;released&quot; &quot;released&quot; &quot;released&quot;</span></span></code></pre></div>
-=======
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span></code></pre></div>
->>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/covid19_comfirmed_case_taiwan.csv&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>vector_gender <span class="ot">&lt;-</span> df<span class="sc">$</span>gender[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>vector_age <span class="ot">&lt;-</span> df<span class="sc">$</span>age[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>vector_state <span class="ot">&lt;-</span> df<span class="sc">$</span>state[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>vector_gender[<span class="dv">3</span>]</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># (2)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>vector_age[<span class="dv">5</span>]</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># (3)</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>vector_state[<span class="fu">seq</span>(<span class="at">from=</span><span class="dv">1</span>,<span class="at">to=</span><span class="dv">10</span>,<span class="at">by=</span><span class="dv">2</span>)]</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#kiwi的筆記：vector_state[c(1:10)%%2==1]</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># output should be</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;male&quot;</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Above 50&quot;</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;released&quot; &quot;isolated&quot; &quot;released&quot; &quot;released&quot; &quot;released&quot;</span></span></code></pre></div>
+<pre><code>#&gt; [1] &quot;male&quot;
+#&gt; [1] &quot;Above 50&quot;
+#&gt; [1] &quot;released&quot; &quot;isolated&quot; &quot;released&quot; &quot;released&quot; &quot;released&quot;</code></pre>
 </div>
 <div id="vector-與-data-frame-20-分" class="section level3">
 <h3>vector 與 data frame (20 分)</h3>
 <p>同上方資料</p>
-<<<<<<< HEAD
 <ol style="list-style-type: decimal">
 <li>請以 <code>vector_gender_first3_last3</code> 為名，利用<code>[]</code>，創造出一個包含前 3 位患者與末 3 位患者性別的 vector。<br />
 </li>
 <li>請以 <code>df_first10</code> 為名，將 <code>vector_gender</code>, <code>vector_age</code>, <code>vector_state</code> 拼成一個 dataframe，並將結果印出。</li>
 </ol>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># (2)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>vector_gender_first3_last3 <span class="ot">&lt;-</span><span class="fu">c</span>(df<span class="sc">$</span>gender[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] , df<span class="sc">$</span>gender[<span class="dv">8</span><span class="sc">:</span><span class="dv">10</span>])</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#kiwi的筆記：c(head(df$gender,3) , tail(df$gender,3))所有資料裡面的前三跟後三</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># (2)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>df_first10 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(vector_gender,vector_age,vector_state)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>df_first10</span></code></pre></div>
+<pre><code>#&gt;    vector_gender vector_age vector_state
+#&gt; 1         female   Above 50     released
+#&gt; 2         female   Above 50     isolated
+#&gt; 3           male   Above 50     isolated
+#&gt; 4         female   Above 50     released
+#&gt; 5         female   Above 50     released
+#&gt; 6         female   Above 70     isolated
+#&gt; 7         female   Above 70     released
+#&gt; 8           male   Above 50     released
+#&gt; 9         female   Above 40     released
+#&gt; 10          male   Above 40     released</code></pre>
 </div>
 <div id="list-20-分" class="section level3">
 <h3>list (20 分)</h3>
 <p>下方列出部分新聞所本學期開設課程，包含教師姓氏, 課程名稱, 修課限制人數, 開設單位等。請協助</p>
 <ol style="list-style-type: decimal">
-=======
-<ul>
-<li>請以 <code>vector_gender_first10_last10</code> 為名，利用<code>[]</code>，創造出一個包含前十位患者與末十位患者性別的 vector。<br />
-</li>
-<li>請以 <code>df_first10</code> 為名，將 <code>vector_gender</code>, <code>vector_age</code>, <code>vector_state</code> 拼成一個 dataframe，並將結果印出。</li>
-</ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span></code></pre></div>
-</div>
-<div id="lists-20-分" class="section level3">
-<h3>lists (20 分)</h3>
-<p>下方列出部分新聞所本學期開設課程，包含教師姓氏, 課程名稱, 修課限制人數, 開設單位等。請協助</p>
-<ul>
->>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 <li>抓出教師姓氏<br />
 </li>
 <li>計算學生人數平均<br />
 </li>
-<<<<<<< HEAD
 <li>修改<code>student_quota</code>元素，將修課限制人數<strong>加倍</strong>，並將 <code>list_journalism_sample$student_quota</code> 印出，造成老師困擾<br />
 </li>
 <li>在 list 中插入新元素 <code>weekday</code>，內容為 <code>c(&quot;三&quot;,&quot;二&quot;,&quot;五&quot;,&quot;三&quot;)</code>，並將<code>list_journalism_sample$weekday</code>印出</li>
 </ol>
-=======
-<li>修改<code>student_quota</code>元素，將修課限制人數<strong>加倍</strong>，造成老師困擾<br />
-</li>
-<li>在 list 中插入新元素 <code>weekday</code>，內容為 <code>c(&quot;三&quot;,&quot;二&quot;,&quot;五&quot;,&quot;三&quot;)</code>，並將結果印出</li>
-</ul>
->>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>list_journalism_sample <span class="ot">&lt;-</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">teacher=</span><span class="fu">c</span>(<span class="st">&quot;chen&quot;</span>,<span class="st">&quot;hung&quot;</span>,<span class="st">&quot;liu&quot;</span>,<span class="st">&quot;lee&quot;</span>),</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">course=</span><span class="fu">c</span>(<span class="st">&quot;新聞寫作&quot;</span>,<span class="st">&quot;數位新聞法規與倫理&quot;</span>,<span class="st">&quot;採訪寫作二&quot;</span>,<span class="st">&quot;    新聞編輯與資訊設計&quot;</span>),</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">student_quota=</span><span class="fu">c</span>(<span class="dv">20</span>,<span class="dv">15</span>,<span class="dv">9</span>,<span class="dv">20</span>),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">dept=</span><span class="st">&quot;journalism&quot;</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<<<<<<< HEAD
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># (2)</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># (3)</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># (4)</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># output should be</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;chen&quot; &quot;hung&quot; &quot;liu&quot;  &quot;lee&quot; </span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 16</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 40 30 18 40</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;三&quot; &quot;二&quot; &quot;五&quot; &quot;三&quot;</span></span></code></pre></div>
-=======
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span></code></pre></div>
->>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>list_journalism_sample <span class="ot">&lt;-</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">teacher=</span><span class="fu">c</span>(<span class="st">&quot;chen&quot;</span>,<span class="st">&quot;hung&quot;</span>,<span class="st">&quot;liu&quot;</span>,<span class="st">&quot;lee&quot;</span>),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">course=</span><span class="fu">c</span>(<span class="st">&quot;新聞寫作&quot;</span>,<span class="st">&quot;數位新聞法規與倫理&quot;</span>,<span class="st">&quot;採訪寫作二&quot;</span>,<span class="st">&quot;    新聞編輯與資訊設計&quot;</span>),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">student_quota=</span><span class="fu">c</span>(<span class="dv">20</span>,<span class="dv">15</span>,<span class="dv">9</span>,<span class="dv">20</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">dept=</span><span class="st">&quot;journalism&quot;</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>list_journalism_sample[[<span class="dv">1</span>]]</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># (2)</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(list_journalism_sample<span class="sc">$</span>student_quota)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co"># (3)</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>list_journalism_sample<span class="sc">$</span>student_quota <span class="ot">&lt;-</span>(list_journalism_sample<span class="sc">$</span>student_quota)<span class="sc">*</span><span class="dv">2</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>list_journalism_sample<span class="sc">$</span>student_quota</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># (4)</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>list_journalism_sample<span class="sc">$</span>weekday<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;三&quot;</span>,<span class="st">&quot;二&quot;</span>,<span class="st">&quot;五&quot;</span>,<span class="st">&quot;三&quot;</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>list_journalism_sample<span class="sc">$</span>weekday</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co"># output should be</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;chen&quot; &quot;hung&quot; &quot;liu&quot;  &quot;lee&quot; </span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 16</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 40 30 18 40</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;三&quot; &quot;二&quot; &quot;五&quot; &quot;三&quot;</span></span></code></pre></div>
+<pre><code>#&gt; [1] &quot;chen&quot; &quot;hung&quot; &quot;liu&quot;  &quot;lee&quot; 
+#&gt; [1] 16
+#&gt; [1] 40 30 18 40
+#&gt; [1] &quot;三&quot; &quot;二&quot; &quot;五&quot; &quot;三&quot;</code></pre>
 </div>
 <div id="data-frame-35-分" class="section level3">
 <h3>data frame (35 分)</h3>
 <p>在回到臺灣 COVID-19 確診病例資料。</p>
-<<<<<<< HEAD
 <ol style="list-style-type: decimal">
-=======
-<ul>
->>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
 <li>請創建一個名為 <code>df_first20</code> 的 dataframe，裡面僅有前 20 位確診者<br />
 </li>
 <li>請印出 <code>df_first20</code> 中女性(female)的年齡(age)<br />
 </li>
 <li>請印出 <code>df_first20</code> 中編號(patient_id)為奇數者的確診日期(released_date)</li>
-<<<<<<< HEAD
 <li>請印出 <code>df_first20</code> 中五十歲以上(Above 50)者女性的的狀態(state)<br />
 </li>
 <li>請印出 <code>df_first20</code> 中，五十歲以上者<strong>以外</strong>所有人的旅遊史(tourism_history)</li>
 </ol>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/AS01/covid19_comfirmed_case_taiwan.csv&quot;</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># (2)</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (3)</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># (4)</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># (5)</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># output should be</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;Above 50&quot; &quot;Above 50&quot; &quot;Above 50&quot; &quot;Above 50&quot; &quot;Above 70&quot; &quot;Above 70&quot;</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] &quot;Above 40&quot; &quot;Above 20&quot; &quot;Above 50&quot; &quot;Above 40&quot;</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;2020-02-06&quot;</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;released&quot; &quot;isolated&quot; &quot;released&quot; &quot;released&quot; &quot;isolated&quot;</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;Yes&quot; &quot;Yes&quot; &quot;No&quot;  &quot;Yes&quot; &quot;Yes&quot; &quot;Yes&quot; &quot;Yes&quot; &quot;Yes&quot; &quot;Yes&quot; &quot;No&quot;</span></span></code></pre></div>
-=======
-<li>請印出 <code>df_first20</code> 中五十歲以上(Above 50)者女性的的狀態(state)</li>
-<li>請印出 <code>df_first20</code> 中，五十歲以上者<strong>以外</strong>所有人的旅遊史(tourism_history)</li>
-</ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/covid19_comfirmed_case_taiwan.csv&quot;</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span></code></pre></div>
->>>>>>> 361e378216930317693dadd3efbf3ec61832ea71
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/covid19_comfirmed_case_taiwan.csv&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>df_first20 <span class="ot">&lt;-</span> df[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># (2)</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>(<span class="fu">subset</span>(df_first20,gender<span class="sc">==</span><span class="st">&quot;female&quot;</span>))<span class="sc">$</span>age</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># (3)</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>(<span class="fu">subset</span>(df_first20,patient_id<span class="sc">%in%</span><span class="fu">seq</span>(<span class="at">from=</span><span class="dv">1</span>,<span class="at">to=</span><span class="dv">20</span>,<span class="at">by=</span><span class="dv">2</span>)))<span class="sc">$</span>released_date</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># (4)</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>(<span class="fu">subset</span>(df_first20,age<span class="sc">==</span><span class="st">&quot;Above 50&quot;</span><span class="sc">&amp;</span>gender<span class="sc">==</span><span class="st">&quot;female&quot;</span>))<span class="sc">$</span>state</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># (5)</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>(<span class="fu">subset</span>(df_first20,age<span class="sc">!=</span><span class="st">&quot;Above 50&quot;</span>))<span class="sc">$</span>tourism_history</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># output should be</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;Above 50&quot; &quot;Above 50&quot; &quot;Above 50&quot; &quot;Above 50&quot; &quot;Above 70&quot; &quot;Above 70&quot;</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] &quot;Above 40&quot; &quot;Above 20&quot; &quot;Above 50&quot; &quot;Above 40&quot;</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;2020-02-06&quot;</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;released&quot; &quot;isolated&quot; &quot;released&quot; &quot;released&quot; &quot;isolated&quot;</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;Yes&quot; &quot;Yes&quot; &quot;No&quot;  &quot;Yes&quot; &quot;Yes&quot; &quot;Yes&quot; &quot;Yes&quot; &quot;Yes&quot; &quot;Yes&quot; &quot;No&quot;</span></span></code></pre></div>
+<pre><code>#&gt;  [1] &quot;Above 50&quot; &quot;Above 50&quot; &quot;Above 50&quot; &quot;Above 50&quot; &quot;Above 70&quot; &quot;Above 70&quot;
+#&gt;  [7] &quot;Above 40&quot; &quot;Above 20&quot; &quot;Above 50&quot; &quot;Above 40&quot;
+#&gt;  [1] &quot;2020-02-06&quot; &quot;&quot;           &quot;2020-02-19&quot; &quot;2020-02-29&quot; &quot;2020-02-29&quot;
+#&gt;  [6] &quot;2020-02-27&quot; &quot;2020-02-26&quot; &quot;&quot;           &quot;2020-02-27&quot; &quot;&quot;          
+#&gt; [1] &quot;released&quot; &quot;isolated&quot; &quot;released&quot; &quot;released&quot; &quot;isolated&quot;
+#&gt;  [1] &quot;Yes&quot; &quot;Yes&quot; &quot;No&quot;  &quot;Yes&quot; &quot;Yes&quot; &quot;Yes&quot; &quot;Yes&quot; &quot;Yes&quot; &quot;Yes&quot; &quot;No&quot;</code></pre>
 </div>
 </div>
 
