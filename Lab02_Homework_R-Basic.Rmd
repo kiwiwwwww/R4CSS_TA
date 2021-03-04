@@ -29,7 +29,7 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 (1) 底下的 code chunk 中，有兩個長度不同的向量，`vector_01_left` 與 `vector_01_right` ，兩者相乘後並沒有出現錯誤。請解釋為什麼他們可以相乘而不會出現 error，結果的值又是怎麼計算得到的？<br>
 
 **把解釋寫在這**: 
-r會自動回收長度不同的向量，vector_01_left 跟 vector_01_right 相乘時，因為 vector_01_right 向量比較短，R 會自動將 vector_01_right 向量重複計算直到與 vector_01_left 向量的長度相同為止。
+R會自動回收長度不同的向量，vector_01_left 跟 vector_01_right 相乘時，因為 vector_01_right 比較短，R 會自動將 vector_01_right 向量重複計算直到與 vector_01_left 的長度相同為止。
 
 計算方式： 1*2  3*3  5*2  10*3  12*2
 
