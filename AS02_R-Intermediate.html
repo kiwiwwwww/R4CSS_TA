@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="你是誰 R09342000 新聞所碩五" />
+<meta name="author" content="林綺薇 R09342008 新聞所碩一" />
 
 
 <title>AS02_R-Intermediate</title>
@@ -41,7 +41,6 @@
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -346,123 +345,248 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">AS02_R-Intermediate</h1>
-<h4 class="author">你是誰 R09342000 新聞所碩五</h4>
-<h4 class="date">2021/02/22</h4>
+<h4 class="author">林綺薇 R09342008 新聞所碩一</h4>
+<h4 class="date">2021/03/09</h4>
 
 </div>
 
 
+<div id="作業目的-r-intermediate" class="section level2">
+<h2>作業目的: R-Intermediate</h2>
+<p>這份作業希望能夠讓你熟習於在 R 裡面的流程控制(control flow)，主要練習條件判斷與迴圈，並實際撰寫函數，題目共有三題。</p>
+<p>第一題希望你用條件判斷和迴圈拼出一段程式碼，題目敘述看起來有些荒謬，但現實世界中有可以對應、正常一些的例子。</p>
+<p>第二題則是將第一題改寫成函數，這樣的過程在後面擷取網頁資料時會用到，舉例來說，你可能想抓 PTT 上 NTUCourse 板上的資料，第一次你寫了一個迴圈，半個月之後你想抓 KoreaDrama 板上的資料，所以改寫之前的程式碼，或者乾脆重新寫了一次，若相同的過程不斷重複，將前面的程式碼改寫成函數，就是相對較有效率的做法。</p>
+<p>第三題和前兩題無關，希望你寫一個輸入日期、輸出星座的函數，利用 Yahoo 或 Google Search 其實就可以搜到很多類似功能的網站，但現在的你也完全有能力寫出相同的東西。</p>
+<p>希望你在實作的過程中有所學習，雖然遇到 error 或卡住的時候會心情很悶，但這種壓力可以刺激成長，如同《一流的人如何保持顛峰》所說，在成為頂尖高手的路上需要拼搏(努力)，而拼搏需要面對建設性挫敗（productive failure），而非讓人愉悅的練習，希望在這份作業中你越挫越勇，並且記得休息唷！</p>
+</div>
 <div id="作業-r-intermediate" class="section level2">
 <h2>作業: R-Intermediate</h2>
-<p>基本題 100 分，加分題 25 分，超過 100 分會以實際分數登記 e.g. 118 分。</p>
-<div id="for-loop-conditional-statement-35-分" class="section level3">
-<h3>for loop &amp; conditional statement (35 分)</h3>
-<p>有位同學小軒非常偏食，又會因為某些原因恣意的拒吃某些店家。請依照小軒的飲食禁忌，利用迴圈與條件判斷 ，印出一週中每天各自小軒<strong>會吃</strong>的店家。</p>
+<p>滿分 120 分，超過 100 分會以實際分數登記 e.g. 118 分。</p>
+<div id="for-loop-conditional-statement-40-分" class="section level3">
+<h3>for loop &amp; conditional statement (40 分)</h3>
+<p>有位同學小軒非常偏食，又會因為某些原因恣意的拒吃某些店家。請依照小軒的飲食禁忌，利用迴圈與條件判斷，印出一週中每天各自小軒<strong>會吃</strong>的店家。</p>
 <ul>
 <li>飲食條件一: 若當天為週間的奇數日(週一、週三、週五)，僅吃名稱長度為奇數的店家</li>
-<li>飲食條件二: 若當天為週間的偶數日(週二、週四)，僅吃名稱中包含水餃的店家</li>
-<li>飲食條件三: 若當天為週六，僅吃名稱中包含麵館的店家</li>
+<li>飲食條件二: 若當天為週間的偶數日(週二、週四)，僅吃名稱中包含“水餃”的店家</li>
+<li>飲食條件三: 若當天為週六，僅吃名稱中包含“館”的店家</li>
 <li>飲食條件四: 若當天為週日，小軒節食都不吃，請印出<strong>一次</strong>“週日小軒都不吃”</li>
 </ul>
 <p>上面的條件看來有些複雜，下方提供提示:</p>
 <ul>
 <li>本題可以利用雙層迴圈<br />
 </li>
-<li>判斷店名長度可以利用<code>str_length()</code>函數<br />
+<li>判斷店名長度可以利用<code>str_length()</code>函數，像是<code>str_length(&quot;小軒&quot;)</code> 的結果是 2<br />
 </li>
 <li>判斷店名是否包含特定字詞，可以利用正規表達式，之後會教學，可以先用 <code>str_detect(字串, &quot;關鍵字&quot;)</code>判斷，舉例來說，<code>str_detect(&quot;信陽麵館&quot;, &quot;館&quot;)</code> 會得到 TRUE<br />
 </li>
-<li>最後一部分請印出<strong>一次</strong>相對困難，可以想一下要怎麼不多印幾次，譬如利用條件判斷式</li>
-<li>若用<code>str_detect()</code>記得安裝 <code>tidyverse</code> or <code>stringr</code></li>
+<li>最後一部分(印出<strong>一次</strong>“週日小軒都不吃”)相對困難，可以想一下要怎麼不多印幾次，譬如利用條件判斷式</li>
+<li>若用<code>str_detect()</code>，記得先安裝 <code>tidyverse</code> or <code>stringr</code>後載入套件</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># library(tidyverse)</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># library(stringr)</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">### result should be</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週一小軒吃揪食堂韓國餐館&quot;</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週一小軒吃林師傅&quot;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週二小軒吃大李水餃&quot;</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週二小軒吃李記水餃&quot;</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週三小軒吃揪食堂韓國餐館&quot;</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週三小軒吃林師傅&quot;</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週四小軒吃大李水餃&quot;</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週四小軒吃李記水餃&quot;</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週五小軒吃揪食堂韓國餐館&quot;</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週五小軒吃林師傅&quot;</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週六小軒吃五九麵館&quot;</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週六小軒吃揪食堂韓國餐館&quot;</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週六小軒吃馬祖麵館&quot;</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週日小軒都不吃&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;tidyverse&quot;)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># library(tidyverse)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># library(stringr)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>vector_shop <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;五九麵館&quot;</span>, <span class="st">&quot;親來食堂&quot;</span>, <span class="st">&quot;憶馬當鮮&quot;</span>, <span class="st">&quot;揪食堂韓國餐館&quot;</span>, </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;找碗&quot;</span>, <span class="st">&quot;大李水餃&quot;</span>, <span class="st">&quot;李記水餃&quot;</span>, <span class="st">&quot;林師傅&quot;</span>, <span class="st">&quot;馬祖麵館&quot;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>vector_weekday <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;週一&quot;</span>, <span class="st">&quot;週二&quot;</span>, <span class="st">&quot;週三&quot;</span>, <span class="st">&quot;週四&quot;</span>, <span class="st">&quot;週五&quot;</span>, <span class="st">&quot;週六&quot;</span>, <span class="st">&quot;週日&quot;</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#kiwiの整理</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#odd_day &lt;-vector_weekday[seq(from=1,to=5,by=2)]</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#even_day &lt;-vector_weekday[seq(from=2,to=5,by=2)]</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#odd_eat &lt;-vector_shop[str_length(vector_shop)%% 2 == 1]</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#even_eat &lt;-vector_shop[str_detect(vector_shop,&quot;水餃&quot;)==TRUE]  </span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#saturday_eat &lt;-vector_shop[str_detect(vector_shop,&quot;館&quot;)==TRUE]  </span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x <span class="cf">in</span> vector_weekday){ </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> (x <span class="sc">%in%</span> vector_weekday[<span class="fu">seq</span>(<span class="at">from=</span><span class="dv">1</span>,<span class="at">to=</span><span class="dv">5</span>,<span class="at">by=</span><span class="dv">2</span>)]){</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>   y <span class="ot">&lt;-</span> <span class="cf">for</span> (y <span class="cf">in</span> vector_shop[<span class="fu">str_length</span>(vector_shop)<span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">1</span>])</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span>(<span class="fu">str_c</span>(x,<span class="st">&quot;小軒吃&quot;</span>,y))</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span> (x <span class="sc">%in%</span> vector_weekday[<span class="fu">seq</span>(<span class="at">from=</span><span class="dv">2</span>,<span class="at">to=</span><span class="dv">5</span>,<span class="at">by=</span><span class="dv">2</span>)]){</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>   y <span class="ot">&lt;-</span> <span class="cf">for</span> (y <span class="cf">in</span> vector_shop[<span class="fu">str_detect</span>(vector_shop,<span class="st">&quot;水餃&quot;</span>)<span class="sc">==</span><span class="cn">TRUE</span>] )</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span>(<span class="fu">str_c</span>(x,<span class="st">&quot;小軒吃&quot;</span>,y))</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span> (x <span class="sc">==</span> vector_weekday[<span class="dv">6</span>]){</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>   y <span class="ot">&lt;-</span> <span class="cf">for</span> (y <span class="cf">in</span> vector_shop[<span class="fu">str_detect</span>(vector_shop,<span class="st">&quot;館&quot;</span>)<span class="sc">==</span><span class="cn">TRUE</span>] )</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span>(<span class="fu">str_c</span>(x,<span class="st">&quot;小軒吃&quot;</span>,y))</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span>{(x <span class="sc">==</span> vector_weekday[<span class="dv">7</span>])</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span>(<span class="fu">str_c</span>(<span class="st">&quot;週日小軒都不吃&quot;</span>))}    </span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="do">### result should be</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週一小軒吃揪食堂韓國餐館&quot;</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週一小軒吃林師傅&quot;</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週二小軒吃大李水餃&quot;</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週二小軒吃李記水餃&quot;</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週三小軒吃揪食堂韓國餐館&quot;</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週三小軒吃林師傅&quot;</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週四小軒吃大李水餃&quot;</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週四小軒吃李記水餃&quot;</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週五小軒吃揪食堂韓國餐館&quot;</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週五小軒吃林師傅&quot;</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週六小軒吃五九麵館&quot;</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週六小軒吃揪食堂韓國餐館&quot;</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週六小軒吃馬祖麵館&quot;</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週日小軒都不吃&quot;</span></span></code></pre></div>
+<pre><code>#&gt; [1] &quot;週一小軒吃揪食堂韓國餐館&quot;
+#&gt; [1] &quot;週一小軒吃林師傅&quot;
+#&gt; [1] &quot;週二小軒吃大李水餃&quot;
+#&gt; [1] &quot;週二小軒吃李記水餃&quot;
+#&gt; [1] &quot;週三小軒吃揪食堂韓國餐館&quot;
+#&gt; [1] &quot;週三小軒吃林師傅&quot;
+#&gt; [1] &quot;週四小軒吃大李水餃&quot;
+#&gt; [1] &quot;週四小軒吃李記水餃&quot;
+#&gt; [1] &quot;週五小軒吃揪食堂韓國餐館&quot;
+#&gt; [1] &quot;週五小軒吃林師傅&quot;
+#&gt; [1] &quot;週六小軒吃五九麵館&quot;
+#&gt; [1] &quot;週六小軒吃揪食堂韓國餐館&quot;
+#&gt; [1] &quot;週六小軒吃馬祖麵館&quot;
+#&gt; [1] &quot;週日小軒都不吃&quot;</code></pre>
 </div>
-<div id="functions-i-35-分" class="section level3">
-<h3>functions (i) (35 分)</h3>
+<div id="functions-i-40-分" class="section level3">
+<h3>functions (i) (40 分)</h3>
 <p>承接上題，請將上方迴圈改寫為名為 <code>hsuan_meal()</code> 的函數，小軒使用此函數時會輸入當週的第幾天 e.g. 週一，以及店家名稱，並依照飲食條件得到結果。</p>
 <ul>
 <li>預期結果舉例:</li>
 <li><code>hsuan_meal(&quot;週一&quot;, &quot;林師傅&quot;)</code> 會得到 <code>週一小軒吃林師傅</code></li>
-<li><code>hsuan_meal(&quot;週二&quot;, &quot;李記水餃&quot;)</code> 會得到 <code>週二小軒不吃李記水餃</code></li>
+<li><code>hsuan_meal(&quot;週二&quot;, &quot;親來食堂&quot;)</code> 會得到 <code>週二小軒不吃親來食堂</code></li>
 <li><code>hsuan_meal(&quot;週日&quot;, &quot;找碗&quot;)</code> 會得到 <code>週日小軒不吃找碗</code></li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>vector_shop <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;五九麵館&quot;</span>, <span class="st">&quot;親來食堂&quot;</span>, <span class="st">&quot;憶馬當鮮&quot;</span>, <span class="st">&quot;揪食堂韓國餐館&quot;</span>, </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;找碗&quot;</span>, <span class="st">&quot;大李水餃&quot;</span>, <span class="st">&quot;李記水餃&quot;</span>, <span class="st">&quot;林師傅&quot;</span>, <span class="st">&quot;馬祖麵館&quot;</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>vector_weekday <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;週一&quot;</span>, <span class="st">&quot;週二&quot;</span>, <span class="st">&quot;週三&quot;</span>, <span class="st">&quot;週四&quot;</span>, <span class="st">&quot;週五&quot;</span>, <span class="st">&quot;週六&quot;</span>, <span class="st">&quot;週日&quot;</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="do">### result should be</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># hsuan_meal(&quot;週一&quot;,&quot;林師傅&quot;)</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週一小軒吃林師傅&quot;</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># hsuan_meal(&quot;週二&quot;,&quot;李記水餃&quot;)</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週二小軒不吃李記水餃&quot;</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># hsuan_meal(&quot;週日&quot;,&quot;找碗&quot;)</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週日小軒不吃找碗&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>vector_shop <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;五九麵館&quot;</span>, <span class="st">&quot;親來食堂&quot;</span>, <span class="st">&quot;憶馬當鮮&quot;</span>, <span class="st">&quot;揪食堂韓國餐館&quot;</span>, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;找碗&quot;</span>, <span class="st">&quot;大李水餃&quot;</span>, <span class="st">&quot;李記水餃&quot;</span>, <span class="st">&quot;林師傅&quot;</span>, <span class="st">&quot;馬祖麵館&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>vector_weekday <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;週一&quot;</span>, <span class="st">&quot;週二&quot;</span>, <span class="st">&quot;週三&quot;</span>, <span class="st">&quot;週四&quot;</span>, <span class="st">&quot;週五&quot;</span>, <span class="st">&quot;週六&quot;</span>, <span class="st">&quot;週日&quot;</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>hsuan_meal <span class="ot">&lt;-</span> <span class="cf">function</span>(x,y){</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (x <span class="sc">%in%</span> vector_weekday[<span class="fu">seq</span>(<span class="at">from=</span><span class="dv">1</span>,<span class="at">to=</span><span class="dv">5</span>,<span class="at">by=</span><span class="dv">2</span>)]){</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (y <span class="sc">%in%</span> vector_shop[<span class="fu">str_length</span>(vector_shop)<span class="sc">%%</span><span class="dv">2</span> <span class="sc">==</span> <span class="dv">1</span>]){</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span>(<span class="fu">str_c</span>(x,<span class="st">&quot;小軒吃&quot;</span>,y))</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span>{</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span>(<span class="fu">str_c</span>(x,<span class="st">&quot;小軒不吃&quot;</span>,y))  </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span> (x <span class="sc">%in%</span> vector_weekday[<span class="fu">seq</span>(<span class="at">from=</span><span class="dv">2</span>,<span class="at">to=</span><span class="dv">5</span>,<span class="at">by=</span><span class="dv">2</span>)]){</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (y <span class="sc">%in%</span> vector_shop[<span class="fu">str_detect</span>(vector_shop,<span class="st">&quot;水餃&quot;</span>)<span class="sc">==</span><span class="cn">TRUE</span>]){</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span>(<span class="fu">str_c</span>(x,<span class="st">&quot;小軒吃&quot;</span>,y))</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span>{</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span>(<span class="fu">str_c</span>(x,<span class="st">&quot;小軒不吃&quot;</span>,y))  </span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span> (x <span class="sc">==</span> vector_weekday[<span class="dv">6</span>]){</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (y <span class="sc">%in%</span> vector_shop[<span class="fu">str_detect</span>(vector_shop,<span class="st">&quot;館&quot;</span>)<span class="sc">==</span><span class="cn">TRUE</span>]){</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span>(<span class="fu">str_c</span>(x,<span class="st">&quot;小軒吃&quot;</span>,y))</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span>{</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span>(<span class="fu">str_c</span>(x,<span class="st">&quot;小軒不吃&quot;</span>,y))  </span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span>{(x <span class="sc">==</span> vector_weekday[<span class="dv">7</span>])</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span>(<span class="fu">str_c</span>(x,<span class="st">&quot;小軒不吃&quot;</span>,y))}   </span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="fu">hsuan_meal</span>(<span class="st">&quot;週一&quot;</span>,<span class="st">&quot;林師傅&quot;</span>)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="fu">hsuan_meal</span>(<span class="st">&quot;週二&quot;</span>,<span class="st">&quot;親來食堂&quot;</span>)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="fu">hsuan_meal</span>(<span class="st">&quot;週日&quot;</span>,<span class="st">&quot;找碗&quot;</span>)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="do">### result should be</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co"># hsuan_meal(&quot;週一&quot;,&quot;林師傅&quot;)</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週一小軒吃林師傅&quot;</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="co"># hsuan_meal(&quot;週二&quot;,&quot;親來食堂&quot;)</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週二小軒不吃親來食堂&quot;</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="co"># hsuan_meal(&quot;週日&quot;,&quot;找碗&quot;)</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] &quot;週日小軒不吃找碗&quot;</span></span></code></pre></div>
+<pre><code>#&gt; [1] &quot;週一小軒吃林師傅&quot;
+#&gt; [1] &quot;週二小軒不吃親來食堂&quot;
+#&gt; [1] &quot;週日小軒不吃找碗&quot;</code></pre>
 </div>
-<div id="functions-ii-30-分" class="section level3">
-<h3>functions (ii) (30 分)</h3>
-<p>請撰寫一個函數 <code>get_zodiac()</code>，使用者輸入生日，該函數便會告訴你所屬的星座。 不能使用他人開發好的現成函數，要自己寫喔。</p>
+<div id="functions-ii-40-分" class="section level3">
+<h3>functions (ii) (40 分)</h3>
+<p>請撰寫一個函數 <code>get_zodiac()</code>，使用者輸入生日(字串或者數值，底下會舉例)，該函數便會告訴你所屬的星座。 不能使用他人開發好的現成函數，要自己寫喔。</p>
 <ul>
-<li><p>hint01: 可以利用條件判斷(if else)</p></li>
-<li><p>hint02: 想辦法處理使用者輸入的日期</p></li>
+<li><p>可以利用條件判斷(if else)來比較日期，你會用到很多 if else</p></li>
+<li><p>可以利用 <code>library(lubridate)</code> 處理使用者輸入的日期，有幾個可以用的函數譬如 <code>as_date()</code>, <code>month()</code>, <code>day()</code></p></li>
+<li><p>如果對方亂輸入，要跳出一段訊息，這邊也可以用 if else 解決</p></li>
 <li><p>預期結果舉例:</p></li>
-<li><p><code>get_zodiac(&quot;1996-09-01&quot;)</code> 會得到 <code>天秤座</code></p></li>
-<li><p><code>get_zodiac(1997-01-01)</code> 會得到 <code>魔羯座</code></p></li>
-<li><p><code>get_zodiac(&quot;一九九八三月十四日&quot;)</code> 會得到 <code>請以&quot;YYYY-MM-DD&quot;格式輸入數字</code></p></li>
+<li><p><code>get_zodiac(&quot;1996-09-25&quot;)</code> 會得到 <code>天秤座</code></p></li>
+<li><p><code>get_zodiac(&quot;1996-09-01&quot;)</code> 會得到 <code>處女座</code></p></li>
+<li><p><code>get_zodiac(19970101)</code> 會得到 <code>魔羯座</code></p></li>
+<li><p><code>get_zodiac(&quot;一九九八三月十四日&quot;)</code> 會得到 <code>請以&#39;YYYY-MM-DD&#39;格式輸入數字</code></p></li>
+<li><p>我會輸入上面以外的測資，所以不要僅寫針對上面四個輸入值的 if else 喔！</p></li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># get_zodiac &lt;- function(){</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   </span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="do">### test your code</span></span></code></pre></div>
-</div>
-<div id="bonus-25-分" class="section level3">
-<h3>bonus (25 分)</h3>
-<div id="a.-用-apply-讀取多個檔案-10-分" class="section level4">
-<h4>A. 用 apply 讀取多個檔案 (10 分)</h4>
-<p>在 lab 中利用 for loop 讀取了大量檔案，datacamp 的教學中提到了 apply 家族的函數。請用 apply 家族的函數一次讀取<code>data/Lab03/</code> 路徑中的十個檔案。</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 幫你讀好檔名了</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>vector_file_name <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;data/Lab03/&quot;</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span></code></pre></div>
-</div>
-<div id="b.-學習使用-purrrmap-15-分" class="section level4">
-<h4>B. 學習使用 purrr::map (15 分)</h4>
-<div id="b.1-基本使用" class="section level5">
-<h5>B.1 基本使用</h5>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 幫你讀好檔名了</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>vector_file_name <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;data/Lab03/&quot;</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span></code></pre></div>
-</div>
-<div id="b.2-讀取多個檔案" class="section level5">
-<h5>B.2 讀取多個檔案</h5>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 幫你讀好檔名了</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>vector_file_name <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">&quot;data/Lab03/&quot;</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span></code></pre></div>
-</div>
-</div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>get_zodiac <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">ymd</span>(x)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">is.na</span>(x)){</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;請以&#39;YYYY-MM-DD&#39;格式輸入數字&quot;</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">12</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&gt;=</span><span class="dv">23</span>)){</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;摩羯座&quot;</span>)  </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">01</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&lt;=</span><span class="dv">22</span>)){</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;摩羯座&quot;</span>) </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">01</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&gt;=</span><span class="dv">23</span>)){</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;水瓶座&quot;</span>) </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">02</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&lt;=</span><span class="dv">22</span>)){</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;水瓶座&quot;</span>) </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">02</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&gt;=</span><span class="dv">23</span>)){</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;雙魚座&quot;</span>) </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">03</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&lt;=</span><span class="dv">22</span>)){</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;雙魚座&quot;</span>) </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">03</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&gt;=</span><span class="dv">23</span>)){</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;牡羊座&quot;</span>) </span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">04</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&lt;=</span><span class="dv">22</span>)){</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;牡羊座&quot;</span>) </span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">04</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&gt;=</span><span class="dv">23</span>)){</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;金牛座&quot;</span>) </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">05</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&lt;=</span><span class="dv">22</span>)){</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;金牛座&quot;</span>) </span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">05</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&gt;=</span><span class="dv">23</span>)){</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;雙子座&quot;</span>) </span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">06</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&lt;=</span><span class="dv">22</span>)){</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;雙子座&quot;</span>) </span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">06</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&gt;=</span><span class="dv">23</span>)){</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;巨蟹座&quot;</span>) </span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">07</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&lt;=</span><span class="dv">22</span>)){</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;巨蟹座&quot;</span>) </span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">07</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&gt;=</span><span class="dv">23</span>)){</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;獅子座&quot;</span>) </span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">08</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&lt;=</span><span class="dv">22</span>)){</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;獅子座&quot;</span>) </span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">08</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&gt;=</span><span class="dv">23</span>)){</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;處女座&quot;</span>) </span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">09</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&lt;=</span><span class="dv">22</span>)){</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;處女座&quot;</span>) </span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">09</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&gt;=</span><span class="dv">23</span>)){</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;天秤座&quot;</span>) </span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">10</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&lt;=</span><span class="dv">22</span>)){</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;天秤座&quot;</span>) </span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">10</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&gt;=</span><span class="dv">23</span>)){</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;天蠍座&quot;</span>) </span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">11</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&lt;=</span><span class="dv">22</span>)){</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;天蠍座&quot;</span>) </span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">11</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&gt;=</span><span class="dv">23</span>)){</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;射手座&quot;</span>) </span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span> <span class="cf">if</span>((<span class="fu">month</span>(x)<span class="sc">==</span><span class="dv">12</span>)<span class="sc">&amp;&amp;</span>(<span class="fu">day</span>(x)<span class="sc">&lt;=</span><span class="dv">22</span>)){</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;射手座&quot;</span>) </span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a><span class="do">### test your code</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a><span class="fu">get_zodiac</span>(<span class="st">&quot;1996-09-25&quot;</span>)</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="fu">get_zodiac</span>(<span class="st">&quot;1996-09-01&quot;</span>)</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a><span class="fu">get_zodiac</span>(<span class="dv">19970101</span>)</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a><span class="fu">get_zodiac</span>(<span class="st">&quot;一九九八三月十四日&quot;</span>)</span></code></pre></div>
+<pre><code>#&gt; [1] &quot;天秤座&quot;
+#&gt; [1] &quot;處女座&quot;
+#&gt; [1] &quot;摩羯座&quot;
+#&gt; [1] &quot;請以&#39;YYYY-MM-DD&#39;格式輸入數字&quot;</code></pre>
 </div>
 </div>
 

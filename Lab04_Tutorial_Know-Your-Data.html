@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lab04_Know-Your-Data</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="曾子軒 Dennis Tseng" />
+    <script src="libs/header-attrs-2.6/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lab04_Know-Your-Data
+## Lab04_Data-Importing-and-Manipulation
+### 曾子軒 Dennis Tseng
+### 台大新聞所 NTU Journalism
+### 2021/03/16
+
+---
+
+&lt;style type="text/css"&gt;
+
+.remark-slide-content {
+    padding: 1em 1em 1em 1em;
+    font-size: 28px;
+}
+
+.my-one-page-font {
+  padding: 1em 1em 1em 1em;
+  font-size: 20px;
+  /*xaringan::inf_mr()*/
+}
+
+&lt;/style&gt;
+
+
+# 今日重點
+
+- Lab04
+- AS03
+- 上週作業檢討
+- Package Installing &amp; Loading
+- Data Importing &amp; Exporting
+
+Appendix
+- Pipe Operator
+- Basic Data Manipulation
+- 路徑 &amp; 中文編碼
+
+---
+
+class: inverse, center, middle
+
+# [Lab04](https://p4css.github.io/R4CSS_TA/Lab04_Homework_Know-Your-Data.html)
+
+---
+
+class: inverse, center, middle
+
+# [AS03](https://p4css.github.io/R4CSS_TA/AS03_Know-Your-Data.html)
+
+---
+
+# 上週作業檢討
+
+- [Lab03 範例解答連結](https://p4css.github.io/R4CSS_TA/Lab03_Homework_R-Intermediate_ref.html)
+- Lab03 B. Write your own functions
+ - 比起一行直接寫完，將變數運算結果賦值更好理解
+
+```r
+# A
+score_addoil &lt;- function(name, score_original){
+  print(str_c(name, "，你的期中考分數經過調整後是 ", ceiling(sqrt(score_original)*10), " 分，", sample(vector_addoil, 1)))
+}
+# B
+score_addoil &lt;- function(name, score_original){
+  score_new &lt;- ceiling(score_original^(0.5)*10)
+  value_addoil &lt;- sample(vector_addoil, 1)
+  print(str_c(name, "，你的期中考分數經過調整後是 ", score_new, " 分，", value_addoil))
+}
+```
+
+---
+
+# 作業檢討
+
+- Lab03 B. Write your own functions
+ - 寫的時候建議一個步驟一個步驟進行，寫完先印出來檢查
+
+
+```r
+score_addoil_tmp &lt;- function(name, score_original){
+  score_new &lt;- ceiling(score_original^(0.5)*10)
+  print(score_new)
+}
+score_addoil_tmp("子軒", 64)
+```
+
+---
+
+# 作業檢討
+
+- Lab03 B. Write your own functions
+ - 想測試你的參數，可以先進行賦值，就可以在函數內運算
+
+
+```r
+score_original &lt;- 64
+score_addoil_tmp &lt;- function(name, score_original){
+  score_new &lt;- ceiling(score_original^(0.5)*10)
+  score_new
+}
+```
+
+---
+
+# 作業檢討
+
+- Lab03 B. Write your own functions
+ - 比起一行直接寫完，將變數運算結果賦值更好理解
+ - 想測試你的參數，可以先進行賦值，就可以在函數內運算
+ - 寫的時候建議一個步驟一個步驟進行，寫完先印出來檢查
+ - 不只是寫函數，只要是執行需要兩個步驟以上的任務，上述建議都適用，像是寫迴圈時，測試和檢查都很重要
+
+---
+
+# 作業檢討
+
+- Lab03 A. 用 for loop 讀取多個檔案
+
+```r
+library(tidyverse)
+vector_file_name &lt;- dir(path = "data/Lab03/")
+df_all &lt;- tibble() #data.frame()也可以
+
+for (i in 1:length(vector_file_name)) {
+  df_tmp &lt;- read_csv(str_c("data/Lab03/", vector_file_name[i]))
+  df_all &lt;- df_all %&gt;% bind_rows(df_tmp)
+}
+
+df_all #tibble
+head(df_all) #dataframe
+```
+
+---
+
+# 作業檢討
+
+- Lab03 A. 用 for loop 讀取多個檔案：
+ - 第一步：要利用複製貼上以外的方式找出檔名，所以用 `dir()`
+ - 第二步：在迴圈中嘗試用 `dir()` 與 `read_csv()`，先看結果
+ - 第三步：讀進檔案需要路徑現在只有檔名，所以用`str_c()`串
+
+```r
+# (1)
+vector_file_name &lt;- dir(path = "data/Lab03/")
+# (2)
+for (i in 1:length(vector_file_name)) {
+  print(vector_file_name[i])
+}
+# (3)
+str_c("data/Lab03/", vector_file_name)
+```
+
+---
+
+# 作業檢討
+
+- Lab03 A. 用 for loop 讀取多個檔案：
+ - 第四步：在迴圈內讀取檔案，發現會把檔案蓋掉，要想個方法
+ - 第五步：多創一個空的，就可以了！
+ - 印出來：tibble 直接印、dataframe 用 `head()` 免得爆掉
+
+
+```r
+# (4)
+for (i in 1:length(vector_file_name)) {
+  df &lt;- read_csv(str_c("data/Lab03/", vector_file_name[i]))
+}
+# (5)
+df_all &lt;- tibble() #data.frame()也可以
+for (i in 1:length(vector_file_name)) {
+  df_tmp &lt;- read_csv(str_c("data/Lab03/", vector_file_name[i]))
+  df_all &lt;- df_all %&gt;% bind_rows(df_tmp)
+}
+df_all;dim(df_all)
+```
+
+---
+# 作業檢討
+
+- [AS02 範例解答連結](https://p4css.github.io/R4CSS_TA/AS02_R-Intermediate_ref.html)，小軒偏食題請參考答案，這裡討論 AS02 星座題，共分為三個部分
+- 偷懶的寫法 by 子軒，標準的寫法 by 綺薇，優雅的寫法 by 美瑜
+- 架構
+ - 重點一是處理星座，寫 if else 的方法有很多
+ - 重點二是輸入值處理，有可能是字串或數值
+  - 數值 e.g. `19960925`
+  - 字串(a) e.g. `"1996-09-25"`
+  - 字串(b) e.g. `"19960925"`
+ 
+
+```r
+lubridate::as_date(19960925)
+lubridate::as_date("1996-09-25")
+lubridate::as_date("19960925")
+```
+
+---
+# 作業檢討
+
+- AS02 星座題
+ - 輸入值處理，有可能是字串或數值
+  - 數值 e.g. `19960925`
+  - 字串(a) e.g. `"1996-09-25"`
+  - 字串(b) e.g. `"19960925"`
+ 
+
+```r
+get_zodiac &lt;- function(input_date) {
+  # as.character() 處理數值, as_date() 轉成日期
+  new_date &lt;- lubridate::as_date(as.character(input_date))
+  if(is.na(new_date)) {
+    print("error message")
+  } else {
+    # 日期區間的條件判斷
+  }
+}
+```
+
+---
+# Package 套件
+
+- Package
+ - 套件主要由不同函數所組成，也有些儲存資料集，可以想像成一本又一本的好書
+ - 套件主要放在兩個地方
+        - 公共圖書館：[CRAN (Comprehensive R Archive Network)](https://cran.r-project.org/)
+        - 自行出版：個人的 [Github 頁面](https://github.com/yihui/xaringan)
+- 安裝套件
+ - 要先把書下載下來，可以想像成去 Amazon 抓免費電子書
+ - CRAN：`install.packages("tidyverse")`
+ - Github：`remotes::install_github("DeveloperName/PackageName")`
+ - Gihtub [範例](https://github.com/yihui/xaringan)：`remotes::install_github('yihui/xaringan')`
+
+---
+# Package 套件
+
+- 載入套件
+ - 每次看書，都要去個人的圖書館把書叫出來
+ - `library(tidyverse)` or `require(tidyverse)`
+ - 每次載入套件都會有訊息，這是正常的，不要怕！
+- 呼叫函數
+ - 使用 base R 裡面的函數像是 `mean()` 不用載入套件直接用
+ - 使用 base R 以外的函數，可以載入套件後使用或是利用 `::`
+        - `library(stringr);str_c("a","b")`
+        - `stringr::str_c("a","b")`
+
+---
+
+# Package 套件
+
+- summary
+ - 套件 = 書，安裝套件 = 下載書，載入套件 = 從圖書館借書
+ - 安裝只要安裝一次就好，所以安裝完程式碼可以刪掉或註解掉
+ - 檔案的最上面先載入你的套件
+ - 底下開始寫你的程式碼
+
+ 
+
+```r
+# install.packages("stringr")
+library(stringr)
+str_c("a","b","c", sep = ";")
+```
+
+```
+## [1] "a;b;c"
+```
+
+---
+# Data Importing &amp; Exporting
+
+- 讀取和輸出檔案的幾個重點
+ - 檔案格式是什麼 e.g. .csv
+ - 檔案編碼是什麼 e.g. BIG5
+ - 輸出要輸出成什麼格式 e.g. .rds
+- 套件與函數的使用
+ - base R 就有函數 e.g. `read.csv()`
+ - tidyverse 底下的 [`library(readr)`](https://readr.tidyverse.org/)
+     - 檔案讀進來會是 tibble (之前提的，dataframe 的延伸)
+     - 預設編碼是 UTF8，可以避免許多問題
+- 今天內容
+ - 只講 tabulated data，也就是 table
+ - 之後還有 JSON, shapefile, html, etc.
+
+---
+# File Format 檔案格式 (table)
+
+- delimited file
+ - .csv, comma-separated values；.tsv, tab-separated values
+ - use `read.**()` or `readr::read_**()`
+- plain text
+ - .txt, use `readLines()` or `readr::read_file()`
+- excel
+ - .xls, .xlsx
+ - [`readxl::read_excel()`](https://readxl.tidyverse.org/), [`openxlsx::read.xlsx()`](https://ycphs.github.io/openxlsx/), [`XLConnect::loadWorkbook()`](https://github.com/miraisolutions/xlconnect)
+- google sheet
+ - [`googlesheets4::read_sheet()`](https://googlesheets4.tidyverse.org/)
+- PDF
+ - [`tabulizer::extract_tables()`](https://cran.r-project.org/web/packages/tabulizer/vignettes/tabulizer.html), [`pdftools::pdf_text()`](https://docs.ropensci.org/pdftools/)
+
+---
+
+# File Format - csv
+
+- arguments of `readr::read_csv()`
+ - `file`(檔案路徑)
+ - `delim`(用什麼區分, 預設是 ",")
+ - `col_names`(是否有預設的欄位名稱, 預設有)
+ - `locale`(地區，指編碼)
+ - `na`(missing value 長怎樣, 預設是 c("", "NA") )
+ - `skip`(要跳過幾列, 預設 = 0)
+
+---
+# File Format - csv
+
+
+```r
+library(tidyverse)
+file_p &lt;- "data/df_zodiac_class.csv"
+df_zodiac_class &lt;- 
+  read_csv(file_p)
+
+df_zodiac_class2 &lt;- 
+  read_csv(file_p, col_names = F, skip = 1)
+
+df_zodiac_class3 &lt;- 
+  read_csv(file_p, col_names = F, skip = 1, na = c("", "NA", "missing"))
+```
+
+---
+
+# File Format - excel
+
+- arguments of `readxl::read_excel()`
+ - `path`(檔案路徑)
+ - `sheet`(哪一張工作表，預設是第一張表)
+ - `range`(範圍，函數會去讀取所有不為空的欄與列)
+
+---
+# File Format - excel
+
+
+```r
+library(readxl)
+file_p2 &lt;- "data/df_class03.xlsx"
+df_class03 &lt;- read_excel(file_p2)
+# 發現有兩張工作表，先讀第一張
+df_class03_A &lt;- read_excel(file_p2, sheet = "工作表1")
+# or
+df_class03_A &lt;- read_excel(file_p2, sheet = 1)
+# 讀第二張
+df_class03_B &lt;- read_excel(file_p2, sheet = "工作表2")
+# 讀第二張發現第三欄是註解
+df_class03_B &lt;- read_excel(file_p2, sheet = "工作表2", range = "A1:B4")
+```
+
+
+---
+# File Encoding - csv
+
+- 讀檔案的時候，檔案編碼可能有問題，可以用 notepad ++ / 記事本 / excel 觀察編碼
+- 處理方式分三種，一種是直接更改原始檔案編碼後另存，一種是讀取檔案時設定參數，一種是讀取檔案後再來更改編碼
+- 也可以懶得打開其他程式，直接用 R 讀讀看跟它拼了，很熱血
+ - 如果欄位名稱是中文編碼又錯，很遺憾直接讀不進來
+ - 如果欄位名稱是英文編碼又錯，那就讀得進來，那你就要讀進來之後再改編碼
+
+---
+# File Encoding - csv
+- 範例一：[109Q1 實價登錄資料](https://plvr.land.moi.gov.tw/DownloadOpenData)
+- column name 跟內文都是中文，編碼不是 UTF8
+- 可以用 notepad ++ / 記事本 / excel 觀察編碼，或者直接用 R 讀讀看，跟它拼了
+
+
+```r
+# 實價登錄
+df_land_109Q1_test &lt;- read_csv("data/Lab04/109Q1_a_lvr_land_a_build.csv")
+# Error in make.names(x) : invalid multibyte string at '&lt;bd&gt;s&lt;b8&gt;&lt;b9&gt;'
+
+df_land_109Q1_test &lt;- read_csv("data/Lab04/109Q1_a_lvr_land_a_build.csv", locale = locale(encoding = "BIG5"))
+```
+
+---
+# File Encoding - csv
+
+- 範例二：[各縣市用電資料](https://www.taipower.com.tw/tc/sell_amt_city/sell_amt_city1.aspx) 
+- column name 是英文，所以讀得進來，但內文是中文，所以亂碼
+- 可以用 notepad ++ / 記事本 / excel 觀察編碼，或者直接用 R 讀讀看，跟它拼了
+
+
+```r
+# 實價登錄
+df_electricity_usage_test &lt;- read_csv("data/Lab04/electricity_usage.csv")
+# no error but 亂碼
+df_electricity_usage_test$county &lt;- 
+  iconv(df_electricity_usage_test$county, from = "BIG5", to = "UTF8")
+```
+
+---
+# File Exporting
+
+- 函數與檔案格式
+ - 一般格式像是 .csv 用 `write.**()` or `readr::write_**()`，後者預設輸出 encoding 都是 UTF8，非常棒
+ - R 內建兩個函數可以讀寫 R 的物件
+     - 單一物件 .rds：`readRDS()/saveRDS()` or `readr::read_rds()/write_rds()`
+         - `write_rds(mtcars, "data/mtcars.rds")`
+     - 很多物件 .RData：`save()` or `load()` 
+         - e.g. `save(data1, data2, file = "data/d0102.RData")`
+
+---
+# File Exporting
+
+
+```r
+file_r &lt;- "data/Lab04/"
+a &lt;- 1
+b &lt;- 2
+library(readr)
+
+### export
+write_rds(a, str_c(file_r, "a.rds"))
+save(a, b, file = str_c(file_r, "a_b.RData"))
+
+### load
+a_check &lt;- read_rds(str_c(file_r, "a.rds"))
+
+rm(a)
+rm(b)
+load(file = str_c(file_r, "a_b.RData"))
+```
+
+
+---
+
+class: inverse, center, middle
+
+# The End
+
+---
+
+class: inverse, center, middle
+
+# Appendix
+
+---
+# Pipe Operator
+
+- 改變世界的管線運算子 pipe operator
+ - `%&gt;%`：趴大於趴，趴趴熊的趴，意思是傳送，把左邊傳到右邊
+ - `library(magrittr)` or `library(tidyverse)`
+ - 國中數學： `k(g(f(x)))`，對 `x` 用 `f()` 接著 `g()` 接著 `k()`
+
+
+```r
+# set function
+five_time_add_two  &lt;- function(x) { 5*x + 2 }
+four_time_add_one  &lt;- function(x) { 4*x + 1 }
+two_time_minus_one &lt;- function(x) { 2*x - 1 }
+
+# use function
+five_time_add_two(2)
+four_time_add_one(five_time_add_two(2))
+two_time_minus_one(four_time_add_one(five_time_add_two(2)))
+```
+
+---
+
+# Pipe Operator
+
+- 改變世界的管線運算子 pipe operator
+ - 看起來比較簡潔、後續操作 table 的時候非常方便
+ - 發音：描述 `%&gt;%` 符號的時候用 pipe，在程式碼中描述用 then
+
+
+```r
+library(tidyverse)
+# base R
+two_time_minus_one(four_time_add_one(five_time_add_two(2)))
+# use pipe
+2 %&gt;% 
+  five_time_add_two() %&gt;% 
+  four_time_add_one() %&gt;% 
+  two_time_minus_one()
+```
+
+---
+# Basic Data Manipulation
+
+- 資料操作 using [`library(dplyr)`](https://dplyr.tidyverse.org/)
+ - 利用 5 + 1 個動詞操作 table，第一個參數放 data，第二個參數看操作，發音是 DEE ply er，被稱為資料操作的文法
+- Verbs 5 + 1
+ - `select()` 選擇特定的 column
+ - `filter()` 篩選特定的 row
+ - `mutate()` 增加新的 column
+ - `arrange()` 按照變數性質排序
+ - `summarise()` 摘要變數結果
+ - `group_by()`	依照類別變數分組
+
+
+```r
+library(tidyverse)
+starwars
+```
+---
+# Basic Data Manipulation
+
+- Verbs 5 + 1
+ - `select()` 選擇特定的 column
+ - `filter()` 篩選特定的 row
+ - `mutate()` 增加新的 column
+ 
+
+```r
+# select()
+starwars[, c("name", "height")]
+select(starwars, name, height)
+starwars %&gt;% select(name, height)
+# filter()
+starwars[starwars$height &lt;= 160,]
+starwars %&gt;% filter(height &lt;= 160)
+# mutate()
+starwars$tall &lt;- ifelse(starwars$height &lt;= 160, 0, 1)
+starwars %&gt;% mutate(tall = if_else(height &lt;= 160, 0, 1))
+```
+
+---
+# Basic Data Manipulation
+- Verbs 5 + 1
+ - `arrange()` 按照變數性質排序
+ - `summarise()` 摘要變數結果
+ - `group_by()`	依照類別變數分組
+
+
+```r
+# arrange()
+starwars[order(starwars$height), ,drop = FALSE]
+starwars %&gt;% arrange(height)
+# summarise() / summarize()
+aggregate(height ~ 1, starwars, FUN = max, na.rm=TRUE)
+starwars %&gt;% summarise(height_max = max(height, na.rm = T))
+# group_by() and summarise()
+aggregate(height ~ gender, starwars, FUN = max, na.rm=TRUE)
+starwars %&gt;% group_by(gender) %&gt;% 
+  summarise(height_max = max(height, na.rm = T))
+```
+
+---
+# Basic Data Manipulation
+
+- 5 + 1 與其他
+ - row 操作：`filter()`, `slice()`,`arrange()`
+ - column 操作：`select()`, `mutate()`,`rename()`, `relocate()`
+ - group of rows：`summarise()` 搭配 `group_by()`
+- `dplyr` vs. `base R`：你該選擇 `dplyr` 的理由
+ 1. 資料操作就是一連串動作，上面的動詞讓你可以拆解動作
+ 2. 這些動詞的組合幾乎涵蓋了在 excel 會用到的操作
+ 3. 使用時不用加上引號或 `$` 就可以指涉資料欄位，適合 pipe
+ 4. 動詞內部參數具有高度一致性
+ 5. 函數底層改寫過效率高不用跑很久
+- 極力推薦、用生命推薦 `dplyr`，但你堅持不用也沒關係
+
+---
+# 路徑和中文編碼
+
+- Path 路徑
+ - 相對路徑 &amp; 絕對路徑
+  - `"/Users/dennistseng/R4CSS-TA/data/Lab03/ARG.csv"`
+  - `"data/Lab03/ARG.csv"`
+- 如何取得路徑：除了堅持老派的手寫溫度
+ - Mac：`右鍵 再按 options` or `option + command + c`
+ - Windows：`shift 再按 右鍵` or `ctrl + L`
+ - Windows：直接從 `address bar` or `file explorer` 複製
+ - reference：[Mac](https://kknews.cc/zh-tw/news/4ze44yq.html) &amp; [Windows](https://www.tenforums.com/tutorials/131557-copy-path-file-explorer-windows-10-a.html)
+ - 路徑中的斜線與反斜線： Mac copy 得到的路徑用 `/` 間隔，可以直接使用，Windows copy 得到的路徑用 `\` 間隔，不能直接用，要修正成 `/` or `\\`
+ - `"data/a.csv"` or `"data\\a.csv"` 都可以
+
+---
+# 路徑和中文編碼
+
+- 路徑的語言
+ - 英文基本上沒問題，中文可能會有問題，現在沒問題不代表以後沒問題，尤其是 Windows 非常煩人
+ - 建議：R &amp; RStudio 的路徑用英文 e.g. `C:\`；使用者名稱用英文
+ - 路徑好改，使用者名稱只能新創英文帳號，若還是想用中文，可以[設置環境變數](https://github.com/wush978/DataScienceAndR/wiki/Windows%E4%B8%AD%E6%96%87%E4%BD%BF%E7%94%A8%E8%80%85%E8%88%87Rstudio%E7%9A%84%E7%92%B0%E5%A2%83%E8%AE%8A%E6%95%B8%E8%AA%BF%E6%A0%A1)
+- 一些權限問題
+ - R 和 RStudio 不要安裝在 Windows 的 OneDrive 資料夾
+ - .R 檔案 or .Rmd 檔案最好不要放在自動跟雲端硬碟 sync 的資料夾，譬如 Google Drive 或是 Dropbox 都有危險
+
+---
+# 路徑和中文編碼
+
+- 字元編碼 character encoding
+ - 電腦用 0,1 儲存資訊，字元編碼就是利用數字代表文字與符號
+- [ASCII 編碼](https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html)：美國制定，用來對應英文符號與二進制
+ - ASCII 大約可以表示 128 個文字符號和數字之間的關係
+ - 舉例：e.g. `A` 的編碼是 65，也就是二進制中的 `01000001`
+ - 但如果是英文以外的語言如中文，會有兩個問題
+     - 符號不夠：naïve 的 ï 不在裡面，要新的編碼
+     - 不同國家的符號與二進制對應方式不同：`é` vs. `ג` (法 vs. 希)
+- [ANSI](https://kknews.cc/zh-tw/code/442kg42.html)：Windows 上的 code page，對應到預設編碼
+ - 因應當前系統區域(locale) 決定編碼，繁體中文對應 BIG5，簡體中文對應 GB2312，日文可能是 JIS
+ - 亂碼：台灣人存 ANSI，代表用 BIG5 存，日本人打開打開記事本，ANSI 判斷後用 JIS 解碼，解碼方式不對，就出現亂碼了
+
+
+---
+# 路徑和中文編碼
+
+- [Unicode](https://home.unicode.org/)：納入所有字符的萬國碼
+ - 收錄上百萬個文字與符號，稱為字符集(character set)
+ - `U+963f` 代表 `阿`, `U+4E25` 代表 `严`, `U+0041`, 代表 `A`
+ - 只規定對應方式(集合 set)，沒規定儲存方式(編碼 encoding)
+ - `U+4E25` 的 `4E25` 轉成二進制為 `100111000100101`，15 位元
+     - 長度問題：原本 128 個符號用 8 個位元儲存，現在要兩倍
+     - 辨識問題：怎麼知道是一個符號 or 兩個符號拼在一起
+ - 解決方法：需要轉成二進制的儲存方式
+- [UTF-8 編碼](http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html)：Unicode 的實現
+ - 彈性長度：前綴數字表示長度，後面數字代表符號
+ - 包含了 ASCII 的編碼，為目前網頁編碼主流，2008 年超過 60%，2015 年超過 80%
+
+---
+# 路徑和中文編碼
+
+- 生活中遇到亂碼
+ - 打開 email, excel, 記事本, notepad ++ 都可能遇到編碼問題
+- 在 R/RStudio 裡面遇到亂碼
+ - 判斷問題起因：檔案問題 or R/RStudio 問題 or 系統編碼問題
+ - 個別檔案的編碼問題(這邊都預設你用 RStudio)
+      - .R or .Rmd 的亂碼：調整預設編碼 or 以 UTF8 編碼開啟檔案，請參考[連結](https://shihs.github.io/blog/r/2018/10/04/R-RStudtio%E7%B7%A8%E7%A2%BC%E5%95%8F%E9%A1%8C/)第一部分，主要是調設定
+      - 讀取 .csv or .txt 的亂碼：建議都改成 UTF8
+          1. 手動更改編碼 e.g. 在記事本裡面另存成其他編碼
+          2. 讀取檔案時在函數中設定編碼 e.g. `read.csv()` 裡面的參數 `fileEncoding = "UTF-8"` 
+          3. 讀進檔案後再轉碼 e.g.  `df &lt;- readLines("a.CSV", encoding="big5");df &lt;- iconv(df, "big5", "utf8")`
+
+---
+# 路徑和中文編碼
+
+- 在 R/RStudio 裡面遇到亂碼
+ - 個別檔案的編碼問題(這邊都預設你用 RStudio)
+     - 檢查編碼方式：`x &lt;- '中文'; Encoding(x)`
+     - 什麼都不設定，會用系統預設的編碼讀取檔案，底下討論
+ - R/RStudio 的問題
+     - R console 中文變亂碼：上網查原因 e.g. R 版本太新
+     - R Studio 某些預覽有問題：上網查原因 e.g. 開發的 bug
+     - 圖片預覽中文無法顯示：字體問題 (尤其 Mac)，之後討論
+ - 系統編碼問題
+     - 讀檔的編碼改了依然有中文亂碼：R 會用系統的預設編碼
+     - 利用 `Sys.getlocale()` 查看編碼，利用 `Sys.setlocale()` 更改編碼，兩個參數， `category` 代表要修改的[類別](https://www.csie.ntu.edu.tw/~r95053/samples/collection/backup/locale2.html)，`locale` 代表系統區域
+
+---
+# 路徑和中文編碼
+
+- 在 R/RStudio 裡面遇到亂碼
+ - 系統編碼問題
+     - Mac：`Sys.setlocale(category = "LC_ALL", locale = "UTF-8")`
+     - Win：`Sys.setlocale(category = "LC_ALL", locale = "cht")`
+- 路徑和中文編碼 Summary
+ - Windows 很不友善、路徑跟檔案名稱最好都英文
+ - 編碼有很多種，能用 UTF-8 就用 UTF-8
+ - 亂碼可能是檔案編碼、R/RStudio 的 bug、系統預設編碼
+ - .R 亂碼調整 file encoding
+ - 讀 csv 可以手動調整、讀取時設定、讀取後轉換
+ - 顯示中文有問題可能是 bug，或是要調整系統編碼
+
+---
+
+
+
+class: inverse, center, middle
+
+# The End
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"self_contained": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,5 +1,12 @@
 # R4CSS_TA
 
+### week02_03/09
+
+- Datacamp 打開 [leaderboard](https://www.datacamp.com/enterprise/r1092-journalism-processing-and-visualization/leaderboard)
+- 問大家有沒有問題
+- 開始講講義、講 lab、講作業        
+- 講慢一點！
+- `purl(".Rmd")`
 
 ### week02_03/02
 

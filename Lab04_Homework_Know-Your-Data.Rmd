@@ -1,0 +1,252 @@
+---
+title: "Lab04_Homework_Know-Your-Data"
+author: "你是誰 R09342000 新聞所碩五"
+date: "2021/03/16"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Know Your Data
+
+這份作業希望能夠讓你練習：
+
+a. 讀取資料
+b. 處理編碼
+c. 輸出資料
+d. 利用管線運算子(`%>%`)
+e. 基本的資料操作
+
+題目大部分都要求印出 tibble/dataframe，若你的資料是 tibble，直接印出即可，若是 dataframe，請印出前三列即可。
+
+## 作業: Know Your Data
+
+滿分共 100 分。
+
+### A. importing data and data manipulation - csv (50 分) 
+
+本題目利用內政部統計處的[社會經濟資料服務平台](https://segis.moi.gov.tw/STAT/Web/Portal/STAT_PortalHome.aspx)所提供的資料，該平台有大量台灣的地理圖資與人口變數，之後找題目可以參考。我們使用的是 109 年第 4 季各縣市的結婚統計。
+
+1. data importing：請讀取請右方路徑的 csv 檔，路徑為 `data 資料夾 -> Lab04 資料夾 -> 109Q4_county_marriage.csv`，並取名為 `df_109Q4_county_marriage`。檔案讀進來後可能有亂碼，請任選課堂提到的亂碼處理方式（讀取前修改編碼、讀取設定參數、讀進後修改編碼），將檔案以正確編碼印出。若你是讀取前修改編碼，請用文字說明步驟，若你是設定參數或修改編碼，請在程式碼中用註解(`#`)說明你在做什麼！
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+
+### your result should be 
+#> # A tibble: 23 x 7
+#>    COUNTY_ID COUNTY  MARRY_CP_CNT MARRY_CNT  MARRY_M_CNT  MARRY_F_CNT  INFO_TIME
+#>    <chr>     <chr>   <chr>        <chr>      <chr>        <chr>        <chr>    
+#>  1 縣市代碼  縣市名稱… 結婚對數     結婚登記中外(含大… 結婚登記中外(含大陸港… 結婚登記中外(含大陸港… 資料時間 
+#>  2 65000     新北市  6529         580        189          391          109Y4S   
+#>  3 63000     臺北市  3856         422        207          215          109Y4S   
+#>  4 68000     桃園市  3986         370        107          263          109Y4S   
+#>  5 66000     臺中市  4837         381        130          251          109Y4S   
+#>  6 67000     臺南市  2706         185        57           128          109Y4S   
+#>  7 64000     高雄市  4139         343        112          231          109Y4S   
+#>  8 10002     宜蘭縣  725          62         11           51           109Y4S   
+#>  9 10004     新竹縣  1003         71         13           58           109Y4S   
+#> 10 10005     苗栗縣  859          75         19           56           109Y4S   
+#> # … with 13 more rows
+```
+
+2. `slice()` and `mutate()`：這份資料有七個 column，而且第一列是中文欄位名稱。承上題，請先修改編碼，又因為後續計算需要將幾個欄位轉成數值，所以請將第一列踢掉，接著將`結婚對數`, `結婚登記中外聯姻人數`, `結婚登記中外聯姻男性人數`, `結婚登記中外聯姻女性人數` 從 `character` 變成 `integer`，最後將結果儲存在 `df_109Q4_county_marriage_clean`，並印出 `df_109Q4_county_marriage_clean`（欄位名稱是英文的沒錯）
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 22 x 7
+#>    COUNTY_ID COUNTY MARRY_CP_CNT MARRY_CNT MARRY_M_CNT MARRY_F_CNT INFO_TIME
+#>    <chr>     <chr>         <int>     <int>       <int>       <int> <chr>    
+#>  1 65000     新北市         6529       580         189         391 109Y4S   
+#>  2 63000     臺北市         3856       422         207         215 109Y4S   
+#>  3 68000     桃園市         3986       370         107         263 109Y4S   
+#>  4 66000     臺中市         4837       381         130         251 109Y4S   
+#>  5 67000     臺南市         2706       185          57         128 109Y4S   
+#>  6 64000     高雄市         4139       343         112         231 109Y4S   
+#>  7 10002     宜蘭縣          725        62          11          51 109Y4S   
+#>  8 10004     新竹縣         1003        71          13          58 109Y4S   
+#>  9 10005     苗栗縣          859        75          19          56 109Y4S   
+#> 10 10007     彰化縣         1882       161          32         129 109Y4S   
+#> # … with 12 more rows
+```
+
+3. `arrange()` and `slice()`：請利用 `df_109Q4_county_marriage_clean`，篩選出 109 Q4 結婚對數最多的縣市，最後給我縣市代碼、縣市名稱、結婚對數的 tibble/dataframe
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 1 x 3
+#>   COUNTY_ID COUNTY MARRY_CP_CNT
+#>   <chr>     <chr>         <int>
+#> 1 65000     新北市         6529
+```
+
+4. `filer()` and `arrange()`：請利用 `df_109Q4_county_marriage_clean`，先篩選出台灣六都，接著按照結婚對數由大到小排列，最後給我包含所有欄位的 tibble/dataframe
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 6 x 7
+#>   COUNTY_ID COUNTY MARRY_CP_CNT MARRY_CNT MARRY_M_CNT MARRY_F_CNT INFO_TIME
+#>   <chr>     <chr>         <int>     <int>       <int>       <int> <chr>    
+#> 1 65000     新北市         6529       580         189         391 109Y4S   
+#> 2 66000     臺中市         4837       381         130         251 109Y4S   
+#> 3 64000     高雄市         4139       343         112         231 109Y4S   
+#> 4 68000     桃園市         3986       370         107         263 109Y4S   
+#> 5 63000     臺北市         3856       422         207         215 109Y4S   
+#> 6 67000     臺南市         2706       185          57         128 109Y4S   
+```
+
+5. `mutate()` and `arrange()` and `filter()`：請利用 `df_109Q4_county_marriage_clean`，先增加一個計算各縣市的結婚登記中外聯姻人數中，女性人數佔比的欄位，接著再增加一個欄位計算女性人數佔比的排名(最高為 1)，最後請篩選出聯姻人數女性比例**前三高**的列，並給我縣市代碼、縣市名稱、結婚登記中外聯姻人數、聯姻女性人數、聯姻女性人數比例、聯姻女性比例排名的 tibble/dataframe
+
+提示：你可以查一下[`row_number()`](https://dplyr.tidyverse.org/reference/ranking.html) 在做些什麼
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+### your result should be
+#> # A tibble: 3 x 6
+#>   COUNTY_ID COUNTY MARRY_CNT MARRY_F_CNT MARRY_F_CNT_PER MARRY_F_CNT_RANK
+#>   <chr>     <chr>      <int>       <int>           <dbl>            <int>
+#> 1 09007     連江縣         3           1           0.667                1
+#> 2 63000     臺北市       422         215           0.491                2
+#> 3 10015     花蓮縣        24          14           0.417                3
+```
+
+### B. importing data and data manipulation - excel (50 分) 
+
+本題目利用[台大碩士班考試入學報名人數資料](http://www.aca.ntu.edu.tw/gra/access/acc_mase/aboard-b07.asp?id=9)，原始檔案有 PDF 與 Excel，這邊選擇 Excel 檔案，讓你練習讀取 Excel 檔案以及資料操作。
+
+(1) data importing：請讀取右方路徑的 Excel 檔，路徑為 `data 資料夾 -> Lab04 資料夾 -> 台大_101學年度碩士班考試招生錄取情況一覽表.xls`，並取名為 `df_ntu_exam`。另外提醒一下，這個檔案是 .xls，也就是舊版的 excel 檔案，不是現在較常見的 .xlsx 喔！
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 224 x 20
+#>    口試    簡章代碼 口試比例 系所別 組別  報考人數 ...7  招生名額 ...9  錄取人數
+#>    <chr>   <chr>       <dbl> <chr>  <chr> <chr>    <chr> <chr>    <chr> <chr>   
+#>  1  <NA>   <NA>        NA    <NA>   <NA>  一般     在職  一般     在職  一般    
+#>  2  <NA>   <NA>        NA    總計   <NA>  18474    <NA>  1935     <NA>  1908    
+#>  3  <NA>   <NA>        NA    合計(全部… <NA>  18372    102   1860     75    1876    
+#>  4  <NA>   <NA>        NA    小計(無口… <NA>  11309    26    1251     33    1258    
+#>  5  <NA>   <NA>        NA    小計(有口… <NA>  7063     76    609      42    618     
+#>  6  <NA>   101         NA    中國文學系… <NA>  175      <NA>  17       <NA>  17      
+#>  7 "●\u00… 102          0.25 外國語文學… <NA>  73       <NA>  10       <NA>  10      
+#>  8  <NA>   103         NA    歷史學系… <NA>  127      <NA>  18       <NA>  20      
+#>  9  <NA>   104         NA    哲學系 甲組(主… 6        <NA>  3        <NA>  2       
+#> 10  <NA>   105         NA    哲學系 乙組(主… 23       <NA>  3        <NA>  3       
+#> # … with 214 more rows, and 10 more variables: ...11 <chr>, 錄取情況 <chr>,
+#> #   ...13 <chr>, 錄取最低分數 <chr>, ...15 <chr>, 錄取率 <chr>, ...17 <chr>,
+#> #   備取人數 <chr>, ...19 <chr>, 本校最低門檻 <dbl>
+```
+
+(2) `select()`：台大考試入學的碩士生分為一般組與在職組，請幫我拿掉`在職`相關的欄位。另外，也請幫我拿掉`口試`相關的欄位，完成後印出 tibble/dataframe
+
+提示：你可以先在 Excel 當中打開原始檔案看長相
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 224 x 11
+#>    簡章代碼 系所別 組別  報考人數 招生名額 錄取人數 錄取情況 錄取最低分數 錄取率
+#>    <chr>    <chr>  <chr> <chr>    <chr>    <chr>    <chr>    <chr>        <chr> 
+#>  1 <NA>     <NA>   <NA>  一般     一般     一般     一般     一般         一般  
+#>  2 <NA>     總計   <NA>  18474    1935     1908     缺額29   <NA>         0.103…
+#>  3 <NA>     合計(全部… <NA>  18372    1860     1876     增額14   <NA>         0.102…
+#>  4 <NA>     小計(無口… <NA>  11309    1251     1258     增額7    <NA>         0.111…
+#>  5 <NA>     小計(有口… <NA>  7063     609      618      增額7    <NA>         0.087…
+#>  6 101      中國文學系… <NA>  175      17       17       <NA>     230          0.097…
+#>  7 102      外國語文學… <NA>  73       10       10       <NA>     221.66       0.136…
+#>  8 103      歷史學系… <NA>  127      18       20       同分2    285          0.157…
+#>  9 104      哲學系 甲組(主… 6        3        2        缺額1    202          0.333…
+#> 10 105      哲學系 乙組(主… 23       3        3        <NA>     201          0.130…
+#> # … with 214 more rows, and 2 more variables: 備取人數 <chr>,
+#> #   本校最低門檻 <dbl>
+```
+
+(3) `slice()` or `filter()` or `[,]`：觀察原始檔案可以發現，資料中前幾列包含總計、合計、小計，因為我只想看各系所的招生情況，所以請先依照上題所說，先拿掉`在職`與`口試`相關的欄位，接著幫我抓取**從中國文學系**開始的資料，完成後將結果儲存在 `df_ntu_exam_clean`，最後將 `df_ntu_exam_clean` 印出
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 219 x 11
+#>    簡章代碼 系所別 組別  報考人數 招生名額 錄取人數 錄取情況 錄取最低分數 錄取率
+#>    <chr>    <chr>  <chr> <chr>    <chr>    <chr>    <chr>    <chr>        <chr> 
+#>  1 101      中國文學系… <NA>  175      17       17       <NA>     230          0.097…
+#>  2 102      外國語文學… <NA>  73       10       10       <NA>     221.66       0.136…
+#>  3 103      歷史學系… <NA>  127      18       20       同分2    285          0.157…
+#>  4 104      哲學系 甲組(主… 6        3        2        缺額1    202          0.333…
+#>  5 105      哲學系 乙組(主… 23       3        3        <NA>     201          0.130…
+#>  6 106      人類學系… <NA>  29       8        8        <NA>     334.6000000… 0.275…
+#>  7 107      圖書資訊學… <NA>  42       9        9        <NA>     316          0.214…
+#>  8 108      日本語文學… <NA>  54       12       12       <NA>     263.9700000… 0.222…
+#>  9 109      戲劇學系… 甲組(主… 30       9        7        缺額2    182          0.233…
+#> 10 110      戲劇學系… 乙組(劇… 14       3        1        缺額2    233.66       0.071…
+#> # … with 209 more rows, and 2 more variables: 備取人數 <chr>,
+#> #   本校最低門檻 <dbl>
+```
+
+(4) `filter()`：觀察原始資料後發現，有些系組的報考人數的值為空，請利用 `df_ntu_exam_clean`，幫我找出報考人數值為空的資料有哪些，完成後印出 tibble/dataframe
+
+提示
+
+a. Excel 的空值讀進 R 之後會長什麼樣子
+b. 你很有可能會用到 `is.na()` 這個函數，如果 `NA` 丟進去，會得到 `TRUE`，以外會得到 `FALSE`
+c. `filter()` 的本質就是篩選符合特定條件的列，所以理想上你也可以篩選出報考人數的值為空的列
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 12 x 11
+#>    簡章代碼 系所別 組別  報考人數 招生名額 錄取人數 錄取情況 錄取最低分數 錄取率
+#>    <chr>    <chr>  <chr> <chr>    <chr>    <chr>    <chr>    <chr>        <chr> 
+#>  1 411      醫學檢驗暨… (在職)… <NA>     <NA>     <NA>     <NA>     <NA>         <NA>  
+#>  2 502      土木工程學… 大地工程… <NA>     <NA>     <NA>     <NA>     <NA>         <NA>  
+#>  3 504      土木工程學… 結構工程… <NA>     <NA>     <NA>     <NA>     <NA>         <NA>  
+#>  4 506      土木工程學… 水利工程… <NA>     <NA>     <NA>     <NA>     <NA>         <NA>  
+#>  5 710      國際企業學… 丁組  <NA>     <NA>     <NA>     <NA>     <NA>         <NA>  
+#>  6 803A     職業醫學與… 甲組  <NA>     6        7        <NA>     202.3000000… <NA>  
+#>  7 803B     環境衛生研… 甲組  <NA>     6        7        <NA>     201.8000000… <NA>  
+#>  8 809      公共衛生碩… 甲組(生… <NA>     <NA>     <NA>     <NA>     <NA>         <NA>  
+#>  9 810      公共衛生碩… 乙組(流… <NA>     <NA>     <NA>     <NA>     <NA>         <NA>  
+#> 10 811      公共衛生碩… 丙組(社… <NA>     <NA>     <NA>     <NA>     <NA>         <NA>  
+#> 11 812      公共衛生碩… 丁組(健… <NA>     <NA>     <NA>     <NA>     <NA>         <NA>  
+#> 12 813      公共衛生碩… 戊組(環… <NA>     <NA>     <NA>     <NA>     <NA>         <NA>  
+#> # … with 2 more variables: 備取人數 <chr>, 本校最低門檻 <dbl>
+```
+
+(5) data exporting：請幫我將 `df_ntu_exam_clean` 輸出成 .csv 到 Lab04 資料夾當中，請取名為 `df_ntu_exam_clean.csv`。
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+```
+
+(6) `filter()` and `select()`：請幫我利用 `df_ntu_exam_clean`，篩選出 "新聞研究所" 的資料感嘆一下 101 年的榮景，最後印出新聞所那列的系所、報考人數、招生名額、錄取人數、錄取率的 tibble/dataframe
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 1 x 5
+#>   系所別     報考人數 招生名額 錄取人數 錄取率              
+#>   <chr>      <chr>    <chr>    <chr>    <chr>               
+#> 1 新聞研究所 275      13       14       0.050909090909090911
+```

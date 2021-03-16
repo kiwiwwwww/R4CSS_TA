@@ -77,4 +77,4 @@ Steven 的這篇文章使用的技巧與資源包含
 1+1
 ```
 
-解釋: 加入 include = FALSE 該段 code 會執行，但不會在產出中看到
+解釋: 加入 echo = FALSE 該段 code 會執行，但不會在產出中看到 code，只會看到結果

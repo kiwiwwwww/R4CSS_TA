@@ -1,0 +1,284 @@
+---
+title: "AS03_Know-Your-Data"
+author: "你是誰 R09342000 新聞所碩五"
+date: "2021/03/16"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Know Your Data
+
+這份作業希望能夠讓你熟悉讀取不同檔案型態的資料，並利用 `dplyr` 與 管線運算子操作資料表，讓你可以認識自己要分析的資料！
+
+題目大部分都要求印出 tibble/dataframe，若你的資料是 tibble，直接印出即可，若是 dataframe，請印出前三列即可。
+
+## 作業: Know Your Data
+
+滿分 100 分
+
+### data importing & data manipulation (i) (50 分)
+
+> The world cannot be understood without numbers. But the world cannot be understood with numbers alone.
+
+― Hans Rosling, Factfulness (漢斯・羅斯林，《真確》)
+
+[GapMinder Foundation](https://www.gapminder.org/tools/#$chart-type=bubbles) 是一個致力於「利用統計數字理解世界上各個國家社會、經濟、環境發展」的基金會，除了開發軟體視覺化呈現前述的統計數字以外，他們也將蒐集到的資料公開上網。
+
+若你對他們做的事情有興趣，可以先看這一篇介紹文 [如何用 30 秒了解台灣發展與全球趨勢：用 GapMinder 培養正確世界觀](https://leemeng.tw/gapminder.html)。但跟文中所說不同的是，現在 GapMinder Foundation 已經有提供台灣的資料了！因此，底下我們將利用 R 語言，來探索這份資料。
+
+1. data importing and renaming columns: 
+請讀取請右方路徑的 csv 檔，路徑為 `data 資料夾 -> AS03 資料夾 -> gapminder_raw.tsv`，並取名為 `df_gapminder_raw`。這個檔案是 tsv 而非 csv，而且它的欄位名稱 (column names) 遺失了，請小心謹慎！將檔案讀進來之後，請依序更改 `df_gapminder_raw` 的欄位名稱成 country, continent, year, lifeExp(預期壽命), pop(人口數), gdpPercap(人均GDP)，括弧內是我的說明，請用英文命名欄位即可，最後印出改名後的`df_gapminder_raw`
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be
+#> # A tibble: 1,704 x 6
+#>    country     continent  year lifeExp      pop gdpPercap
+#>    <chr>       <chr>     <dbl>   <dbl>    <dbl>     <dbl>
+#>  1 Afghanistan Asia       1952    28.8  8425333      779.
+#>  2 Afghanistan Asia       1957    30.3  9240934      821.
+#>  3 Afghanistan Asia       1962    32.0 10267083      853.
+#>  4 Afghanistan Asia       1967    34.0 11537966      836.
+#>  5 Afghanistan Asia       1972    36.1 13079460      740.
+#>  6 Afghanistan Asia       1977    38.4 14880372      786.
+#>  7 Afghanistan Asia       1982    39.9 12881816      978.
+#>  8 Afghanistan Asia       1987    40.8 13867957      852.
+#>  9 Afghanistan Asia       1992    41.7 16317921      649.
+#> 10 Afghanistan Asia       1997    41.8 22227415      635.
+#> # … with 1,694 more rows
+```
+
+2. detecting NAs: `df_gapminder_raw` 當中有 missing value 嗎？請利用程式碼研究每個欄位的 missing value 情形，回報哪些國家的哪些欄位有 missing value，並請闡述你認為該怎麼處理這些 missing value ，要手動補上嗎？要直接把有 missing value 的列都踢掉嗎？還是計算相關欄位再踢掉？最後將你處理過 missing value 的結果(如果你認為都不用動，就不用動沒關係)儲存在 `df_gapminder_clean` 中並將它印出
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+
+
+### your result should be
+# 不一定，看你怎麼處理資料
+
+### your text (把文字描述寫在 code chunk 中)
+
+# 範例答案：我覺得 missing value 看了令人很不舒服，數值變數應該都改成 88 比較吉利，數值變數以外都應該改成 "others"
+```
+
+3. checking on Taiwan: 利用 `df_gapminder_clean` 篩選出台灣的資料，請用文字描述你的觀察，你看到什麼趨勢？
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be
+#> # A tibble: 12 x 6
+#>    country continent  year lifeExp      pop gdpPercap
+#>    <chr>   <chr>     <dbl>   <dbl>    <dbl>     <dbl>
+#>  1 Taiwan  Asia       1952    58.5  8550362     1207.
+#>  2 Taiwan  Asia       1957    62.4 10164215     1508.
+#>  3 Taiwan  Asia       1962    65.2 11918938     1823.
+#>  4 Taiwan  Asia       1967    67.5 13648692     2644.
+#>  5 Taiwan  Asia       1972    69.4 15226039     4063.
+#>  6 Taiwan  Asia       1977    70.6 16785196     5597.
+#>  7 Taiwan  Asia       1982    72.2 18501390     7426.
+#>  8 Taiwan  Asia       1987    73.4 19757799    11055.
+#>  9 Taiwan  Asia       1992    74.3 20686918    15216.
+#> 10 Taiwan  Asia       1997    75.2 21628605    20207.
+#> 11 Taiwan  Asia       2002    77.0 22454239    23235.
+#> 12 Taiwan  Asia       2007    78.4 23174294    28718.
+
+### your text
+
+```
+
+4. grouping and aggregating: 利用 `df_gapminder_clean` 計算各洲的平均預期壽命。務必在計算時考慮該如何處理 missing value，如果你前面選擇留著，這邊要留著嗎，如果你前面刪掉，對你現在的運算會有影響嗎？請先印出結果的 tibble/dataframe ，並用文字說明理由
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be
+# 看你怎麼處理 missing value，結果會有不同
+
+### your text
+
+# 範例：如前所述，我把數值變數的 missing value 都變成 88，在取平均的時候會有影響，感覺不是好事，但我懶得改
+```
+
+5. creating variables and ordering: 請先計算**亞洲**各國 1972 年的總額 GDP (人口數 x 人均GDP)，再依照預期壽命**由大到小**排列，最後印出國家、總額 GDP、預期壽命三個欄位的 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be
+# 看你怎麼處理 missing value，結果會有不同
+```
+
+6. subsetting: 請先篩選出歐洲各國**各自人口最多**的年份(e.g. A國 1992 年的人口多於 2007, 2002, etc.，因此留下 A國 1992 年的資料)，接著再依照預期壽命篩選出最高的十個國家(e.g. A國 1992年人口最多, B國 2002年的人口最多，比較兩國這兩年各自的預期壽命)，然後依照國家名稱由 A 到 Z 排列，最後印出國家、年份、預期壽命、人口數的 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be
+# 看你怎麼處理 missing value，結果會有不同
+```
+
+7. in-group comparing: 比較各國 1992 年和 2007 年的預期壽命差距，接著留下**各洲中**預期壽命差距最大與最小的國家，最後印出洲、國家、預期壽命差距的 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be
+# 看你怎麼處理 missing value，結果會有不同
+```
+
+
+### data importing & data manipulation (ii) (50 分)
+
+PTT 上面有好幾個和影集(drama)有關的子板(board)，下方提供 03/02 當天所抓取的相關資料，請載入這份資料後回答問題。
+
+1. data importing: 請讀取請右方路徑的 csv 檔，路徑為 `data 資料夾 -> AS03 資料夾 -> df_main_clean.csv`，取名為 `df_main_clean`後印出
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 1,457 x 10
+#>    board  type   title   date       comments author  text      IP       link    
+#>    <chr>  <chr>  <chr>   <date>        <dbl> <chr>   <chr>     <chr>    <chr>   
+#>  1 Korea… [公告] Fw: [公… 2021-01-18       20 XDDDD5… "┌──┬│┌─… "※ 發信站:… https:/…
+#>  2 Korea… [新聞] [新聞] 柳… 2021-01-18        5 jinyi … "演員柳惠英被提… "※ 發信站:… https:/…
+#>  3 Korea… [閒聊] [閒聊]  … 2021-01-18      101 jay947… "花了幾個週末把… "※ 發信站:… https:/…
+#>  4 Korea… [新聞] [新聞] 孫… 2021-01-18        9 jinyi … "據多名電視臺相… "※ 發信站:… https:/…
+#>  5 Korea… [LIVE] [LIVE]… 2021-01-18      249 kawasa… "前輩，那支口紅… "※ 發信站:… https:/…
+#>  6 Korea… [LIVE] [LIVE]… 2021-01-18      406 tcchen… "劇名:▁▁▁▁… "※ 發信站:… https:/…
+#>  7 Korea… [LIVE] [LIVE]… 2021-01-18       80 diana8… "───────… "※ 發信站:… https:/…
+#>  8 Korea… [心得] [心得] 惡… 2021-01-18       28 analyt… "最後一集到底來… "※ 發信站:… https:/…
+#>  9 Korea… [求薦] [求薦] 想… 2021-01-18      214 greenb… "1.重刷doc… "※ 發信站:… https:/…
+#> 10 Korea… <NA>   看完13集驅… 2021-01-19       35 patty6… "不知道各位大大… "※ 發信站:… https:/…
+#> # … with 1,447 more rows, and 1 more variable: time <dttm>
+```
+
+2. counting: 這份資料來自好幾個不同的子板 e.g. 韓劇版，請問各子板各有多少篇文章？請印出 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 4 x 2
+#>   board           n
+#> * <chr>       <int>
+#> 1 China-Drama   361
+#> 2 EAseries      383
+#> 3 KoreaDrama    369
+#> 4 TaiwanDrama   344
+```
+
+3. aggregating: 每個子板最多留言的文章是哪些？請摘要出各板擁有最多留言文章的 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 4 x 2
+#>   board       comments_max
+#> * <chr>              <dbl>
+#> 1 China-Drama          825
+#> 2 EAseries            1499
+#> 3 KoreaDrama          1498
+#> 4 TaiwanDrama         1413
+```
+
+4. in-group mutating: 請先增加一個每個子板留言總數的欄位，接著計算每篇文章的留言數佔它所屬的子板留言總數的比例，請印出板名、留言數、子板留言總數、留言數佔子板留言總數比例的 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 1,457 x 4
+#> # Groups:   board [4]
+#>    board      comments comments_all comments_per
+#>    <chr>         <dbl>        <dbl>        <dbl>
+#>  1 KoreaDrama       20        61846    0.000323 
+#>  2 KoreaDrama        5        61846    0.0000808
+#>  3 KoreaDrama      101        61846    0.00163  
+#>  4 KoreaDrama        9        61846    0.000146 
+#>  5 KoreaDrama      249        61846    0.00403  
+#>  6 KoreaDrama      406        61846    0.00656  
+#>  7 KoreaDrama       80        61846    0.00129  
+#>  8 KoreaDrama       28        61846    0.000453 
+#>  9 KoreaDrama      214        61846    0.00346  
+#> 10 KoreaDrama       35        61846    0.000566 
+#> # … with 1,447 more rows
+```
+
+5. subsetting and comparing: "2021-02-23"到"2021-03-01"之間(包含這兩天)，哪個板的文章數量最多？請印出板名、文章數的 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 1 x 2
+#>   board        n
+#>   <chr>    <int>
+#> 1 EAseries    56
+```
+
+6. advanced - in-group subsetting: 請找出各板中"發文數量最多的一天"當天"留言數前兩多"的文章，請印出板名、標題、日期、留言數的 tibble/dataframe
+
+提示：你可以用 `row_number()`
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 172 x 4
+#> # Groups:   date [91]
+#>    board       title                                         date       comments
+#>    <chr>       <chr>                                         <date>        <dbl>
+#>  1 China-Drama [新聞]鄭爽被罵翻後首錄影 網傳將已錄好引退聲明 2021-01-20      825
+#>  2 China-Drama [討論] 鄭爽有演，還沒播出的影劇會收到影響嗎？ 2021-01-20      732
+#>  3 China-Drama [Live] 上陽賦 58-63 超前點播                  2021-02-17      707
+#>  4 China-Drama Re: [心得] 到底該不該推薦有翡                 2020-12-26      606
+#>  5 China-Drama [問題] 陳情令到第幾集開始好看?                2020-12-17      592
+#>  6 China-Drama [Live] 斗羅大陸 EP6-11 兄妹                   2021-02-07      537
+#>  7 China-Drama [求薦] 終極筆記後該看哪個？                   2021-02-09      530
+#>  8 China-Drama [新聞]《陳情令》爆下架危機!網曝4重點…審查卡   2021-01-25      529
+#>  9 China-Drama [Live] 斗羅大陸 EP28-33 超前點播              2021-02-15      449
+#> 10 China-Drama [心得] 到底該不該推薦有翡                     2020-12-24      444
+#> # … with 162 more rows
+```
+
+7. advanced - transforming variables and counting: 文章類型(type)非常多樣，譬如"[心得]", "[閒聊]" 等，請保留"[心得]"、"[閒聊]"、"[新聞]"、"[情報]"，並將"[LIVE]"與"[Live]"合併成"[LIVE]"，剩下其他種類或是 missing value 都改成"[其他]"，修改後再計算各板的文章類型**比例**(百分比)，最後按照每個版的名稱由 A 到 Z、比例由大到小排列，並印出板名、類型、類型文章數、類型文章數占比的 tibble/dataframe
+
+提示：你可以查一下 `case_when()` 的用法，或是你想要用 `ifelse()` 或者 `if_else()` 都行
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+### your result should be 
+#> # A tibble: 23 x 4
+#>    board       type       n      per
+#>    <chr>       <chr>  <int>    <dbl>
+#>  1 China-Drama [LIVE]    45 0.0309  
+#>  2 China-Drama [其他]    57 0.0391  
+#>  3 China-Drama [心得]   128 0.0879  
+#>  4 China-Drama [情報]    12 0.00824 
+#>  5 China-Drama [新聞]     9 0.00618 
+#>  6 China-Drama [閒聊]   110 0.0755  
+#>  7 EAseries    [其他]    91 0.0625  
+#>  8 EAseries    [心得]   109 0.0748  
+#>  9 EAseries    [情報]     1 0.000686
+#> 10 EAseries    [新聞]   123 0.0844  
+#> # … with 13 more rows
+```
+

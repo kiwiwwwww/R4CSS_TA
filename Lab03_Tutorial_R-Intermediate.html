@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lab03_R-Intermediate_Tutorial</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="曾子軒 Dennis Tseng" />
+    <script src="libs/header-attrs-2.6/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lab03_R-Intermediate_Tutorial
+## for loop, if else, functions, and others
+### 曾子軒 Dennis Tseng
+### 台大新聞所 NTU Journalism
+### 2021/03/09
+
+---
+
+&lt;style type="text/css"&gt;
+
+.remark-slide-content {
+    padding: 1em 1em 1em 1em;
+    font-size: 28px;
+}
+
+.my-one-page-font {
+  padding: 1em 1em 1em 1em;
+  font-size: 20px;
+  /*xaringan::inf_mr()*/
+}
+
+&lt;/style&gt;
+
+
+
+# 今日重點
+
+- Path, Directory, and R Project
+- 遇到 R 問題怎麼辦
+- 流程控制
+ - 條件判斷 if else
+ - 迴圈 for loop
+ - 函數 functions
+- 複習 dataframe 操作與小延伸
+
+---
+# Path (路徑) and Directory (目錄)
+
+- Path, 資料夾的地址
+ - 我剛剛在`"台大新聞所四樓的 415 研究室裡面的沙發上睡覺"`
+ - **absolute path 絕對路徑**，以上面的例子來說，因為你們不在 415 教室，所以我會用完整的地址`"台大新聞所四樓的 415 研究室裡面的沙發上"`描述我的位置，這是"絕對"的地址
+ - **relative path 相對路徑**，以上面的例子來說，如果有同學剛剛也在 415 教室裡面，我就會跟他說我在`"沙發上"`，因為同學已經在那個空間了，這是"相對"的地址
+- 實際案例
+ - `"/Users/dennistseng/Documents/R4CSS-TA/data/Lab03/ARG.csv"`
+ - `"data/Lab03/ARG.csv"`
+---
+# Path (路徑) and Directory (目錄)
+
+- Directory, 現在在哪個資料夾
+ - 舉例來說，我剛剛在的地方是 415 教室
+ - working directory 代表你的 R 運行時讀檔案的起始位置
+- 尋找自己的 directory
+ - `getwd()`
+ - `setwd()`
+ - 缺點是 not self-contained, not portable
+ - 別人不方便協作、資料夾變動不好恢復、同時有多專案進行時會混亂
+
+---
+# R Project (R 專案)
+
+- R project, R 專案
+ - 使用 R 專案有很多好處，其中之一在於讓你的**環境**保持乾淨
+ - 環境指的是 environment，A 專案的變數不會跟 B 專案的變數打架，譬如兩邊都有 `df_country` 但內容不同
+ - 打開 R4CSS_TA 裡面的 R4CSS_TA.Rproj 
+ - 我寫 `read_csv("data/Lab03/ARG.csv")` 上傳 Github，下載後不用改路徑，但若寫 `"Users/子軒/碩一/學校事務/不想寫程式/R語言/R4CSS_TA/data/Lab03/ARG.csv"` 別人就沒辦法用
+ - working directory 就會是R project 檔案所在的資料夾 
+ 
+---
+# R Project (R 專案)
+
+&lt;img src="photo/Lab03_rproj01.jpg" width="45%" height="45%" /&gt;&lt;img src="photo/Lab03_rproj02.jpg" width="45%" height="45%" /&gt;
+---
+# R Project (R 專案)
+
+- GOOD
+&lt;img src="photo/Lab03_rproj03.jpg" width="100%" height="100%" /&gt;
+
+- BAD
+&lt;img src="photo/Lab03_rproj04.jpg" width="100%" height="100%" /&gt;
+---
+# 遇到 R 問題
+
+- 題目
+ - 請印出 `df_first20` 中編號(patient_id)為奇數者的確診日期(released_date)
+- 問題
+ - 要怎麼抓 dataframe 裡面的值
+ - 要怎麼抓奇數
+
+---
+# 遇到 R 問題
+
+- 知道關鍵字: [stackoverflow](https://stackoverflow.com/questions/7448881/how-to-access-single-elements-in-a-table-in-r)
+ - ` r your problem site:stackoverflow.com`
+ - `R dataframe element site:stackoverflow.com`
+ - result `How to access single elements in a table in R`
+- 不知道關鍵字: 先在 google 打大方向
+ - [`R dataframe tutorial`](http://www.r-tutor.com/r-introduction/data-frame)
+-  不知道關鍵字: 中英電子書看章節名稱與標題
+ - [`輕鬆學習 R 語言`](https://yijutseng.github.io/DataScienceRBook/manipulation.html#subset)
+ - [`R 資料科學與統計`](https://bookdown.org/jefflinmd38/r4biost/dataobject.html#%E8%B3%87%E6%96%99%E6%A1%86%E6%9E%B6%E7%9A%84%E4%B8%8B%E6%A8%99%E8%88%87%E7%B4%A2%E5%BC%95-data-frame-index)
+- 不知道關鍵字: 看 Datacamp 的時候留意標題
+ - [Introduction to R](https://campus.datacamp.com/courses/free-introduction-to-r/chapter-5-data-frames?ex=6)
+ - `Selection of data frame elements`
+
+---
+# Control Flow 流程控制
+
+- 為達到特定目的，在執行大量程式碼的過程中，需要指引優先順序、依照不同條件走不同流程，有時也需要重複執行步驟等
+- 以網路資料擷取(爬蟲)為例，在爬 [PTT 韓劇版](https://www.ptt.cc/bbs/KoreaDrama/index.html) 上面的資料的時候
+ - 一次要抓 10 頁，每頁都有 20 篇文章
+ - 只想抓 `[LIVE]` 類型的相關文章，其餘跳過
+ - 抓得到文章索引，但點進去發現內容違規被刪除
+ - 若抓滿 20 篇相關文章便結束運行
+- 利用**分支 branch** 與**迭代 iteration** 完成任務
+ - 重複執行步驟
+ - 條件判斷, 特殊狀況/錯誤排除, 觸發特定事件後中止
+ - 分支靠條件判斷(if else)迭代靠迴圈(for loop)
+
+---
+
+# 條件判斷 conditional statement
+
+- 如果、要不然
+ - `if (條件) { 滿足條件後執行 }`	
+ - `if (條件) { 滿足條件則執行 } else { 不滿足條件則執行 }`
+ - `if (條件) { 滿足條件則執行 } else if { 滿足條件則執行 } else { 不滿足條件則執行 }`
+- 實例
+
+```r
+n_quota &lt;- 10;n_apply &lt;- 20
+if (n_quota &gt; n_apply) {
+  print("供 &gt; 需")
+} else if (n_quota == n_apply) {
+  print("供 = 需")
+} else {
+  print("供 &lt; 需")
+}
+```
+
+---
+
+# 條件判斷 conditional statement
+
+- 條件判斷
+
+```r
+# +, -, x, /; 加減乘除
+1+1 &gt; 1
+# %%, %/%; 餘數與商數
+11 %% 3
+11 %/% 3
+# &gt;, &lt;, ==, !=
+3 == 2
+3 != 2
+```
+
+---
+
+# 條件判斷 conditional statement
+
+- 條件判斷
+
+```r
+# &amp;, |: for 向量
+c(1,3,-4) &gt; 0 &amp; c(-1,2,4) &lt; 0
+c(1,3,-4) &gt; 0 | c(-1,2,4) &lt; 0 
+
+# &amp;&amp;, ||: for 單一值
+2 &gt; 0 &amp;&amp; -1 &lt; 0
+3 &gt; 0 || 1 &lt; 0 
+
+c(1,3) &gt; 0 &amp;&amp; c(-1,2) &lt; 0
+c(1,3) &gt; 0 &amp;&amp; c(2,-1) &lt; 0
+
+# %in%, ==
+3 %in% c(1,2,3,4,5) 
+c(1,3,6) %in% c(1,2,3,4,5) 
+c(1,3,6) == c(1,2,3,4,5) 
+```
+---
+
+# 條件判斷 conditional statement
+
+- 實際例子(i): 印出月份
+
+```r
+print_month_bad &lt;- function(input_date) {
+  input_date &lt;- as.Date(input_date)
+  print(months(input_date))
+}
+
+print_month_bad("2021-03-09")
+print_month_bad(20210309)
+```
+
+---
+
+# 條件判斷 conditional statement
+
+- 實際例子(ii): 加上輸入值的檢驗
+
+```r
+print_month_good &lt;- function(input_date) {
+  if(!is.character(input_date)) {
+    print("請依照 '1997-01-01' 格式輸入")
+  } else {
+    input_date &lt;- as.Date(input_date)
+    print(months(input_date))
+  }
+}
+
+print_month_good("2021-03-09")
+print_month_good(20210309)
+```
+
+---
+
+# 條件判斷 conditional statement
+
+- 實際例子(ii): 它不夠好
+
+```r
+# ok
+print_month_good("2021-03-09")
+print_month_good(20210309)
+# not ok
+print_month_good("20210309")
+```
+
+---
+# 條件判斷 conditional statement
+
+- 實際例子(iii): 離完美更近一些 using `library(lubridate)`
+
+```r
+library(lubridate)
+print_month_better &lt;- function(input_date) {
+  input_date &lt;- lubridate::as_date(input_date)
+  if(is.na(input_date)) {
+    print("請依照 '1997-01-01' 格式輸入")
+  } else {
+    print(lubridate::month(input_date))
+  }
+}
+# ok
+print_month_better("2021-03-09");print_month_better("20210309")
+print_month_better("420210309")
+# not ok...
+print_month_better(20210309)
+```
+
+---
+# [library(lubridate)](https://lubridate.tidyverse.org/)
+
+
+```r
+library(lubridate)
+ymd("20110604");mdy("06-04-2011");dmy("04/06/2011");
+```
+
+```
+## [1] "2011-06-04"
+```
+
+```
+## [1] "2011-06-04"
+```
+
+```
+## [1] "2011-06-04"
+```
+
+```r
+mdy("May 11, 1996");mdy("September 12  2001");dmy("1/July/1988")
+```
+
+```
+## [1] "1996-05-11"
+```
+
+```
+## [1] "2001-09-12"
+```
+
+```
+## [1] "1988-07-01"
+```
+
+---
+# library(lubridate)
+
+- 處理日期與時間
+- Datacamp 上專門教這個的課 [Working with Dates and Times in R
+](https://learn.datacamp.com/courses/working-with-dates-and-times-in-r)
+- 最常見的函數 `ymd_hms("2010-12-13 15:30:30")`
+- 換算時區、計算時間間隔(duration, interval, period)
+- 日期與時間的加減乘除、年月日的特殊運算 e.g. `ceiling_date()`
+- 日期可以跟數值轉換 e.g. `as.numeric(as_date("1997-01-01"))`
+---
+
+# 條件判斷 conditional statement
+
+- `if (條件) { 滿足條件則執行 } else if { 滿足條件則執行 } else { 不滿足條件則執行 }`
+- 由 `if else` 語句、`T, F` 條件所組成
+- 用途
+ - 滿足特定條件則執行特定程式碼
+ - 寫函數時的例外處理
+ - 迴圈當中有時候跳過特定情況
+
+---
+# For loop 迴圈
+
+- 迴圈的長相
+
+
+```r
+vec &lt;- c(1,4,9)
+for (i in 1:length(vec)) {
+  print(vec[i] + 10)
+}
+```
+
+```
+## [1] 11
+## [1] 14
+## [1] 19
+```
+---
+# For loop 迴圈
+
+- 解釋
+ - 從 1 開始，印出 "向量 `vec` 當中第 i 個元素" + 10 的結果，持續此步驟直到向量 `vec` 的長度結束
+
+
+```r
+vec &lt;- c(1,4,9)
+for (i in 1:length(vec)) {
+  print(vec[i] + 10)
+}
+```
+
+---
+# For loop 迴圈
+
+- 解釋
+ - 從 1 開始，判斷 "向量 `vec` 當中第 i 個元素" 的奇偶，若為奇數印出 "good"，偶數則印出 "bad"，持續此步驟直到向量 `vec` 的長度結束
+
+
+```r
+vec &lt;- c(1,4,9)
+for (i in 1:length(vec)) {
+  if(vec[i] %% 2 == 1) {
+    print("good")
+  } else {
+    print("bad")
+  }
+}
+```
+
+---
+# For loop 迴圈
+
+- 解釋
+ - 各自從 i = 1 與 j = 1 開始，判斷 "向量 `vec_01` 中第 i 個元素" 與 "向量 `vec_02` 中第 j 個元素" 差值的奇偶，若為奇數印出 "good"，偶數則印出 "bad"，持續此步驟直到向量 `vec_02` 的長度，依次類推，直到向量 `vec_01` 最後一值也完成同樣流程
+
+
+```r
+vec_01 &lt;- c(1,4,9)
+vec_02 &lt;- c(2,4)
+for (i in 1:length(vec_01)) {
+  for (j in 1:length(vec_02)) {
+    if(vec_01[i]-vec_02[j] %% 2 == 1) {
+      print("good")
+    } else {
+      print("bad")
+    }
+  }
+}
+```
+
+---
+# For loop 迴圈
+
+- 迴圈的構成元素
+ - `for` 語句 與 `{}`
+ - 開始到結束，通常都用 `i` 開始到 `length()` 結束，也可以寫死
+ - 裡面常常會用到第 i 個元素，也就是 `vector[i]` 的寫法
+ - 可以寫不只一層，想寫兩層三層都可以
+- 迴圈的其他寫法
+ - `while`
+ - `break`
+ - `next`
+
+---
+# while and others
+
+- 只要條件為 `T` 就會一直執行
+
+```r
+x &lt;- 1
+y &lt;- 5
+while (x &lt;= y) {
+  print("good")
+  x &lt;- x + 1
+}
+```
+
+
+---
+# while and others
+
+- 用 `next` 跳過某次
+- 用 `break` 跳出所有
+
+```r
+now &lt;- 1
+destination_A &lt;- 8;destination_B &lt;- 9
+while (now &lt;= destination_B) {
+  if(now == 4) {
+    now &lt;- now + 1
+    next
+  }
+  else {
+    if(now == destination_A) {break}
+    print(stringr::str_c("電梯", now, "樓"))
+  }
+  now &lt;- now + 1
+}
+```
+
+---
+# 迴圈 for loop and while
+
+- `for (i in 開始:結束) { 重複的程式碼 }`
+- `for, while, break, next, repeat`
+- 重複的程式碼內部也可以寫條件判斷
+- 用途
+ - 就是不斷重複做某些事
+
+---
+
+# 寫函數
+
+- Datacamp 上的 [Introduction to Writing Functions in R
+](https://learn.datacamp.com/courses/introduction-to-writing-functions-in-r)
+- 為什麼要寫函數: DRY, [Do not Repeat Yourself](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
+ - 把很多行程式碼組成有意義的區塊
+ - 有了函數之後，就算有些值改變，只需要更改使用者輸入的參數即可
+ - 避免複製貼上時出錯
+- 時機若對就要自己寫函數: 當你一直複製貼上的時候
+- 寫函數的步驟
+ - 思考你想透過這個函數達成什麼，通常就是複製貼上的部分
+ - 想一個合適貼切而且易懂的名字，不要寫 `function_01()`
+ - 列出使用者輸入的參數，放在 `function(){}` 的括號裡面
+ - 列出函數內部的運作，放在 `function(){}` 的中括號裡面
+
+---
+
+# 寫函數
+
+- 一個不那麼生活化的例子，但很易懂
+- 你有個特殊的運算需求，但沒人寫過相關函數
+
+```r
+ten_time_add_two &lt;- function(x){
+  y = x * 10 + 2
+  print(y)
+}
+
+ten_time_add_two(1)
+```
+
+```
+## [1] 12
+```
+
+---
+
+# 寫函數
+
+- 一個生活化的例子
+- 你有個特殊的評論需求，但沒人寫過相關函數
+
+```r
+bad_reply &lt;- function(name_seller){
+  value_bad &lt;- "真的很差勁"
+  stringr::str_c(name_seller, value_bad)
+}
+
+bad_reply("賣家b04701103")
+```
+
+```
+## [1] "賣家b04701103真的很差勁"
+```
+
+```r
+bad_reply(c("賣家b04701103","賣家r09342011","賣家ooxx"))
+```
+
+```
+## [1] "賣家b04701103真的很差勁" "賣家r09342011真的很差勁"
+## [3] "賣家ooxx真的很差勁"
+```
+
+---
+
+# 寫函數 - 注意事項
+
+- 取名字
+ - 不要太長也不要太短 e.g. `g()`, `first_add3_then_time10()`
+ - 不要沒意義 e.g. `elegant_function()`
+ - 不要不一致 e.g. `get_second()` &amp; `GET.THIRD()`
+ - 相同開頭(prefix) 為佳 e.g. `remove_second()` &amp; `remove_third()` 
+ - 不要惡搞已經有的函數 e.g. `sum &lt;- function(x){mean(x)}`
+- 參數 argument 
+ - 使用者輸入的東西跟你想得很不一樣
+ - 你希望輸入是日期但可能會有數字、字串等等
+ - 可以加上 `if else` 語句判斷後再執行以免出錯
+ - 可以不只一個 argument，也可以有預設值
+
+---
+
+# 寫函數 - 注意事項
+
+
+```r
+bad_reply &lt;- function(name_seller, score = 1, value_bad = "真的很差勁"){
+  if(!is.integer(score)){
+    print("請重新輸入: score 為 1 - 5 的正整數")
+  } else {
+  stringr::str_c(name_seller, value_bad, " 怒給", score, "星")
+  }
+}
+
+bad_reply("賣家b04701103", score = 2)
+bad_reply("賣家r09342011", "沒有誠信")
+bad_reply("賣家ooxx", score = 1.2)
+bad_reply("賣家ooxx", score = "爛")
+```
+
+---
+# 寫函數 - 注意事項
+
+- 環境
+ - global, 整個大環境
+ - local, 函數裡面的環境, 不影響大環境
+
+
+```r
+y = 1
+add_five &lt;- function(x){y = x + 5; return(y)}
+add_five(3)
+```
+
+```
+## [1] 8
+```
+
+```r
+y
+```
+
+```
+## [1] 1
+```
+
+---
+
+# 寫函數 - 注意事項
+
+- 最重要的就是 Do not Repeat Yourself 同時也避免複製貼上出錯
+- 名字要好好取，要有意義、有一致性、不要太長也不要太短
+- 參數可以有很多個，也可以有預設值
+- 使用者輸入的跟你想的可能不一樣，可能需要處理例外的 branch
+- 函數的環境跟整個大環境是分開的
+
+---
+
+# dataframe 操作
+
+- 取特定列
+ - base R: `[,]`, `head()` and `tail()`
+ - tidyverse: `slice_**()`
+  - `slice()`, `slice_head()`, `slice_tail()`, `slice_sample()`
+- 取特定欄
+ - base R: `[,]`
+ - tidyverse: `select()` (next week)
+- 列與欄的合併
+ - base R: `rbind()` and `cbind()`
+ - tidyverse: `bind_rows()` and `bind_cols()`
+
+---
+
+# dataframe 列操作
+
+- base R
+
+```r
+df_head &lt;- head(iris, 1)
+df_several &lt;- iris[c(1:3), ]
+df_last &lt;- tail(iris, 1)
+rbind(df_head, df_last)
+rbind(df_head, df_several)
+```
+
+- tidyverse
+
+```r
+df_head &lt;- slice_head(iris, n= 1)
+df_several &lt;- slice(iris, 1:3)
+df_last &lt;- slice_tail(iris, n= 1)
+bind_rows(df_head, df_last)
+```
+
+---
+# dataframe 欄操作
+
+- base R
+
+```r
+iris_c12 &lt;- iris[ ,c("Sepal.Length","Sepal.Width")]
+iris_c34 &lt;- iris[ ,c(3:4)]
+iris_c1234 &lt;- cbind(iris_c12,iris_c34)
+```
+
+- tidyverse (next week)
+
+```r
+iris_c12 &lt;- select(iris, Sepal.Length, Sepal.Width)
+iris_c34 &lt;- select(iris, 3, 4)
+iris_c1234 &lt;- bind_cols(iris_c12,iris_c34)
+```
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"self_contained": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
