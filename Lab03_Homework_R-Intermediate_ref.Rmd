@@ -1,0 +1,82 @@
+---
+title: "Lab03_Homework_R-Intermediate_ref"
+author: "曾子軒 Teaching Assistant"
+date: "2021/03/09"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業: R Intermediate
+
+滿分共 100 分。
+
+### A. 用 for loop 讀取多個檔案 (50 分) 
+
+for loop 有許多用途，最常見的用途是寫爬蟲，之後老師上課會談。除此之外，for loop 最重要的用途在於節省時間，舉例來說，它可以幫助我們在短時間內讀取大量檔案。
+
+在 `"data/Lab03/"` 路徑中，共有十個檔案，請撰寫一段程式碼，利用 for loop 讀取所有檔案，並合併至 `df_all`，最後再印出結果。
+
+- hint01: 最簡單暴力的解法是寫十次 `read.csv()/read_csv()`，最後全部 `bind_rows()`，但如果不想寫十次該怎麼辦?
+
+- hint02: 可以搜尋 `dir(path = "")` 跟 `str_c()` 這兩個函數，理解它如何運行
+
+```{r message=FALSE, warning=FALSE}
+### your code
+### 寫作業
+library(tidyverse)
+vector_file_name <- dir(path = "data/Lab03/")
+df_all <- tibble()
+
+for (i in 1:length(vector_file_name)) {
+  df_tmp <- read_csv(str_c("data/Lab03/", vector_file_name[i]))
+  df_all <- df_all %>% bind_rows(df_tmp)
+}
+
+df_all
+dim(df_all)
+```
+
+
+### B. Write your own functions (50 分) 
+
+使用他人開發的套件很方便，但實務上遇到的資料多變，為了達到特定目的，有時候還是需要捲起袖子自己寫函數。
+
+舉例來說，你目前正擔任某堂課的助教，但因為同學的期中考成績太糟，需要調整分數，並給每位同學不同的鼓勵與祝福話語。請你撰寫一個名為 `score_addoil()` 的函數，當老師使用這個函數時，會輸入同學的姓名、原始分數，並會得到一段包含同學姓名、調整後分數、祝福話語的短文。
+
+- 步驟一: 將原始分數開根號後再乘以10，並且**無條件進位到**整數
+- 步驟二: 利用 `vector_addoil` **隨機**產出祝福話語
+- 預期結果舉例:
+ - `score_addoil("子軒", 64)` 會得到 `"子軒，你的期中考分數經過調整後是 80 分，你很棒了"`
+ - `score_addoil("蟹老闆", 90)` 會得到 `"蟹老闆，你的期中考分數經過調整後是 95 分，在我心中你是第一名"`
+ - `score_addoil("古德", 50)` 會得到 `"古德，你的期中考分數經過調整後是 71 分，我很看好你喔"`
+
+因為是隨機產生，所以你的函數產出結果的祝福話語可能會和上面不一樣。下方提供一些提示讓你參考:
+
+- hint01: 把字拼起來一樣會用到 `str_c()` 這個函數, 隨機可以參考 `sample()` 這個函數
+- hint02: 記得要無條件進位！
+
+```{r}
+vector_addoil <- c("你很棒了", "相信你可以的", "就快搞定了", "我知道你盡力了", "不輟喔", 
+                   "別給自己太多壓力", "我挺你", "我很看好你喔", "在我心中你是第一名")
+### your code
+score_addoil <- function(name, score_original){
+  score_new <- ceiling(score_original^(0.5)*10)
+  value_addoil <- sample(vector_addoil, 1)
+  print(str_c(name, "，你的期中考分數經過調整後是 ", score_new, " 分，", value_addoil))
+}
+
+score_addoil("子軒", 64)
+score_addoil("蟹老闆", 90)
+score_addoil("古德", 50)
+```
+

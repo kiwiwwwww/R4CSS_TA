@@ -1,0 +1,281 @@
+---
+title: "AS02_R-Intermediate"
+author: "曾子軒 Teaching Assistant"
+date: "2021/03/09"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: R-Intermediate
+
+這份作業希望能夠讓你熟習於在 R 裡面的流程控制(control flow)，主要練習條件判斷與迴圈，並實際撰寫函數，題目共有三題。
+
+第一題希望你用條件判斷和迴圈拼出一段程式碼，題目敘述看起來有些荒謬，但現實世界中有可以對應、正常一些的例子。
+
+第二題則是將第一題改寫成函數，這樣的過程在後面擷取網頁資料時會用到，舉例來說，你可能想抓 PTT 上 NTUCourse 板上的資料，第一次你寫了一個迴圈，半個月之後你想抓 KoreaDrama 板上的資料，所以改寫之前的程式碼，或者乾脆重新寫了一次，若相同的過程不斷重複，將前面的程式碼改寫成函數，就是相對較有效率的做法。
+
+第三題和前兩題無關，希望你寫一個輸入日期、輸出星座的函數，利用 Yahoo 或 Google Search 其實就可以搜到很多類似功能的網站，但現在的你也完全有能力寫出相同的東西。
+
+希望你在實作的過程中有所學習，雖然遇到 error 或卡住的時候會心情很悶，但這種壓力可以刺激成長，如同《一流的人如何保持顛峰》所說，在成為頂尖高手的路上需要拼搏(努力)，而拼搏需要面對建設性挫敗（productive failure），而非讓人愉悅的練習，希望在這份作業中你越挫越勇，並且記得休息唷
+
+## 作業: R-Intermediate
+
+滿分 120 分，超過 100 分會以實際分數登記 e.g. 118 分。
+
+### for loop & conditional statement (40 分)
+
+有位同學小軒非常偏食，又會因為某些原因恣意的拒吃某些店家。請依照小軒的飲食禁忌，利用迴圈與條件判斷，印出一週中每天各自小軒**會吃**的店家。
+
+- 飲食條件一: 若當天為週間的奇數日(週一、週三、週五)，僅吃名稱長度為奇數的店家
+- 飲食條件二: 若當天為週間的偶數日(週二、週四)，僅吃名稱中包含"水餃"的店家
+- 飲食條件三: 若當天為週六，僅吃名稱中包含"館"的店家
+- 飲食條件四: 若當天為週日，小軒節食都不吃，請印出**一次**"週日小軒都不吃"
+
+上面的條件看來有些複雜，下方提供提示:   
+
+- 本題可以利用雙層迴圈   
+- 判斷店名長度可以利用`str_length()`函數，像是`str_length("小軒")` 的結果是 2   
+- 判斷店名是否包含特定字詞，可以利用正規表達式，之後會教學，可以先用 `str_detect(字串, "關鍵字")`判斷，舉例來說，`str_detect("信陽麵館", "館")` 會得到 TRUE   
+- 最後一部分(印出**一次**"週日小軒都不吃")相對困難，可以想一下要怎麼不多印幾次，譬如利用條件判斷式 
+- 若用`str_detect()`，記得先安裝 `tidyverse` or `stringr`後載入套件
+
+```{r message=FALSE, warning=FALSE}
+### your code
+library(tidyverse)
+vector_shop <- c("五九麵館", "親來食堂", "憶馬當鮮", "揪食堂韓國餐館", 
+                "找碗", "大李水餃", "李記水餃", "林師傅", "馬祖麵館")
+vector_weekday <- c("週一", "週二", "週三", "週四", "週五", "週六", "週日")
+
+for (i in 1:length(vector_weekday)) {
+  for (j in 1:length(vector_shop)) {
+    if(i %in% c(1,3,5)){
+      if(str_length(vector_shop[j]) %% 2 == 1){print(str_c(vector_weekday[i], "小軒吃", vector_shop[j]))}
+    } else if(i %in% c(2, 4)){
+      if(str_detect(vector_shop[j], "水餃")){print(str_c(vector_weekday[i], "小軒吃", vector_shop[j]))}
+    } else if(i %in% c(6)){
+      if(str_detect(vector_shop[j], "館")){print(str_c(vector_weekday[i], "小軒吃", vector_shop[j]))}
+    } else if(i %in% c(7) & j == 1) {
+      print("週日小軒都不吃")
+    }
+  }
+}
+
+### result should be
+# [1] "週一小軒吃揪食堂韓國餐館"
+# [1] "週一小軒吃林師傅"
+# [1] "週二小軒吃大李水餃"
+# [1] "週二小軒吃李記水餃"
+# [1] "週三小軒吃揪食堂韓國餐館"
+# [1] "週三小軒吃林師傅"
+# [1] "週四小軒吃大李水餃"
+# [1] "週四小軒吃李記水餃"
+# [1] "週五小軒吃揪食堂韓國餐館"
+# [1] "週五小軒吃林師傅"
+# [1] "週六小軒吃五九麵館"
+# [1] "週六小軒吃揪食堂韓國餐館"
+# [1] "週六小軒吃馬祖麵館"
+# [1] "週日小軒都不吃"
+```
+
+### functions (i) (40 分)
+
+承接上題，請將上方迴圈改寫為名為 `hsuan_meal()` 的函數，小軒使用此函數時會輸入當週的第幾天 e.g. 週一，以及店家名稱，並依照飲食條件得到結果。
+
+- 預期結果舉例:
+ - `hsuan_meal("週一", "林師傅")` 會得到 `週一小軒吃林師傅`
+ - `hsuan_meal("週二", "親來食堂")` 會得到 `週二小軒不吃親來食堂`
+ - `hsuan_meal("週日", "找碗")` 會得到 `週日小軒不吃找碗`
+
+```{r}
+vector_shop <- c("五九麵館", "親來食堂", "憶馬當鮮", "揪食堂韓國餐館", 
+                "找碗", "大李水餃", "李記水餃", "林師傅", "馬祖麵館")
+vector_weekday <- c("週一", "週二", "週三", "週四", "週五", "週六", "週日")
+
+### your code
+hsuan_meal <- function(weekday, name){
+  if(which(vector_weekday==weekday) %% 2 == 1 & str_length(name) %% 2 == 1 ) {
+    print(str_c(weekday, "小軒吃", name))
+  } else if(which(vector_weekday==weekday) %in% c(2,4) & str_detect(name, "水餃")) {
+    print(str_c(weekday, "小軒吃", name))
+  } else if(which(vector_weekday==weekday) %in% c(6) & str_detect(name, "館")) {
+    print(str_c(weekday, "小軒吃", name))
+  } else {
+    print(str_c(weekday, "小軒不吃", name))
+  }
+}
+### result should be
+
+hsuan_meal("週一","林師傅")
+# [1] "週一小軒吃林師傅"
+
+hsuan_meal("週二","親來食堂")
+# [1] "週二小軒不吃親來食堂"
+
+hsuan_meal("週日","找碗")
+# [1] "週日小軒不吃找碗"
+```
+
+### functions (ii) (40 分)
+
+請撰寫一個函數 `get_zodiac()`，使用者輸入生日(字串或者數值，底下會舉例)，該函數便會告訴你所屬的星座。
+不能使用他人開發好的現成函數，要自己寫喔。
+
+- 可以利用條件判斷(if else)來比較日期，你會用到很多 if else
+- 可以利用 `library(lubridate)` 處理使用者輸入的日期，有幾個可以用的函數譬如 `as_date()`, `month()`, `day()`
+- 如果對方亂輸入，要跳出一段訊息，這邊也可以用 if else 解決
+
+- 預期結果舉例:
+- `get_zodiac("1996-09-25")` 會得到 `天秤座`
+- `get_zodiac("1996-09-01")` 會得到 `處女座`
+- `get_zodiac(19970101)` 會得到 `魔羯座`
+- `get_zodiac("一九九八三月十四日")` 會得到 `請以'YYYY-MM-DD'格式輸入數字`
+
+- 我會輸入上面以外的測資，所以不要僅寫針對上面四個輸入值的 if else 喔！
+
+
+
+```{r warning=F, message=F}
+library(tidyverse)
+library(lubridate)
+
+### 綺薇
+get_zodiac_kiwi <- function(x){
+  
+  x <- ymd(x)
+  
+  if(is.na(x)){
+    print("請以'YYYY-MM-DD'格式輸入數字")
+  }else if((month(x)==12)&&(day(x)>=23)){
+    print("摩羯座")  
+  }else if((month(x)==01)&&(day(x)<=22)){
+    print("摩羯座") 
+  }else if((month(x)==01)&&(day(x)>=23)){
+    print("水瓶座") 
+  }else if((month(x)==02)&&(day(x)<=22)){
+    print("水瓶座") 
+  }else if((month(x)==02)&&(day(x)>=23)){
+    print("雙魚座") 
+  }else if((month(x)==03)&&(day(x)<=22)){
+    print("雙魚座") 
+  }else if((month(x)==03)&&(day(x)>=23)){
+    print("牡羊座") 
+  }else if((month(x)==04)&&(day(x)<=22)){
+    print("牡羊座") 
+  }else if((month(x)==04)&&(day(x)>=23)){
+    print("金牛座") 
+  }else if((month(x)==05)&&(day(x)<=22)){
+    print("金牛座") 
+  }else if((month(x)==05)&&(day(x)>=23)){
+    print("雙子座") 
+  }else if((month(x)==06)&&(day(x)<=22)){
+    print("雙子座") 
+  }else if((month(x)==06)&&(day(x)>=23)){
+    print("巨蟹座") 
+  }else if((month(x)==07)&&(day(x)<=22)){
+    print("巨蟹座") 
+  }else if((month(x)==07)&&(day(x)>=23)){
+    print("獅子座") 
+  }else if((month(x)==08)&&(day(x)<=22)){
+    print("獅子座") 
+  }else if((month(x)==08)&&(day(x)>=23)){
+    print("處女座") 
+  }else if((month(x)==09)&&(day(x)<=22)){
+    print("處女座") 
+  }else if((month(x)==09)&&(day(x)>=23)){
+    print("天秤座") 
+  }else if((month(x)==10)&&(day(x)<=22)){
+    print("天秤座") 
+  }else if((month(x)==10)&&(day(x)>=23)){
+    print("天蠍座") 
+  }else if((month(x)==11)&&(day(x)<=22)){
+    print("天蠍座") 
+  }else if((month(x)==11)&&(day(x)>=23)){
+    print("射手座") 
+  }else if((month(x)==12)&&(day(x)<=22)){
+    print("射手座") 
+  }
+  
+}
+
+### test
+get_zodiac_kiwi("1996-09-25")
+get_zodiac_kiwi("1996-09-01")
+get_zodiac_kiwi(19960925)
+get_zodiac_kiwi("一九九八三月十四日")
+
+### 子軒
+get_zodiac_dennis <- function(hbd) {
+  if(is.na(as_date(as.character(hbd)))){
+    print("請以'YYYY-MM-DD'格式輸入數字")
+  }
+  else {
+    hbd <- as_date(as.character(hbd))
+    hbd_month <- month(hbd)
+    hbd_day <- day(hbd)
+    hbd_num <- hbd_month*100 + hbd_day
+    
+    if(hbd_num >= 120 & hbd_num <= 218) {zodiac <- '水瓶座'}
+    else if(hbd_num >= 219 & hbd_num <= 320) {zodiac <- '雙魚座'}
+    else if(hbd_num >= 321 & hbd_num <= 419) {zodiac <- "白羊座"} 
+    else if(hbd_num >= 420 & hbd_num <= 520) {zodiac <- '金牛座'}
+    else if(hbd_num >= 521 & hbd_num <= 620) {zodiac <- '雙子座'}
+    else if(hbd_num >= 621 & hbd_num <= 722) {zodiac <- '巨蟹座'}
+    else if(hbd_num >= 723 & hbd_num <= 822) {zodiac <- '獅子座'}
+    else if(hbd_num >= 823 & hbd_num <= 922) {zodiac <- '處女座'}
+    else if(hbd_num >= 923 & hbd_num <= 1022) {zodiac <- '天秤座'}
+    else if(hbd_num >= 1023 & hbd_num <= 1121) {zodiac <- '天蠍座'}
+    else if(hbd_num >= 1122 & hbd_num <= 1221) {zodiac <- '射手座'}
+    else if(hbd_num >= 1222 | hbd_num <= 119) {zodiac <- '摩羯座'}
+    else {zodiac <- "gg"}
+    return(zodiac)
+  }
+  
+}
+
+### test
+get_zodiac_dennis("1996-09-25")
+get_zodiac_dennis("1996-09-01")
+get_zodiac_dennis(19960925)
+get_zodiac_dennis("一九九八三月十四日")
+
+### 美瑜
+get_zodiac_meiyu <- function(input_date) {
+  
+  if(!is.character(input_date)){ input_date <- as.character(input_date) }
+  
+  zodiac_date <- c(21, 20, 21, 20, 21, 22, 23, 23, 23, 24, 22, 21)
+  zodiac_name <- c("摩羯座", "水瓶座", "雙魚座", "牡羊座", "金牛座", "雙子座",
+                 "巨蟹座", "獅子座", "處女座", "天秤座", "天蠍座", "射手座", "摩羯座")
+  
+  input_date <- lubridate::as_date(input_date)
+  if(is.na(input_date)) {
+    print("請以'YYYY-MM-DD'格式輸入數字")
+  } else {
+    if(as.numeric(day(input_date)) / zodiac_date[as.numeric(month(input_date))] < 1){
+      print(zodiac_name[as.numeric(month(input_date))])
+    } else {
+      print(zodiac_name[as.numeric(month(input_date))+1])
+    }
+  }
+}
+
+### test
+get_zodiac_meiyu("1996-09-25")
+get_zodiac_meiyu("1996-09-01")
+get_zodiac_meiyu(19960925)
+get_zodiac_meiyu("一九九八三月十四日")
+```
+
+
+
