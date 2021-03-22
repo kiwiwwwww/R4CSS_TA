@@ -433,127 +433,178 @@ div.tocify {
 <div id="unite-和-separte" class="section level3">
 <h3>1. <code>unite()</code> 和 <code>separte()</code>：</h3>
 <p>A. 現在的學號分開了，請幫我用 <code>&quot;-&quot;</code> 拼起來，欄位命名為 <code>ID</code>，存成 <code>df_dmajor_105_tmp</code> 後印出<br />
-B. 再幫我把 <code>df_dmajor_105_tmp</code> 分開成三個欄位分別叫做 “ID_year”, “ID_dept”, “ID_order”，分開以後<span style="color: white;">回到一個人生活</span></p>
+B. 再幫我把 <code>df_dmajor_105_tmp</code> 分開成三個欄位分別叫做 “ID_year”, “ID_dept”, “ID_order”，分開以後<span style="color: white;">回到一個人生活</span><br />
+這題給你看答案喔！</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code (A)</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 498 x 5</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    ID          dept_original grade name  dept_dmajor</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      </span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 B02-A01-314 法律系財法組      4 蔡O軒 哲學系     </span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 B01-B01-076 法律系財法組      4 呂O禹 生科系     </span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 B03-A01-361 法律系財法組      3 于O庭 哲學系     </span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 B03-A01-345 法律系財法組      3 黃O文 社會系     </span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 B04-A01-349 法律系財法組      2 蔣O謙 歷史系     </span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 B04-A01-326 法律系財法組      2 卓O廷 會計系     </span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 B03-A01-305 法律系財法組      2 黃O晴 財金系     </span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 B02-A01-217 法律系司法組      4 曾O博 哲學系     </span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 B02-A01-214 法律系司法組      4 張O銘 經濟系     </span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 B01-303-022 法律系司法組      4 蔣O郁 經濟系     </span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 488 more rows</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="do">### your code (B)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_dmajor_105_tmp <span class="ot">&lt;-</span> df_dmajor_105 <span class="sc">%&gt;%</span> <span class="fu">unite</span>(<span class="at">col =</span> <span class="st">&quot;ID&quot;</span>, <span class="fu">c</span>(ID_year, ID_dept, ID_order), <span class="at">sep =</span> <span class="st">&quot;-&quot;</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_dmajor_105_tmp</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 498 x 5</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    ID          dept_original grade name  dept_dmajor</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      </span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 B02-A01-314 法律系財法組      4 蔡O軒 哲學系     </span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 B01-B01-076 法律系財法組      4 呂O禹 生科系     </span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 B03-A01-361 法律系財法組      3 于O庭 哲學系     </span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 B03-A01-345 法律系財法組      3 黃O文 社會系     </span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 B04-A01-349 法律系財法組      2 蔣O謙 歷史系     </span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 B04-A01-326 法律系財法組      2 卓O廷 會計系     </span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 B03-A01-305 法律系財法組      2 黃O晴 財金系     </span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 B02-A01-217 法律系司法組      4 曾O博 哲學系     </span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 B02-A01-214 法律系司法組      4 張O銘 經濟系     </span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 B01-303-022 法律系司法組      4 蔣O郁 經濟系     </span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 488 more rows</span></span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 498 x 7</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    ID_year ID_dept ID_order dept_original grade name  dept_dmajor</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      </span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 B02     A01     314      法律系財法組      4 蔡O軒 哲學系     </span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 B01     B01     076      法律系財法組      4 呂O禹 生科系     </span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 B03     A01     361      法律系財法組      3 于O庭 哲學系     </span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 B03     A01     345      法律系財法組      3 黃O文 社會系     </span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 B04     A01     349      法律系財法組      2 蔣O謙 歷史系     </span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 B04     A01     326      法律系財法組      2 卓O廷 會計系     </span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 B03     A01     305      法律系財法組      2 黃O晴 財金系     </span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 B02     A01     217      法律系司法組      4 曾O博 哲學系     </span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 B02     A01     214      法律系司法組      4 張O銘 經濟系     </span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 B01     303     022      法律系司法組      4 蔣O郁 經濟系     </span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 488 more rows</span></span></code></pre></div>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="do">### your code (B)</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>df_dmajor_105_tmp <span class="sc">%&gt;%</span> <span class="fu">separate</span>(<span class="at">col =</span> ID, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;ID_year&quot;</span>, <span class="st">&quot;ID_dept&quot;</span>, <span class="st">&quot;ID_order&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;-&quot;</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 498 x 7</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    ID_year ID_dept ID_order dept_original grade name  dept_dmajor</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      </span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 B02     A01     314      法律系財法組      4 蔡O軒 哲學系     </span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 B01     B01     076      法律系財法組      4 呂O禹 生科系     </span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 B03     A01     361      法律系財法組      3 于O庭 哲學系     </span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 B03     A01     345      法律系財法組      3 黃O文 社會系     </span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 B04     A01     349      法律系財法組      2 蔣O謙 歷史系     </span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 B04     A01     326      法律系財法組      2 卓O廷 會計系     </span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 B03     A01     305      法律系財法組      2 黃O晴 財金系     </span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 B02     A01     217      法律系司法組      4 曾O博 哲學系     </span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 B02     A01     214      法律系司法組      4 張O銘 經濟系     </span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 B01     303     022      法律系司法組      4 蔣O郁 經濟系     </span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 488 more rows</span></span></code></pre></div>
+<pre><code>#&gt; # A tibble: 498 x 5
+#&gt;    ID          dept_original grade name  dept_dmajor
+#&gt;    &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      
+#&gt;  1 B02-A01-314 法律系財法組      4 蔡O軒 哲學系     
+#&gt;  2 B01-B01-076 法律系財法組      4 呂O禹 生科系     
+#&gt;  3 B03-A01-361 法律系財法組      3 于O庭 哲學系     
+#&gt;  4 B03-A01-345 法律系財法組      3 黃O文 社會系     
+#&gt;  5 B04-A01-349 法律系財法組      2 蔣O謙 歷史系     
+#&gt;  6 B04-A01-326 法律系財法組      2 卓O廷 會計系     
+#&gt;  7 B03-A01-305 法律系財法組      2 黃O晴 財金系     
+#&gt;  8 B02-A01-217 法律系司法組      4 曾O博 哲學系     
+#&gt;  9 B02-A01-214 法律系司法組      4 張O銘 經濟系     
+#&gt; 10 B01-303-022 法律系司法組      4 蔣O郁 經濟系     
+#&gt; # … with 488 more rows
+#&gt; # A tibble: 498 x 7
+#&gt;    ID_year ID_dept ID_order dept_original grade name  dept_dmajor
+#&gt;    &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      
+#&gt;  1 B02     A01     314      法律系財法組      4 蔡O軒 哲學系     
+#&gt;  2 B01     B01     076      法律系財法組      4 呂O禹 生科系     
+#&gt;  3 B03     A01     361      法律系財法組      3 于O庭 哲學系     
+#&gt;  4 B03     A01     345      法律系財法組      3 黃O文 社會系     
+#&gt;  5 B04     A01     349      法律系財法組      2 蔣O謙 歷史系     
+#&gt;  6 B04     A01     326      法律系財法組      2 卓O廷 會計系     
+#&gt;  7 B03     A01     305      法律系財法組      2 黃O晴 財金系     
+#&gt;  8 B02     A01     217      法律系司法組      4 曾O博 哲學系     
+#&gt;  9 B02     A01     214      法律系司法組      4 張O銘 經濟系     
+#&gt; 10 B01     303     022      法律系司法組      4 蔣O郁 經濟系     
+#&gt; # … with 488 more rows</code></pre>
 </div>
 <div id="group_by-and-summarize" class="section level3">
 <h3>2. <code>group_by()</code> and <code>summarize()</code>:</h3>
 <p>利用 <code>df_dmajor_105</code></p>
 <p>A. 請幫我找出<strong>向外</strong>雙主修人數最多的系所<br />
-B. 請幫我找出<strong>向外</strong>雙主修科系最多元的系所</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code (A)</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 2</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   dept_original     n</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;int&gt;</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 森林環資系       27</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="do">### your code (B)</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 2</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   dept_original n_major</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;int&gt;</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 森林環資系         16</span></span></code></pre></div>
+B. 請幫我找出<strong>向外</strong>雙主修科系最多元的系所<br />
+這題給你看答案喔！</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code (A)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_dmajor_105 <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dept_original) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">==</span> <span class="fu">max</span>(n))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 2</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   dept_original     n</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;int&gt;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 森林環資系       27</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="do">### your code (B)</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>df_dmajor_105 <span class="sc">%&gt;%</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dept_original) <span class="sc">%&gt;%</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n_major =</span> <span class="fu">n_distinct</span>(dept_dmajor)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n_major <span class="sc">==</span> <span class="fu">max</span>(n_major))</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 2</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   dept_original n_major</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;int&gt;</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 森林環資系         16</span></span></code></pre></div>
+<pre><code>#&gt; # A tibble: 1 x 2
+#&gt;   dept_original     n
+#&gt;   &lt;chr&gt;         &lt;int&gt;
+#&gt; 1 森林環資系       27
+#&gt; # A tibble: 1 x 2
+#&gt;   dept_original n_major
+#&gt;   &lt;chr&gt;           &lt;int&gt;
+#&gt; 1 森林環資系         16</code></pre>
 </div>
 <div id="join-and-count-and-mutate" class="section level3">
 <h3>3. <code>join()</code> and <code>count()</code> and <code>mutate()</code>:</h3>
 <p>利用 <code>df_dmajor_105</code> 和 <code>df_college_join</code> 串接，請幫我計算各學院<strong>向外</strong>雙主修的人數以及佔據總體的比例</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 x 3</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    college      n     per</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  * &lt;chr&gt;    &lt;int&gt;   &lt;dbl&gt;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 公衛學院     1 0.00201</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 工學院      30 0.0602 </span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 文學院     105 0.211  </span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 法學院      22 0.0442 </span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 理學院      54 0.108  </span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 生農學院   102 0.205  </span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 社科院      84 0.169  </span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 管理學院    50 0.100  </span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 醫學院      20 0.0402 </span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 電資學院    30 0.0602</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 x 3</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    college      n     per</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  * &lt;chr&gt;    &lt;int&gt;   &lt;dbl&gt;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 公衛學院     1 0.00201</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 工學院      30 0.0602 </span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 文學院     105 0.211  </span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 法學院      22 0.0442 </span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 理學院      54 0.108  </span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 生農學院   102 0.205  </span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 社科院      84 0.169  </span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 管理學院    50 0.100  </span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 醫學院      20 0.0402 </span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 電資學院    30 0.0602</span></span></code></pre></div>
 </div>
 <div id="join-and-mutate" class="section level3">
 <h3>4. <code>join()</code> and <code>mutate()</code>:</h3>
 <p>利用 <code>df_dmajor_105</code> 和 <code>df_college_join</code> 串接，請幫我計算各學院之間雙主修的人數，並且增加一個欄位，以原本學院為基礎，計算該學院雙主修到各學院的人數佔比。舉例來說，社科院有 5 人雙文學院、3 人雙工學院、2 人雙管理學院，請幫我計算出這些人數，以及社科雙文學院的佔比為 50%、雙工學院的佔比為 30%、雙管理學院的佔比為 20%，最後將結果儲存成 <code>df_dmajor_105_college</code> 並印出。</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 70 x 4</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   college_original [10]</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    college_original college_dmajor     n     per</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;            &lt;chr&gt;          &lt;int&gt;   &lt;dbl&gt;</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 公衛學院         生科學院           1 1      </span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 工學院           工學院             6 0.2    </span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 工學院           文學院             3 0.1    </span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 工學院           理學院             7 0.233  </span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 工學院           生農學院           1 0.0333 </span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 工學院           社科院             7 0.233  </span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 工學院           管理學院           3 0.1    </span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 工學院           電資學院           3 0.1    </span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 文學院           公衛學院           1 0.00952</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 文學院           工學院             1 0.00952</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 60 more rows</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 70 x 4</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   college_original [10]</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    college_original college_dmajor     n     per</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;            &lt;chr&gt;          &lt;int&gt;   &lt;dbl&gt;</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 公衛學院         生科學院           1 1      </span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 工學院           工學院             6 0.2    </span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 工學院           文學院             3 0.1    </span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 工學院           理學院             7 0.233  </span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 工學院           生農學院           1 0.0333 </span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 工學院           社科院             7 0.233  </span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 工學院           管理學院           3 0.1    </span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 工學院           電資學院           3 0.1    </span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 文學院           公衛學院           1 0.00952</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 文學院           工學院             1 0.00952</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 60 more rows</span></span></code></pre></div>
 </div>
 <div id="pivot_wider" class="section level3">
 <h3>5. <code>pivot_wider()</code>：</h3>
 <p>請將 <code>df_dmajor_105_college</code> 轉成寬表格後印出，表格中的值使用 <code>per</code>， <code>n</code> 可以刪掉了</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be </span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 x 11</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   college_original [10]</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    college_original 生科學院  工學院 文學院 理學院 生農學院 社科院 管理學院</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;               &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 公衛學院          1       0        0     0        0      0        0     </span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 工學院            0       0.2      0.1   0.233    0.0333 0.233    0.1   </span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 文學院            0.00952 0.00952  0.419 0.0286   0.0571 0.381    0.0571</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 法學院            0.0455  0        0.455 0        0.0455 0.318    0.136 </span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 理學院            0.0370  0.148    0.148 0.315    0.111  0.148    0.0185</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 生農學院          0.0490  0.0882   0.108 0.127    0.382  0.186    0.0294</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 社科院            0       0.0119   0.155 0.0714   0.0595 0.440    0.0952</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 管理學院          0.08    0        0.26  0.14     0.02   0.2      0.2   </span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 醫學院            0       0        0.15  0.15     0.2    0.15     0.1   </span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 電資學院          0       0.0333   0.1   0.5      0.167  0.0333   0.167 </span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 3 more variables: 電資學院 &lt;dbl&gt;, 公衛學院 &lt;dbl&gt;, 法學院 &lt;dbl&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="do">### your result should be </span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 x 11</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   college_original [10]</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    college_original 生科學院  工學院 文學院 理學院 生農學院 社科院 管理學院</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;               &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 公衛學院          1       0        0     0        0      0        0     </span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 工學院            0       0.2      0.1   0.233    0.0333 0.233    0.1   </span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 文學院            0.00952 0.00952  0.419 0.0286   0.0571 0.381    0.0571</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 法學院            0.0455  0        0.455 0        0.0455 0.318    0.136 </span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 理學院            0.0370  0.148    0.148 0.315    0.111  0.148    0.0185</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 生農學院          0.0490  0.0882   0.108 0.127    0.382  0.186    0.0294</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 社科院            0       0.0119   0.155 0.0714   0.0595 0.440    0.0952</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 管理學院          0.08    0        0.26  0.14     0.02   0.2      0.2   </span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 醫學院            0       0        0.15  0.15     0.2    0.15     0.1   </span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 電資學院          0       0.0333   0.1   0.5      0.167  0.0333   0.167 </span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 3 more variables: 電資學院 &lt;dbl&gt;, 公衛學院 &lt;dbl&gt;, 法學院 &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 </div>
 

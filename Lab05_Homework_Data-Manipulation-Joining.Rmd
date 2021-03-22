@@ -65,10 +65,13 @@ df_dmajor_105 <- df_dmajor_105 %>% drop_na()
 ### 1. `unite()` 和 `separte()`：
 
 A. 現在的學號分開了，請幫我用 `"-"` 拼起來，欄位命名為 `ID`，存成 `df_dmajor_105_tmp` 後印出   
-B. 再幫我把 `df_dmajor_105_tmp` 分開成三個欄位分別叫做 "ID_year", "ID_dept", "ID_order"，分開以後<span style="color: white;">回到一個人生活</span>
+B. 再幫我把 `df_dmajor_105_tmp` 分開成三個欄位分別叫做 "ID_year", "ID_dept", "ID_order"，分開以後<span style="color: white;">回到一個人生活</span>   
+這題給你看答案喔！
 
 ```{r message=FALSE, warning=FALSE}
 ### your code (A)
+df_dmajor_105_tmp <- df_dmajor_105 %>% unite(col = "ID", c(ID_year, ID_dept, ID_order), sep = "-")
+df_dmajor_105_tmp
 
 ### your result should be
 #> # A tibble: 498 x 5
@@ -87,6 +90,7 @@ B. 再幫我把 `df_dmajor_105_tmp` 分開成三個欄位分別叫做 "ID_year",
 #> # … with 488 more rows
 
 ### your code (B)
+df_dmajor_105_tmp %>% separate(col = ID, into = c("ID_year", "ID_dept", "ID_order"), sep = "-")
 
 ### your result should be
 #> # A tibble: 498 x 7
@@ -112,10 +116,16 @@ B. 再幫我把 `df_dmajor_105_tmp` 分開成三個欄位分別叫做 "ID_year",
 利用 `df_dmajor_105`
 
 A. 請幫我找出**向外**雙主修人數最多的系所   
-B. 請幫我找出**向外**雙主修科系最多元的系所
+B. 請幫我找出**向外**雙主修科系最多元的系所   
+這題給你看答案喔！
 
 ```{r message=FALSE, warning=FALSE}
 ### your code (A)
+df_dmajor_105 %>%
+  group_by(dept_original) %>%
+  summarise(n = n()) %>%
+  ungroup() %>%
+  filter(n == max(n))
 
 ### your result should be
 #> # A tibble: 1 x 2
@@ -124,6 +134,11 @@ B. 請幫我找出**向外**雙主修科系最多元的系所
 #> 1 森林環資系       27
 
 ### your code (B)
+df_dmajor_105 %>%
+  group_by(dept_original) %>%
+  summarise(n_major = n_distinct(dept_dmajor)) %>%
+  ungroup() %>%
+  filter(n_major == max(n_major))
 
 ### your result should be
 #> # A tibble: 1 x 2
