@@ -1,0 +1,395 @@
+---
+title: "Lab05_Data-Manipulation-Joining"
+subtitle: "Lab05_grouping-joining-tidyr"
+author: "曾子軒 Dennis Tseng"
+institute: "台大新聞所 NTU Journalism"
+date: "2021/03/23"
+output:
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      self_contained: true
+---
+<style type="text/css">
+
+.remark-slide-content {
+    padding: 1em 1em 1em 1em;
+    font-size: 28px;
+}
+
+.my-one-page-font {
+  padding: 1em 1em 1em 1em;
+  font-size: 20px;
+  /*xaringan::inf_mr()*/
+}
+
+</style>
+
+
+# 今日重點
+
+- Lab05 Practice
+- AS04 Preview
+- AS03 檢討
+- `group_by()` and `ungroup()`
+- tidyr：Pivoting, Combining, Splitting
+
+---
+
+class: inverse, center, middle
+
+# [AS04](https://p4css.github.io/R4CSS_TA/AS04_Data-Manipulation-Joining.html)
+
+---
+
+# 作業檢討
+
+- 兩個題組的GapMinder 題組都是 import data
+ - 題組一是缺少欄位名稱的 `tsv`
+ - 題組二是有中文的 `csv`
+- 讀取和輸出檔案的幾個重點
+ - 檔案格式是什麼 e.g. .csv
+ - 檔案編碼是什麼 e.g. BIG5
+ - 輸出要輸出成什麼格式 e.g. .rds
+- 套件與函數的使用
+ - base R 就有函數 e.g. `read.csv()`
+ - tidyverse 底下的 [`library(readr)`](https://readr.tidyverse.org/) e.g. `read_csv()`
+ 
+---
+# 作業檢討: File Format 檔案格式
+
+- delimited file
+ - csv, comma-separated values；tsv, tab-separated values
+ - use `read.**()` or `readr::read_**()`
+- plain text
+ - .txt, use `readLines()` or `readr::read_file()`
+- excel
+ - .xls, .xlsx
+ - [`readxl::read_excel()`](https://readxl.tidyverse.org/), [`openxlsx::read.xlsx()`](https://ycphs.github.io/openxlsx/), [`XLConnect::loadWorkbook()`](https://github.com/miraisolutions/xlconnect)
+- google sheet
+ - [`googlesheets4::read_sheet()`](https://googlesheets4.tidyverse.org/)
+- PDF
+ - [`tabulizer::extract_tables()`](https://cran.r-project.org/web/packages/tabulizer/vignettes/tabulizer.html), [`pdftools::pdf_text()`](https://docs.ropensci.org/pdftools/)
+
+---
+# 作業檢討: 推薦 readr 套件的理由
+
+1. 讀進來預設就是 tibble
+2. 函數很聰明，會去猜測每個 column 是什麼 type
+3. 預設編碼是 UTF8，可以避免許多問題
+4. 讀檔效率較佳，當資料筆數超過十萬會有明顯差異
+5. 提供較多元的參數可供挑選
+
+```{r message=F, warning=F}
+library(tidyverse)
+```
+
+---
+# 作業檢討: 推薦 readr 套件的理由
+
+```{r message=T, warning=F}
+df_main_clean <- read_csv("data/AS03/df_main_clean.csv")
+```
+
+---
+# 作業檢討: 推薦 readr 套件的理由
+
+- 第二題的檔案有中文、有不同型態的欄位
+
+```{r message=T, warning=F}
+df_main_clean
+```
+
+---
+
+# 作業檢討: File Format - csv
+
+- `read.table()` 與 `read.csv()`
+ - 兩個其實是同一個函數，後者只是預設 `sep = ","`
+ - 同理可推 `read.table()` 讀 tsv 的時候修改成 `sep = "\t"`
+- 參數
+ - `file`(檔案路徑)
+ - `header`(是否有預設的欄位名稱, 預設有為 `TRUE`)
+ - `sep`(用什麼區分, 預設是 `","`)
+ - `fileEncoding`(預設電腦編碼，Win = `"BIG5"`, MAC = `"UTF-8"`)
+ - `na.strings`(missing value 長怎樣, 預設是 `"NA"` )
+ - `skip`(要跳過幾列, 預設 = `0`)
+ - `quote`(引用長怎樣, 預設 = `"\"'"`)
+---
+
+# 作業檢討: File Format - csv
+
+- `read_delim()` 與 `read_csv()`
+ - 兩個其實是同一個函數，後者只是預設 `delim = ","`
+ - 同理可推 `read_delim()` 讀 tsv 的時候修改成 `delim = "\t"`
+- 參數
+ - `file`(檔案路徑)
+ - `col_names`(是否有預設的欄位名稱, 預設有為 `TRUE`)
+ - `delim`(用什麼區分, 預設是 `","`)
+ - `locale`(地區，指編碼, `readr` 一律預設檔案用 `"UTF8"`)
+ - `na`(missing value 長怎樣, 預設是 `c("", "NA")` )
+ - `skip`(要跳過幾列, 預設 = `0`)
+ - `quote`(引用長怎樣, 預設 = `"\""`)
+
+---
+
+# 作業檢討: 實際讀取 tsv
+
+- GapMinder 題組
+
+```{r message=F, warning=F}
+df_test <- 
+  read_delim("data/AS03/gapminder_raw.tsv", delim = ",")
+df_test
+```
+---
+
+# 作業檢討: 實際讀取 tsv
+
+- GapMinder 題組
+
+```{r message=F, warning=F}
+df_gapminder_raw <- read_delim("data/AS03/gapminder_raw.tsv", col_names = F, delim = "\t")
+df_gapminder_raw %>% head(3)
+# equals to
+df_gapminder_raw <- read_tsv("data/AS03/gapminder_raw.tsv", col_names = F)
+```
+
+---
+
+# 作業檢討: 修改檔名
+
+- GapMinder 題組
+
+```{r message=F, warning=F, eval = F}
+# using rename()
+df_gapminder_raw %>% 
+  rename(country = 1, continent = 2, year = 3, lifeExp = 4, pop = 5, gdpPercap = 6)
+# using colnames()
+colnames(df_gapminder_raw) <- 
+  c("country", "continent", "year", "lifeExp", "pop", "gdpPercap")
+```
+
+---
+
+# 作業檢討: 遇到 `NA` 的處理
+
+- GapMinder 題組
+
+```{r message=F, warning=F, eval = F}
+df_gapminder_raw %>% filter(is.na(country))
+df_gapminder_raw %>% filter(is.na(continent))
+df_gapminder_raw %>% filter(is.na(year))
+df_gapminder_raw %>% filter(is.na(lifeExp))
+df_gapminder_raw %>% filter(is.na(pop))
+df_gapminder_raw %>% filter(is.na(gdpPercap))
+
+df_gapminder_clean <- df_gapminder_raw %>%
+  rename(country = 1, continent = 2, year = 3, lifeExp = 4, pop = 5, gdpPercap = 6) %>%
+  mutate(continent = if_else(country == "Nepal", "Asia", continent))
+```
+
+---
+
+# 作業檢討: 判斷區間
+
+- `if_else()` and `case_when()`
+ - 常常與 `mutate()` 搭配判斷條件用，`NA` 無法判斷要特別處理
+ - `if_else(條件, TRUE 的值, FALSE 的值)`
+ - `case_when(條件 ~ 滿足條件的值, 最後有一個類似 else 的東西)`
+
+```{r message=F, warning=F, eval = F}
+df_gapminder_clean %>% 
+  mutate(life_interval = if_else(lifeExp < 60, "<60", ">=60")) %>%
+  mutate(life_interval = if_else(lifeExp >= 70 & life_interval == ">=60"), ">=70", life_interval) %>%
+  count(life_interval)
+```
+
+
+---
+
+# 作業檢討: 判斷區間
+
+- `if_else()` and `case_when()`
+ - 常常與 `mutate()` 搭配判斷條件用，`NA` 無法判斷要特別處理
+ - `if_else(條件, TRUE 的值, FALSE 的值)`
+ - `case_when(條件 ~ 滿足條件的值, 最後有一個類似 else 的東西)`
+
+```{r message=F, warning=F, eval = F}
+df_gapminder_clean %>% 
+  mutate(life_interval = case_when(
+    # 條件寫左邊，中間用 ~ 連接，右邊放數值
+    lifeExp < 60 ~ "<60",
+    lifeExp >= 60 & lifeExp < 70 ~ ">=60",
+    lifeExp >= 70 ~ ">=70",
+    # 最後是 TRUE ~ 值 作結，放 else 的內容
+    TRUE ~ "others"
+  )) %>%
+  count(life_interval)
+```
+
+---
+
+# group and summarize
+
+- `summarize()`
+ - 產出一個總結後的 dataframe
+ - 若有先 `group_by()`，會產出各組的總結
+- `group_by()`
+ - 把 dataframe 變成 grouped dataframe，長相相同
+ - group 之後使用動詞
+ - 比較：有 `group_by()` 和沒 `group_by()`
+ 
+```{r message=F, warning=F}
+df_main_clean <- read_csv("data/AS03/df_main_clean.csv")
+```
+
+---
+# group and summarize
+
+```{r message=F, warning=F}
+df_main_clean %>% 
+  summarise(comments = max(comments, na.rm = T))
+```
+
+```{r message=F, warning=F}
+df_main_clean %>% group_by(board) %>%
+  summarise(comments = max(comments, na.rm = T))
+```
+
+---
+# group and summarize
+
+- `ungroup()`
+ - 把 grouped 的狀態消除變回原本的
+ - 有時候會需要先 `group_by()` 再 `ungroup()`
+ - 底下來看  summarize(), group_by() and ungroup() 的應用
+- 舉例
+ - 計算各子板、各類型文章數量的**佔比**
+ - 取出**各子板**當中文章佔該板最高的類型 
+ - 取出**不分子板**當中文章佔該板最高的類型 
+
+---
+# summarize(), group_by() and ungroup()
+
+- 舉例
+ - 計算各子板、各類型文章數量的**佔比**
+ 
+```{r message=F, warning=F}
+df_main_clean %>% group_by(board, type) %>%
+  summarise(n = n()) %>%
+  mutate(per = n/sum(n))
+```
+
+---
+# group and summarize
+
+- 舉例
+ - 取出**各子板**當中文章佔該板最高的類型 
+ - 取出**不分子板**當中文章佔該板最高的類型 
+ 
+```{r message=F, warning=F}
+df_main_clean %>% group_by(board, type) %>%
+  summarise(n = n()) %>%
+  mutate(per = n/sum(n)) %>%
+  filter(per == max(per))
+```
+
+---
+# group and summarize
+
+- 舉例
+ - 取出**各子板**當中文章佔該板最高的類型 
+ - 取出**不分子板**當中文章佔該板最高的類型 
+ 
+```{r message=F, warning=F}
+df_main_clean %>% group_by(board, type) %>%
+  summarise(n = n()) %>% ungroup() %>%
+  mutate(per = n/sum(n)) %>%
+  filter(per == max(per))
+```
+
+---
+# tidy data
+
+- Pivoting
+ - `pivot_longer()` 把資料變成長表格
+ - `cols` = 放進去的欄位, `names_to` = 名稱欄位叫做什麼, `values_to` = 值欄位叫做什麼
+ - `pivot_wider()` 把資料變成寬表格
+ - `id_cols` = 不要動的欄位, `names_from` = 名稱來自哪, `values_from` = 值來自哪
+- Splitting and Combining
+ - `separate()` 把一個欄位切開(split)成多個欄位
+ - `unite()` 把多個欄位合併(combine)成多個欄位
+ - `col` = 要動的欄位, `into` = 要變成什麼名字, `sep` = 切分的符號, `remove` = 是否要保留原本的欄位
+
+---
+# tidy data
+
+- df_main_agg 是一個 wide data
+
+```{r message=F, warning=F}
+df_main_agg <- df_main_clean %>% group_by(board) %>%
+  summarise(article = n(), comments = sum(comments), author = n_distinct(author))
+
+df_main_agg
+```
+
+---
+# tidy data
+
+- 把它變長
+```{r message=F, warning=F}
+df_main_agg_long <- 
+  df_main_agg %>% 
+  pivot_longer(cols = -board, names_to = "type", values_to = "n")
+df_main_agg_long
+```
+
+---
+# tidy data
+
+- 把它變寬
+
+```{r message=F, warning=F}
+df_main_agg_wide <- 
+  df_main_agg_long %>%
+  pivot_wider(id = board, names_from = type, values_from = n)
+
+df_main_agg_wide
+```
+
+---
+# tidy data
+
+- 把它合併
+```{r message=F, warning=F}
+df_main_sep <- 
+  df_main_agg %>% 
+  unite(col = "metric", 2:4, sep = "-")
+
+df_main_sep
+```
+
+---
+# tidy data
+
+- 把它切開
+
+```{r message=F, warning=F}
+df_main_uni <- 
+  df_main_sep %>%
+  separate(col = metric, into = c("article", "comments", "author"))
+
+df_main_uni
+```
+
+---
+
+class: inverse, center, middle
+
+# [Lab05](https://p4css.github.io/R4CSS_TA/Lab05_Data-Manipulation-Joining.html)
+
