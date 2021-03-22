@@ -64,7 +64,7 @@ df_dmajor_105 <- df_dmajor_105 %>% drop_na()
 
 ### 1. `unite()` 和 `separte()`：
 
-A. 現在的學號分開了，請幫我用 `"-"` 拼起來，欄位命名為 `ID`，存成 `df_dmajor_105_tmp` 後印出
+A. 現在的學號分開了，請幫我用 `"-"` 拼起來，欄位命名為 `ID`，存成 `df_dmajor_105_tmp` 後印出   
 B. 再幫我把 `df_dmajor_105_tmp` 分開成三個欄位分別叫做 "ID_year", "ID_dept", "ID_order"，分開以後<span style="color: white;">回到一個人生活</span>
 
 ```{r message=FALSE, warning=FALSE}
@@ -111,7 +111,7 @@ B. 再幫我把 `df_dmajor_105_tmp` 分開成三個欄位分別叫做 "ID_year",
 
 利用 `df_dmajor_105`
 
-A. 請幫我找出**向外**雙主修人數最多的系所
+A. 請幫我找出**向外**雙主修人數最多的系所   
 B. 請幫我找出**向外**雙主修科系最多元的系所
 
 ```{r message=FALSE, warning=FALSE}

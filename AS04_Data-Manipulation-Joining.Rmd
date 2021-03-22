@@ -86,6 +86,22 @@ df_education <- df_education_raw %>%
 ### 這邊讓你看 key 的長相
 # df_education_wide %>% count(key)
 
+### count 結果借你看
+#> # A tibble: 45 x 2
+#>    key                                   n
+#>  * <chr>                             <int>
+#>  1 edu_doctor_graduated_f             7760
+#>  2 edu_doctor_ungraduated_f           7760
+#>  3 edu_doctor_ungraduated_m           7760
+#>  4 edu_illiterate_f                   7760
+#>  5 edu_illiterate_m                   7760
+#>  6 edu_junior_graduated_f             7760
+#>  7 edu_junior_graduated_m             7760
+#>  8 edu_junior_ungraduated_f           7760
+#>  9 edu_junior_ungraduated_m           7760
+#> 10 edu_juniorcollege_2ys_graduated_f  7760
+#> # … with 35 more rows
+
 ### your code
 
 
