@@ -32,11 +32,11 @@ output:
 
 # 今日重點
 
-- Lab05 Practice
 - AS04 Preview
 - AS03 檢討
 - `group_by()` and `ungroup()`
 - tidyr：Pivoting, Combining, Splitting
+- Lab05 Practice
 
 ---
 
@@ -48,7 +48,8 @@ class: inverse, center, middle
 
 # 作業檢討
 
-- 兩個題組的GapMinder 題組都是 import data
+- [Lab04 範例解答](https://p4css.github.io/R4CSS_TA/Lab04_Homework_Know-Your-Data_ref.html)、[AS03 範例解答](https://p4css.github.io/R4CSS_TA/AS03_Know-Your-Data_ref.html)
+- 兩個題組的第一題都是 import data
  - 題組一是缺少欄位名稱的 `tsv`
  - 題組二是有中文的 `csv`
 - 讀取和輸出檔案的幾個重點
@@ -161,13 +162,13 @@ df_gapminder_raw <- read_tsv("data/AS03/gapminder_raw.tsv", col_names = F)
 
 ---
 
-# 作業檢討: 修改檔名
+# 作業檢討: 修改欄位名稱
 
 - GapMinder 題組
 
 ```{r message=F, warning=F, eval = F}
 # using rename()
-df_gapminder_raw %>% 
+df_gapminder_raw <- df_gapminder_raw %>% 
   rename(country = 1, continent = 2, year = 3, lifeExp = 4, pop = 5, gdpPercap = 6)
 # using colnames()
 colnames(df_gapminder_raw) <- 
@@ -189,7 +190,6 @@ df_gapminder_raw %>% filter(is.na(pop))
 df_gapminder_raw %>% filter(is.na(gdpPercap))
 
 df_gapminder_clean <- df_gapminder_raw %>%
-  rename(country = 1, continent = 2, year = 3, lifeExp = 4, pop = 5, gdpPercap = 6) %>%
   mutate(continent = if_else(country == "Nepal", "Asia", continent))
 ```
 
@@ -267,7 +267,7 @@ df_main_clean %>% group_by(board) %>%
 - `ungroup()`
  - 把 grouped 的狀態消除變回原本的
  - 有時候會需要先 `group_by()` 再 `ungroup()`
- - 底下來看  summarize(), group_by() and ungroup() 的應用
+ - 底下來看  `summarize()`, `group_by()` and `ungroup()` 的應用
 - 舉例
  - 計算各子板、各類型文章數量的**佔比**
  - 取出**各子板**當中文章佔該板最高的類型 
@@ -391,5 +391,6 @@ df_main_uni
 
 class: inverse, center, middle
 
-# [Lab05](https://p4css.github.io/R4CSS_TA/Lab05_Data-Manipulation-Joining.html)
+# [Lab05](https://p4css.github.io/R4CSS_TA/Lab05_Homework_Data-Manipulation-Joining.html)
+
 
