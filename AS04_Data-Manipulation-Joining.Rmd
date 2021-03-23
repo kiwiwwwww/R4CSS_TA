@@ -1,6 +1,6 @@
 ---
 title: "AS04_Data-Manipulation-Joining"
-author: "你是誰 R09342000 新聞所碩五"
+author: "林綺薇 R09342008 新聞所碩一"
 date: "2021/03/23"
 output:
   html_document:
@@ -54,6 +54,11 @@ df_education <- df_education_raw %>%
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+df_education_wide <- df_education %>%
+                      gather("key","value",4:ncol(.)) 
+
+as_tibble(df_education_wide)
+
 ### your result should be
 #> # A tibble: 349,200 x 6
 #>    district_code site_id    village edu_doctor_graduate… key               value
@@ -84,7 +89,12 @@ df_education <- df_education_raw %>%
 
 ```{r message=FALSE, warning=FALSE}
 ### 這邊讓你看 key 的長相
-# df_education_wide %>% count(key)
+df_education_wide %>% count(key)
+
+as.tibble(df_education_wide %>%
+  mutate(key = str_replace(key,"edu_illiterate_f","edu_illiterate_all_f"))%>%
+  mutate(key = str_replace(key,"edu_juniorcollege_2ys_graduated_m","edu_juniorcollege2ys_graduated_m"))%>%
+  separate(key,c("edu","level","edu_status","gender")))
 
 ### count 結果借你看
 #> # A tibble: 45 x 2
