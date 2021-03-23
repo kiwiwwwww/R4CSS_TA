@@ -1,6 +1,6 @@
 ---
 title: "AS03_Know-Your-Data"
-author: "你是誰 R09342000 新聞所碩五"
+author: "林綺薇 R09342008 新聞所碩一"
 date: "2021/03/16"
 output:
   html_document:
@@ -43,6 +43,23 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+library(tidyverse)
+
+df_gapminder_raw <- read.table(file="data/AS03/gapminder_raw.tsv",sep="\t",header = FALSE,quote = "" )  
+df_test <- read_tsv("data/AS03/gapminder_raw.tsv", col_names = F)
+
+df_gapminder_raw <- df_gapminder_raw %>%
+  select(country = V1 ,
+         continent =V2, 
+         year = V3, 
+         lifeExp = V4, 
+         pop = V5, 
+         gdpPercap = V6)
+
+as_tibble(df_gapminder_raw)
+
+
+
 ### your result should be
 #> # A tibble: 1,704 x 6
 #>    country     continent  year lifeExp      pop gdpPercap
@@ -64,13 +81,28 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 
 ```{r message=FALSE, warning=FALSE}
 ### your code
+sum(is.na(df_gapminder_raw))
+df_gapminder_raw[is.na(df_gapminder_raw$country),] #迷有
+df_gapminder_raw[is.na(df_gapminder_raw$continent),] #Nepal的continent有12個NA
+df_gapminder_raw[is.na(df_gapminder_raw$year),]#迷有
+df_gapminder_raw[is.na(df_gapminder_raw$lifeExp),] #Portugal的lifeExp有12個NA
+df_gapminder_raw[is.na(df_gapminder_raw$pop),] #Puerto Rico的pop有12個NA
+df_gapminder_raw[is.na(df_gapminder_raw$gdpPercap),] #Reunion的gdpPercap有12個NA
+#總共有48個NA唷！
 
+#填補遺漏值的方式
 
+df_gapminder_raw[is.na(df_gapminder_raw)] <- 0
+sum(is.na(df_gapminder_raw))
+df_gapminder_clean <- df_gapminder_raw
+
+as.tibble(df_gapminder_clean)
 
 ### your result should be
 # 不一定，看你怎麼處理資料
 
 ### your text (把文字描述寫在 code chunk 中)
+#綺薇把Nepal的洲補上，其他的在網路上查到很多人建議用平均值之類的補，但我覺得這份資料的各國情況都不同，不適合用附近國家的平均值來補，所以把NA變成0，但變成0之後，發現後面計算都要記得檢查有沒有因為0而被丟到奇怪的項目，有點麻煩，哭哭！
 
 # 範例答案：我覺得 missing value 看了令人很不舒服，數值變數應該都改成 88 比較吉利，數值變數以外都應該改成 "others"
 ```
@@ -79,6 +111,9 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 
 ```{r message=FALSE, warning=FALSE}
 ### your code
+
+df_gapminder_clean%>%
+  filter(country=="Taiwan")
 
 ### your result should be
 #> # A tibble: 12 x 6
@@ -99,17 +134,28 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 
 ### your text
 
+#1952年到2007年之間，台灣的平均壽命越來越長，人口越來越多，人均GDP也持續增加。
+
 ```
 
 4. mutating, filtering, and counting: 請在 `df_gapminder_clean` 中新增欄位，判斷每筆資料的預期壽命介於以下哪個區間（小於 60、大於等於 60 但小於 70、大於等於 70），接著計算歐洲的國家中，各年裡面預期壽命各區間的資料各有多少筆。務必在計算時考慮該如何處理 missing value，如果你前面選擇留著，這邊要留著嗎，如果你前面刪掉，對你現在的運算會有影響嗎？請印出結果，並用文字說明理由
 
 ```{r message=FALSE, warning=FALSE}
 ### your code
+as.tibble(
+df_gapminder_clean%>%
+     mutate(lifeexp_interval = ifelse(lifeExp >= "70", "too_old",
+                               ifelse(lifeExp >= "60"&lifeExp < "70", "old", 
+                               ifelse((lifeExp < "60"&lifeExp > "0"), "young", "no"))))%>%
+     filter(continent == "Europe")%>%
+     count(lifeexp_interval))
+
 
 ### your result should be
 # 看你怎麼處理 missing value，結果可能會有不同
 
 ### your text
+#可以歐洲看到活到60、小於70歲的「old」的資料有85筆，超過70歲的「too_old」是250筆，有點活太久了。因為把所有NA變成0，所以葡萄牙的12筆NA被歸類到「no」。
 
 # 範例：如前所述，我把數值變數的 missing value 都變成 88，在算它屬於哪個區間的時候會有影響，感覺不是好事，但我懶得改
 ```
@@ -118,6 +164,14 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 
 ```{r message=FALSE, warning=FALSE}
 ### your code
+
+as.tibble(
+df_gapminder_clean%>%
+  filter(continent == "Asia",year =="1972")%>%
+  mutate(total_GDP = pop*gdpPercap)%>%
+  arrange(desc(lifeExp))%>%
+  select(country,total_GDP,lifeExp))
+
 
 ### your result should be
 # 看你怎麼處理 missing value，結果可能會有不同
@@ -128,6 +182,18 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+as.tibble(
+df_gapminder_clean%>%
+  filter(continent == "Europe")%>%
+  select(country,year,lifeExp,pop)%>%
+  arrange(desc(pop))%>%
+  group_by(country)%>%
+  slice(1)%>%
+  ungroup()%>%
+  arrange(desc(lifeExp))%>%
+  slice_head(n=10)%>%
+  arrange(country))
+  
 ### your result should be
 # 看你怎麼處理 missing value，結果可能會有不同
 ```
@@ -137,6 +203,23 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+df_gapminder_clean%>%
+          filter(year=="1992"|year=="2007")%>%
+          group_by(year)%>%
+          mutate(gap_lifeExp=
+                 abs( 
+                    subset(df_gapminder_clean, year=="2007")$lifeExp- 
+                    subset(df_gapminder_clean, year=="1992")$lifeExp))%>%
+          ungroup()%>%
+          group_by(country)%>%
+          slice(1)%>%
+          ungroup()%>%
+          select(continent,country,gap_lifeExp)%>%
+          group_by(continent)%>%
+          slice(which.min(gap_lifeExp),which.max(gap_lifeExp))%>%
+          ungroup()
+
+  
 ### your result should be
 # 看你怎麼處理 missing value，結果可能會有不同
 ```
@@ -149,6 +232,9 @@ PTT 上面有好幾個和影集(drama)有關的子板(board)，下方提供 03/0
 
 ```{r message=FALSE, warning=FALSE}
 ### your code
+
+df_main_clean <- read_csv("data/AS03/df_main_clean.csv")
+as_tibble(df_main_clean)
 
 ### your result should be 
 #> # A tibble: 1,457 x 10
@@ -172,6 +258,11 @@ PTT 上面有好幾個和影集(drama)有關的子板(board)，下方提供 03/0
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+as_tibble(count(df_main_clean,board))
+
+#df_main_clean <- as.data.frame(table(df_main_clean$board)) 
+#as.tibble(df_main_clean)
+
 ### your result should be 
 #> # A tibble: 4 x 2
 #>   board           n
@@ -186,6 +277,9 @@ PTT 上面有好幾個和影集(drama)有關的子板(board)，下方提供 03/0
 
 ```{r message=FALSE, warning=FALSE}
 ### your code
+
+as_tibble(df_main_clean%>%
+  filter(board=="KoreaDrama",comments>=50&comments<=100))
 
 ### your result should be 
 #> # A tibble: 62 x 10
@@ -209,6 +303,10 @@ PTT 上面有好幾個和影集(drama)有關的子板(board)，下方提供 03/0
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+as.tibble(df_main_clean%>%
+          mutate(month = substr(df_main_clean$date,6,7))%>%
+          count(board,month))
+
 ### your result should be 
 #> # A tibble: 21 x 3
 #>    board       month     n
@@ -230,6 +328,15 @@ PTT 上面有好幾個和影集(drama)有關的子板(board)，下方提供 03/0
 
 ```{r message=FALSE, warning=FALSE}
 ### your code
+                
+as.tibble(
+
+  df_main_clean%>%
+    filter(date=="2021-02-23"|date=="2021-02-24"|date=="2021-02-25"|date=="2021-02-26"|date=="2021-02-27"|date=="2021-02-28"|date=="2021-03-01")%>%
+    count(board,sort=TRUE)%>%
+    slice(1)%>%
+    select(n,board)
+  )
 
 ### your result should be 
 #> # A tibble: 1 x 2
@@ -245,22 +352,32 @@ PTT 上面有好幾個和影集(drama)有關的子板(board)，下方提供 03/0
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
-### your result should be 
-#> # A tibble: 172 x 4
-#> # Groups:   date [91]
-#>    board       title                                         date       comments
-#>    <chr>       <chr>                                         <date>        <dbl>
-#>  1 China-Drama [新聞]鄭爽被罵翻後首錄影 網傳將已錄好引退聲明 2021-01-20      825
-#>  2 China-Drama [討論] 鄭爽有演，還沒播出的影劇會收到影響嗎？ 2021-01-20      732
-#>  3 China-Drama [Live] 上陽賦 58-63 超前點播                  2021-02-17      707
-#>  4 China-Drama Re: [心得] 到底該不該推薦有翡                 2020-12-26      606
-#>  5 China-Drama [問題] 陳情令到第幾集開始好看?                2020-12-17      592
-#>  6 China-Drama [Live] 斗羅大陸 EP6-11 兄妹                   2021-02-07      537
-#>  7 China-Drama [求薦] 終極筆記後該看哪個？                   2021-02-09      530
-#>  8 China-Drama [新聞]《陳情令》爆下架危機!網曝4重點…審查卡   2021-01-25      529
-#>  9 China-Drama [Live] 斗羅大陸 EP28-33 超前點播              2021-02-15      449
-#> 10 China-Drama [心得] 到底該不該推薦有翡                     2020-12-24      444
-#> # … with 162 more rows
+df_main_clean %>%
+  group_by(board, date) %>%
+  mutate(n = n()) %>%
+  ungroup() %>%
+  group_by(board) %>%
+  filter(n == max(n))%>%
+  arrange(desc(comments)) %>%
+  select(board,title,date,comments) %>%
+  slice(1,2)
+  
+### your result should be
+#> # A tibble: 8 x 4
+#> # Groups: board [4]
+#> board title date comments
+#> <chr> <chr> <date> <dbl>
+#> 1 China-Drama [心得] 太過期待以致失望的有翡（含原著雷） 2021-01-24 415
+#> 2 China-Drama [Live] 上陽賦 EP25 蕭綦高光即將開始 2021-01-24 337
+#> 3 EAseries [心得] Wandavision S01E05 大暴雷啦!! 2021-02-05 182
+#> 4 EAseries [請益] 是否可推薦帶入美式生活的影集 2021-01-22 94
+#> 5 KoreaDrama [情報] 哲仁王后花絮 未公開畫面 金正賢專訪 2021-02-17 1352
+#> 6 KoreaDrama [心得] 哲仁王后結局 2021-02-17 836
+#> 7 TaiwanDrama [LIVE] 台視《生生世世》第162集 台視週間20:00 2020-12-30 266
+#> 8 TaiwanDrama [LIVE] 愛不愛栗絲 第三集 2020-12-30 64
+
+
+
 ```
 
 7. advanced - transforming variables and counting: 文章類型(type)非常多樣，譬如"[心得]", "[閒聊]" 等，請保留"[心得]"、"[閒聊]"、"[新聞]"、"[情報]"，並將"[LIVE]"與"[Live]"合併成"[LIVE]"，剩下其他種類或是 missing value 都改成"[其他]"，修改後再計算各板的文章類型**比例**(百分比)，最後按照每個版的名稱由 A 到 Z、比例由大到小排列，並印出板名、類型、類型文章數、類型文章數占比的 tibble/dataframe
@@ -270,20 +387,21 @@ PTT 上面有好幾個和影集(drama)有關的子板(board)，下方提供 03/0
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
-### your result should be 
+
+### your result should be
 #> # A tibble: 23 x 4
-#>    board       type       n      per
-#>    <chr>       <chr>  <int>    <dbl>
-#>  1 China-Drama [LIVE]    45 0.0309  
-#>  2 China-Drama [其他]    57 0.0391  
-#>  3 China-Drama [心得]   128 0.0879  
-#>  4 China-Drama [情報]    12 0.00824 
-#>  5 China-Drama [新聞]     9 0.00618 
-#>  6 China-Drama [閒聊]   110 0.0755  
-#>  7 EAseries    [其他]    91 0.0625  
-#>  8 EAseries    [心得]   109 0.0748  
-#>  9 EAseries    [情報]     1 0.000686
-#> 10 EAseries    [新聞]   123 0.0844  
+#> board type n per
+#> <chr> <chr> <int> <dbl>
+#> 1 China-Drama [心得] 128 0.355
+#> 2 China-Drama [閒聊] 110 0.305
+#> 3 China-Drama [其他] 57 0.158
+#> 4 China-Drama [LIVE] 45 0.125
+#> 5 China-Drama [情報] 12 0.0332
+#> 6 China-Drama [新聞] 9 0.0249
+#> 7 EAseries [新聞] 123 0.321
+#> 8 EAseries [心得] 109 0.285
+#> 9 EAseries [其他] 91 0.238
+#> 10 EAseries [閒聊] 59 0.154
 #> # … with 13 more rows
 ```
 
