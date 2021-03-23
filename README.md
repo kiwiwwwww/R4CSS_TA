@@ -1,5 +1,13 @@
 # R4CSS_TA
 
+### week05_03/23
+
+* LAB 05 Tutorial Data-Manipulation-Joining [slide](https://p4css.github.io/R4CSS_TA/Lab05_Tutorial_Data-Manipulation-Joining.html)
+* LAB 05 Homework Data-Manipulation-Joining [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab05_Homework_Data-Manipulation-Joining.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab05_Homework_Data-Manipulation-Joining.html) 
+* AS 04 Data-Manipulation-Joining [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS04_Data-Manipulation-Joining.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS04_Data-Manipulation-Joining.html) 
+* LAB 04 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab04_Homework_Know-Your-Data_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab04_Homework_Know-Your-Data_ref.html)    
+* AS 03 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS03_Know-Your-Data_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS03_Know-Your-Data_ref.html)       
+
 ### week04_03/16
 
 * LAB 04 Tutorial Know-Your-Data [slide](https://p4css.github.io/R4CSS_TA/Lab04_Tutorial_Know-Your-Data.html)
@@ -7,9 +15,6 @@
 * AS 03 Know-Your-Data [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS03_Know-Your-Data.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS03_Know-Your-Data.html) 
 * LAB 03 Homework RMarkdown reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab03_Homework_R-Intermediate_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab03_Homework_R-Intermediate_ref.html)    
 * AS 02 Homework RMarkdown reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS02_R-Intermediate_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS02_R-Intermediate_ref.html)       
-
-
-
 
 ### week03_03/09
 

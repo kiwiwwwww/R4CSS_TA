@@ -1,0 +1,216 @@
+---
+title: "Lab04_Homework_Know-Your-Data-ref"
+author: "曾子軒 Teaching Assistant"
+date: "2021/03/16"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Know Your Data
+
+這份作業希望能夠讓你練習：
+
+a. 讀取資料
+b. 處理編碼
+c. 輸出資料
+d. 利用管線運算子(`%>%`)
+e. 基本的資料操作
+
+題目大部分都要求印出 tibble/dataframe，若你的資料是 tibble，直接印出即可，若是 dataframe，請印出前三列即可。
+
+## 作業: Know Your Data
+
+滿分共 100 分。
+
+### A. importing data and data manipulation - csv (50 分) 
+
+本題目利用內政部統計處的[社會經濟資料服務平台](https://segis.moi.gov.tw/STAT/Web/Portal/STAT_PortalHome.aspx)所提供的資料，該平台有大量台灣的地理圖資與人口變數，之後找題目可以參考。我們使用的是 109 年第 4 季各縣市的結婚統計。
+
+1. data importing：請讀取請右方路徑的 csv 檔，路徑為 `data 資料夾 -> Lab04 資料夾 -> 109Q4_county_marriage.csv`，並取名為 `df_109Q4_county_marriage`。檔案讀進來後可能有亂碼，請任選課堂提到的亂碼處理方式（讀取前修改編碼、讀取設定參數、讀進後修改編碼），將檔案以正確編碼印出。若你是讀取前修改編碼，請用文字說明步驟，若你是設定參數或修改編碼，請在程式碼中用註解(`#`)說明你在做什麼！
+
+```{r message=FALSE,warning=FALSE}
+### your code
+library(tidyverse)
+df_109Q4_county_marriage <- read_csv("data/Lab04/109Q4_county_marriage.csv")
+# one by one 編碼轉換
+df_109Q4_county_marriage %>% mutate(COUNTY_ID = iconv(COUNTY_ID, from = "BIG5", to = "UTF8"),
+                                    COUNTY = iconv(COUNTY, from = "BIG5", to = "UTF8"),
+                                    MARRY_CP_CNT = iconv(MARRY_CP_CNT, from = "BIG5", to = "UTF8"),
+                                    MARRY_CNT = iconv(MARRY_CNT, from = "BIG5", to = "UTF8"),
+                                    MARRY_M_CNT = iconv(MARRY_M_CNT, from = "BIG5", to = "UTF8"),
+                                    MARRY_F_CNT = iconv(MARRY_F_CNT, from = "BIG5", to = "UTF8"),
+                                    INFO_TIME = iconv(INFO_TIME, from = "BIG5", to = "UTF8"))
+
+# all in one 編碼轉換
+df_109Q4_county_marriage %>% mutate(across(where(is.character), ~iconv(.,from = "BIG5", to = "UTF8")))
+```
+
+2. `slice()` and `mutate()`：這份資料有七個 column，而且第一列是中文欄位名稱。承上題，請先修改編碼，又因為後續計算需要將幾個欄位轉成數值，所以請將第一列踢掉，接著將`結婚對數`, `結婚登記中外聯姻人數`, `結婚登記中外聯姻男性人數`, `結婚登記中外聯姻女性人數` 從 `character` 變成 `integer`，最後將結果儲存在 `df_109Q4_county_marriage_clean`，並印出 `df_109Q4_county_marriage_clean`（欄位名稱是英文的沒錯）
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+# one by one
+df_109Q4_county_marriage_clean <- df_109Q4_county_marriage %>% 
+  mutate(COUNTY_ID = iconv(COUNTY_ID, from = "BIG5", to = "UTF8"),
+         COUNTY = iconv(COUNTY, from = "BIG5", to = "UTF8"),
+         MARRY_CP_CNT = iconv(MARRY_CP_CNT, from = "BIG5", to = "UTF8"),
+         MARRY_CNT = iconv(MARRY_CNT, from = "BIG5", to = "UTF8"),
+         MARRY_M_CNT = iconv(MARRY_M_CNT, from = "BIG5", to = "UTF8"),
+         MARRY_F_CNT = iconv(MARRY_F_CNT, from = "BIG5", to = "UTF8"),
+         INFO_TIME = iconv(INFO_TIME, from = "BIG5", to = "UTF8")) %>%
+  slice(-1) %>% mutate(MARRY_CP_CNT = as.integer(MARRY_CP_CNT),
+                       MARRY_CNT = as.integer(MARRY_CNT),
+                       MARRY_M_CNT = as.integer(MARRY_M_CNT),
+                       MARRY_F_CNT = as.integer(MARRY_F_CNT))
+
+# all in once
+df_109Q4_county_marriage_clean <- df_109Q4_county_marriage %>% 
+  mutate(across(where(is.character), ~iconv(.,from = "BIG5", to = "UTF8"))) %>%
+  slice(-1) %>% mutate(across(matches("MARRY"), ~as.integer(.)))
+
+df_109Q4_county_marriage_clean
+```
+
+3. `arrange()` and `slice()`：請利用 `df_109Q4_county_marriage_clean`，篩選出 109 Q4 結婚對數最多的縣市，最後給我縣市代碼、縣市名稱、結婚對數的 tibble/dataframe
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+# using arrange() and row_number()
+df_109Q4_county_marriage_clean %>%
+  arrange(desc(MARRY_CP_CNT)) %>% 
+  filter(row_number() == 1) %>%
+  select(COUNTY_ID, COUNTY, MARRY_CP_CNT)
+
+# using arrange() and slice()
+df_109Q4_county_marriage_clean %>%
+  arrange(desc(MARRY_CP_CNT)) %>% 
+  slice(1) %>%
+  select(COUNTY_ID, COUNTY, MARRY_CP_CNT)
+
+# using slice_max()
+df_109Q4_county_marriage_clean %>%
+  slice_max(MARRY_CP_CNT, n = 1) %>%
+  select(COUNTY_ID, COUNTY, MARRY_CP_CNT)
+
+# using top_n()
+df_109Q4_county_marriage_clean %>%
+  top_n(MARRY_CP_CNT, n = 1) %>%
+  select(COUNTY_ID, COUNTY, MARRY_CP_CNT)
+```
+
+4. `filer()` and `arrange()`：請利用 `df_109Q4_county_marriage_clean`，先篩選出台灣六都，接著按照結婚對數由大到小排列，最後給我包含所有欄位的 tibble/dataframe
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+# using %in%
+df_109Q4_county_marriage_clean %>%
+  filter(COUNTY %in% c("臺北市", "新北市", "桃園市", "臺中市", "臺南市", "高雄市")) %>%
+  arrange(desc(MARRY_CP_CNT))
+
+# using str_detect()
+df_109Q4_county_marriage_clean %>%
+  filter(str_detect(COUNTY, "北市|中市|桃園|高雄|南市")) %>%
+  arrange(desc(MARRY_CP_CNT))
+
+```
+
+5. `mutate()` and `arrange()` and `filter()`：請利用 `df_109Q4_county_marriage_clean`，先增加一個計算各縣市的結婚登記中外聯姻人數中，女性人數佔比的欄位，接著再增加一個欄位計算女性人數佔比的排名(最高為 1)，最後請篩選出聯姻人數女性比例**前三高**的列，並給我縣市代碼、縣市名稱、結婚登記中外聯姻人數、聯姻女性人數、聯姻女性人數比例、聯姻女性比例排名的 tibble/dataframe
+
+提示：你可以查一下[`row_number()`](https://dplyr.tidyverse.org/reference/ranking.html) 在做些什麼
+
+```{r message=FALSE,warning=FALSE}
+### your code
+df_109Q4_county_marriage_clean %>%
+  mutate(MARRY_F_CNT_PER = MARRY_F_CNT/MARRY_CNT) %>%
+  arrange(desc(MARRY_F_CNT_PER)) %>% mutate(MARRY_F_CNT_RANK = row_number()) %>%
+  filter(MARRY_F_CNT_RANK %in% c(1:3)) %>%
+  select(COUNTY_ID, COUNTY, MARRY_CNT, MARRY_F_CNT, MARRY_F_CNT_PER, MARRY_F_CNT_RANK)
+```
+
+### B. importing data and data manipulation - excel (50 分) 
+
+本題目利用[台大碩士班考試入學報名人數資料](http://www.aca.ntu.edu.tw/gra/access/acc_mase/aboard-b07.asp?id=9)，原始檔案有 PDF 與 Excel，這邊選擇 Excel 檔案，讓你練習讀取 Excel 檔案以及資料操作。
+
+(1) data importing：請讀取右方路徑的 Excel 檔，路徑為 `data 資料夾 -> Lab04 資料夾 -> 台大_101學年度碩士班考試招生錄取情況一覽表.xls`，並取名為 `df_ntu_exam`，我只想要`口試`一直到`本校最低門檻的`欄位。另外提醒一下，這個檔案是 .xls，也就是舊版的 excel 檔案，不是現在較常見的 .xlsx 喔！
+
+```{r message=FALSE,warning=FALSE}
+### your code
+library(readxl)
+df_ntu_exam <- readxl::read_excel("data/Lab04/台大_101學年度碩士班考試招生錄取情況一覽表.xls", range = "A1:T225")
+df_ntu_exam
+```
+
+(2) `select()`：台大考試入學的碩士生分為一般組與在職組，請幫我拿掉`在職`相關的欄位。另外，也請幫我拿掉`口試`相關的欄位，完成後印出 tibble/dataframe
+
+提示：你可以先在 Excel 當中打開原始檔案看長相
+
+```{r message=FALSE,warning=FALSE}
+### your code
+
+# check columns
+df_ntu_exam %>% glimpse()
+
+# one by one
+df_ntu_exam %>% select(-c(`...7`,`...9`,`...11`,`...13`,`...15`,`...17`,`...19`)) %>% 
+  select(-c(`口試`,`口試比例`))
+
+# all in once
+df_ntu_exam %>% select(-c(7,9,11,13,15,17,19)) %>% select(-matches("口試"))
+```
+
+(3) `slice()` or `filter()` or `[,]`：觀察原始檔案可以發現，資料中前幾列包含總計、合計、小計，因為我只想看各系所的招生情況，所以請先依照上題所說，先拿掉`在職`與`口試`相關的欄位，接著幫我抓取**從中國文學系**開始的資料，完成後將結果儲存在 `df_ntu_exam_clean`，最後將 `df_ntu_exam_clean` 印出
+
+```{r message=FALSE,warning=FALSE}
+### your code
+df_ntu_exam_clean <- df_ntu_exam %>% 
+  select(-c(`...7`,`...9`,`...11`,`...13`,`...15`,`...17`,`...19`)) %>% 
+  select(-c(`口試`,`口試比例`)) %>%
+  slice(-c(1:5))
+df_ntu_exam_clean
+```
+
+(4) `filter()`：觀察原始資料後發現，有些系組的報考人數的值為空，請利用 `df_ntu_exam_clean`，幫我找出報考人數值為空的資料有哪些，完成後印出 tibble/dataframe
+
+提示
+
+a. Excel 的空值讀進 R 之後會長什麼樣子
+b. 你很有可能會用到 `is.na()` 這個函數，如果 `NA` 丟進去，會得到 `TRUE`，以外會得到 `FALSE`
+c. `filter()` 的本質就是篩選符合特定條件的列，所以理想上你也可以篩選出報考人數的值為空的列
+
+```{r message=FALSE,warning=FALSE}
+### your code
+df_ntu_exam_clean %>%
+  filter(is.na(`報考人數`))
+```
+
+(5) data exporting：請幫我將 `df_ntu_exam_clean` 輸出成 .csv 到 Lab04 資料夾當中，請取名為 `df_ntu_exam_clean.csv`。
+
+```{r message=FALSE,warning=FALSE}
+### your code
+df_ntu_exam %>% select(-c(`...7`,`...9`,`...11`,`...13`,`...15`,`...17`,`...19`)) %>% 
+  select(-c(`口試`,`口試比例`)) %>%
+  slice(-c(1:5)) %>%
+  write_csv("data/Lab04/df_ntu_exam_clean.csv")
+```
+
+(6) `filter()` and `select()`：請幫我利用 `df_ntu_exam_clean`，篩選出 "新聞研究所" 的資料感嘆一下 101 年的榮景，最後印出新聞所那列的系所、報考人數、招生名額、錄取人數、錄取率的 tibble/dataframe
+
+```{r message=FALSE,warning=FALSE}
+### your code
+df_ntu_exam_clean %>%
+  filter(系所別 == "新聞研究所") %>%
+  select(`系所別`,`報考人數`,`招生名額`,`錄取人數`,`錄取率`)
+```

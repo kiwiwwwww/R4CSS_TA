@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lab05_Data-Manipulation-Joining</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="曾子軒 Dennis Tseng" />
+    <script src="libs/header-attrs-2.6/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lab05_Data-Manipulation-Joining
+## Lab05_grouping-joining-tidyr
+### 曾子軒 Dennis Tseng
+### 台大新聞所 NTU Journalism
+### 2021/03/23
+
+---
+
+&lt;style type="text/css"&gt;
+
+.remark-slide-content {
+    padding: 1em 1em 1em 1em;
+    font-size: 28px;
+}
+
+.my-one-page-font {
+  padding: 1em 1em 1em 1em;
+  font-size: 20px;
+  /*xaringan::inf_mr()*/
+}
+
+&lt;/style&gt;
+
+
+# 今日重點
+
+- AS04 Preview
+- AS03 檢討
+- `group_by()` and `ungroup()`
+- tidyr：Pivoting, Combining, Splitting
+- Lab05 Practice
+
+---
+
+class: inverse, center, middle
+
+# [AS04](https://p4css.github.io/R4CSS_TA/AS04_Data-Manipulation-Joining.html)
+
+---
+
+# 作業檢討
+
+- [Lab04 範例解答](https://p4css.github.io/R4CSS_TA/Lab04_Homework_Know-Your-Data_ref.html)、[AS03 範例解答](https://p4css.github.io/R4CSS_TA/AS03_Know-Your-Data_ref.html)
+- 兩個題組的第一題都是 import data
+ - 題組一是缺少欄位名稱的 `tsv`
+ - 題組二是有中文的 `csv`
+- 讀取和輸出檔案的幾個重點
+ - 檔案格式是什麼 e.g. .csv
+ - 檔案編碼是什麼 e.g. BIG5
+ - 輸出要輸出成什麼格式 e.g. .rds
+- 套件與函數的使用
+ - base R 就有函數 e.g. `read.csv()`
+ - tidyverse 底下的 [`library(readr)`](https://readr.tidyverse.org/) e.g. `read_csv()`
+ 
+---
+# 作業檢討: File Format 檔案格式
+
+- delimited file
+ - csv, comma-separated values；tsv, tab-separated values
+ - use `read.**()` or `readr::read_**()`
+- plain text
+ - .txt, use `readLines()` or `readr::read_file()`
+- excel
+ - .xls, .xlsx
+ - [`readxl::read_excel()`](https://readxl.tidyverse.org/), [`openxlsx::read.xlsx()`](https://ycphs.github.io/openxlsx/), [`XLConnect::loadWorkbook()`](https://github.com/miraisolutions/xlconnect)
+- google sheet
+ - [`googlesheets4::read_sheet()`](https://googlesheets4.tidyverse.org/)
+- PDF
+ - [`tabulizer::extract_tables()`](https://cran.r-project.org/web/packages/tabulizer/vignettes/tabulizer.html), [`pdftools::pdf_text()`](https://docs.ropensci.org/pdftools/)
+
+---
+# 作業檢討: 推薦 readr 套件的理由
+
+1. 讀進來預設就是 tibble
+2. 函數很聰明，會去猜測每個 column 是什麼 type
+3. 預設編碼是 UTF8，可以避免許多問題
+4. 讀檔效率較佳，當資料筆數超過十萬會有明顯差異
+5. 提供較多元的參數可供挑選
+
+
+```r
+library(tidyverse)
+```
+
+---
+# 作業檢討: 推薦 readr 套件的理由
+
+
+```r
+df_main_clean &lt;- read_csv("data/AS03/df_main_clean.csv")
+```
+
+```
+## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   board = col_character(),
+##   type = col_character(),
+##   title = col_character(),
+##   date = col_date(format = ""),
+##   comments = col_double(),
+##   author = col_character(),
+##   text = col_character(),
+##   IP = col_character(),
+##   link = col_character(),
+##   time = col_datetime(format = "")
+## )
+```
+
+---
+# 作業檢討: 推薦 readr 套件的理由
+
+- 第二題的檔案有中文、有不同型態的欄位
+
+
+```r
+df_main_clean
+```
+
+```
+## # A tibble: 1,457 x 10
+##    board  type   title   date       comments author  text      IP       link    
+##    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;   &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;   
+##  1 Korea… [公告] Fw: [公… 2021-01-18       20 XDDDD5… "┌──┬│┌─… "※ 發信站:… https:/…
+##  2 Korea… [新聞] [新聞] 柳… 2021-01-18        5 jinyi … "演員柳惠英被提… "※ 發信站:… https:/…
+##  3 Korea… [閒聊] [閒聊]  … 2021-01-18      101 jay947… "花了幾個週末把… "※ 發信站:… https:/…
+##  4 Korea… [新聞] [新聞] 孫… 2021-01-18        9 jinyi … "據多名電視臺相… "※ 發信站:… https:/…
+##  5 Korea… [LIVE] [LIVE]… 2021-01-18      249 kawasa… "前輩，那支口紅… "※ 發信站:… https:/…
+##  6 Korea… [LIVE] [LIVE]… 2021-01-18      406 tcchen… "劇名:▁▁▁▁… "※ 發信站:… https:/…
+##  7 Korea… [LIVE] [LIVE]… 2021-01-18       80 diana8… "───────… "※ 發信站:… https:/…
+##  8 Korea… [心得] [心得] 惡… 2021-01-18       28 analyt… "最後一集到底來… "※ 發信站:… https:/…
+##  9 Korea… [求薦] [求薦] 想… 2021-01-18      214 greenb… "1.重刷doc… "※ 發信站:… https:/…
+## 10 Korea… &lt;NA&gt;   看完13集驅… 2021-01-19       35 patty6… "不知道各位大大… "※ 發信站:… https:/…
+## # … with 1,447 more rows, and 1 more variable: time &lt;dttm&gt;
+```
+
+---
+
+# 作業檢討: File Format - csv
+
+- `read.table()` 與 `read.csv()`
+ - 兩個其實是同一個函數，後者只是預設 `sep = ","`
+ - 同理可推 `read.table()` 讀 tsv 的時候修改成 `sep = "\t"`
+- 參數
+ - `file`(檔案路徑)
+ - `header`(是否有預設的欄位名稱, 預設有為 `TRUE`)
+ - `sep`(用什麼區分, 預設是 `","`)
+ - `fileEncoding`(預設電腦編碼，Win = `"BIG5"`, MAC = `"UTF-8"`)
+ - `na.strings`(missing value 長怎樣, 預設是 `"NA"` )
+ - `skip`(要跳過幾列, 預設 = `0`)
+ - `quote`(引用長怎樣, 預設 = `"\"'"`)
+---
+
+# 作業檢討: File Format - csv
+
+- `read_delim()` 與 `read_csv()`
+ - 兩個其實是同一個函數，後者只是預設 `delim = ","`
+ - 同理可推 `read_delim()` 讀 tsv 的時候修改成 `delim = "\t"`
+- 參數
+ - `file`(檔案路徑)
+ - `col_names`(是否有預設的欄位名稱, 預設有為 `TRUE`)
+ - `delim`(用什麼區分, 預設是 `","`)
+ - `locale`(地區，指編碼, `readr` 一律預設檔案用 `"UTF8"`)
+ - `na`(missing value 長怎樣, 預設是 `c("", "NA")` )
+ - `skip`(要跳過幾列, 預設 = `0`)
+ - `quote`(引用長怎樣, 預設 = `"\""`)
+
+---
+
+# 作業檢討: 實際讀取 tsv
+
+- GapMinder 題組
+
+
+```r
+df_test &lt;- 
+  read_delim("data/AS03/gapminder_raw.tsv", delim = ",")
+df_test
+```
+
+```
+## # A tibble: 1,703 x 1
+##    `Afghanistan\tAsia\t1952\t28.801\t8425333\t779.4453145` 
+##    &lt;chr&gt;                                                   
+##  1 "Afghanistan\tAsia\t1957\t30.332\t9240934\t820.8530296" 
+##  2 "Afghanistan\tAsia\t1962\t31.997\t10267083\t853.10071"  
+##  3 "Afghanistan\tAsia\t1967\t34.02\t11537966\t836.1971382" 
+##  4 "Afghanistan\tAsia\t1972\t36.088\t13079460\t739.9811058"
+##  5 "Afghanistan\tAsia\t1977\t38.438\t14880372\t786.11336"  
+##  6 "Afghanistan\tAsia\t1982\t39.854\t12881816\t978.0114388"
+##  7 "Afghanistan\tAsia\t1987\t40.822\t13867957\t852.3959448"
+##  8 "Afghanistan\tAsia\t1992\t41.674\t16317921\t649.3413952"
+##  9 "Afghanistan\tAsia\t1997\t41.763\t22227415\t635.341351" 
+## 10 "Afghanistan\tAsia\t2002\t42.129\t25268405\t726.7340548"
+## # … with 1,693 more rows
+```
+---
+
+# 作業檢討: 實際讀取 tsv
+
+- GapMinder 題組
+
+
+```r
+df_gapminder_raw &lt;- read_delim("data/AS03/gapminder_raw.tsv", col_names = F, delim = "\t")
+df_gapminder_raw %&gt;% head(3)
+```
+
+```
+## # A tibble: 3 x 6
+##   X1          X2       X3    X4       X5    X6
+##   &lt;chr&gt;       &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;
+## 1 Afghanistan Asia   1952  28.8  8425333  779.
+## 2 Afghanistan Asia   1957  30.3  9240934  821.
+## 3 Afghanistan Asia   1962  32.0 10267083  853.
+```
+
+```r
+# equals to
+df_gapminder_raw &lt;- read_tsv("data/AS03/gapminder_raw.tsv", col_names = F)
+```
+
+---
+
+# 作業檢討: 修改欄位名稱
+
+- GapMinder 題組
+
+
+```r
+# using rename()
+df_gapminder_raw &lt;- df_gapminder_raw %&gt;% 
+  rename(country = 1, continent = 2, year = 3, lifeExp = 4, pop = 5, gdpPercap = 6)
+# using colnames()
+colnames(df_gapminder_raw) &lt;- 
+  c("country", "continent", "year", "lifeExp", "pop", "gdpPercap")
+```
+
+---
+
+# 作業檢討: 遇到 `NA` 的處理
+
+- GapMinder 題組
+
+
+```r
+df_gapminder_raw %&gt;% filter(is.na(country))
+df_gapminder_raw %&gt;% filter(is.na(continent))
+df_gapminder_raw %&gt;% filter(is.na(year))
+df_gapminder_raw %&gt;% filter(is.na(lifeExp))
+df_gapminder_raw %&gt;% filter(is.na(pop))
+df_gapminder_raw %&gt;% filter(is.na(gdpPercap))
+
+df_gapminder_clean &lt;- df_gapminder_raw %&gt;%
+  mutate(continent = if_else(country == "Nepal", "Asia", continent))
+```
+
+---
+
+# 作業檢討: 判斷區間
+
+- `if_else()` and `case_when()`
+ - 常常與 `mutate()` 搭配判斷條件用，`NA` 無法判斷要特別處理
+ - `if_else(條件, TRUE 的值, FALSE 的值)`
+ - `case_when(條件 ~ 滿足條件的值, 最後有一個類似 else 的東西)`
+
+
+```r
+df_gapminder_clean %&gt;% 
+  mutate(life_interval = if_else(lifeExp &lt; 60, "&lt;60", "&gt;=60")) %&gt;%
+  mutate(life_interval = if_else(lifeExp &gt;= 70 &amp; life_interval == "&gt;=60"), "&gt;=70", life_interval) %&gt;%
+  count(life_interval)
+```
+
+
+---
+
+# 作業檢討: 判斷區間
+
+- `if_else()` and `case_when()`
+ - 常常與 `mutate()` 搭配判斷條件用，`NA` 無法判斷要特別處理
+ - `if_else(條件, TRUE 的值, FALSE 的值)`
+ - `case_when(條件 ~ 滿足條件的值, 最後有一個類似 else 的東西)`
+
+
+```r
+df_gapminder_clean %&gt;% 
+  mutate(life_interval = case_when(
+    # 條件寫左邊，中間用 ~ 連接，右邊放數值
+    lifeExp &lt; 60 ~ "&lt;60",
+    lifeExp &gt;= 60 &amp; lifeExp &lt; 70 ~ "&gt;=60",
+    lifeExp &gt;= 70 ~ "&gt;=70",
+    # 最後是 TRUE ~ 值 作結，放 else 的內容
+    TRUE ~ "others"
+  )) %&gt;%
+  count(life_interval)
+```
+
+---
+
+# group and summarize
+
+- `summarize()`
+ - 產出一個總結後的 dataframe
+ - 若有先 `group_by()`，會產出各組的總結
+- `group_by()`
+ - 把 dataframe 變成 grouped dataframe，長相相同
+ - group 之後使用動詞
+ - 比較：有 `group_by()` 和沒 `group_by()`
+ 
+
+```r
+df_main_clean &lt;- read_csv("data/AS03/df_main_clean.csv")
+```
+
+---
+# group and summarize
+
+
+```r
+df_main_clean %&gt;% 
+  summarise(comments = max(comments, na.rm = T))
+```
+
+```
+## # A tibble: 1 x 1
+##   comments
+##      &lt;dbl&gt;
+## 1     1499
+```
+
+
+```r
+df_main_clean %&gt;% group_by(board) %&gt;%
+  summarise(comments = max(comments, na.rm = T))
+```
+
+```
+## # A tibble: 4 x 2
+##   board       comments
+## * &lt;chr&gt;          &lt;dbl&gt;
+## 1 China-Drama      825
+## 2 EAseries        1499
+## 3 KoreaDrama      1498
+## 4 TaiwanDrama     1413
+```
+
+---
+# group and summarize
+
+- `ungroup()`
+ - 把 grouped 的狀態消除變回原本的
+ - 有時候會需要先 `group_by()` 再 `ungroup()`
+ - 底下來看  `summarize()`, `group_by()` and `ungroup()` 的應用
+- 舉例
+ - 計算各子板、各類型文章數量的**佔比**
+ - 取出**各子板**當中文章佔該板最高的類型 
+ - 取出**不分子板**當中文章佔該板最高的類型 
+
+---
+# summarize(), group_by() and ungroup()
+
+- 舉例
+ - 計算各子板、各類型文章數量的**佔比**
+ 
+
+```r
+df_main_clean %&gt;% group_by(board, type) %&gt;%
+  summarise(n = n()) %&gt;%
+  mutate(per = n/sum(n))
+```
+
+```
+## # A tibble: 60 x 4
+## # Groups:   board [4]
+##    board       type       n     per
+##    &lt;chr&gt;       &lt;chr&gt;  &lt;int&gt;   &lt;dbl&gt;
+##  1 China-Drama [Live]    45 0.125  
+##  2 China-Drama [公告]     4 0.0111 
+##  3 China-Drama [創作]     9 0.0249 
+##  4 China-Drama [問題]    33 0.0914 
+##  5 China-Drama [心得]   128 0.355  
+##  6 China-Drama [情報]    12 0.0332 
+##  7 China-Drama [新聞]     9 0.0249 
+##  8 China-Drama [板務]     1 0.00277
+##  9 China-Drama [求薦]     7 0.0194 
+## 10 China-Drama [討論]     1 0.00277
+## # … with 50 more rows
+```
+
+---
+# group and summarize
+
+- 舉例
+ - 取出**各子板**當中文章佔該板最高的類型 
+ - 取出**不分子板**當中文章佔該板最高的類型 
+ 
+
+```r
+df_main_clean %&gt;% group_by(board, type) %&gt;%
+  summarise(n = n()) %&gt;%
+  mutate(per = n/sum(n)) %&gt;%
+  filter(per == max(per))
+```
+
+```
+## # A tibble: 4 x 4
+## # Groups:   board [4]
+##   board       type       n   per
+##   &lt;chr&gt;       &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;
+## 1 China-Drama [心得]   128 0.355
+## 2 EAseries    [新聞]   123 0.321
+## 3 KoreaDrama  [心得]    98 0.266
+## 4 TaiwanDrama [LIVE]   105 0.305
+```
+
+---
+# group and summarize
+
+- 舉例
+ - 取出**各子板**當中文章佔該板最高的類型 
+ - 取出**不分子板**當中文章佔該板最高的類型 
+ 
+
+```r
+df_main_clean %&gt;% group_by(board, type) %&gt;%
+  summarise(n = n()) %&gt;% ungroup() %&gt;%
+  mutate(per = n/sum(n)) %&gt;%
+  filter(per == max(per))
+```
+
+```
+## # A tibble: 1 x 4
+##   board       type       n    per
+##   &lt;chr&gt;       &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt;
+## 1 China-Drama [心得]   128 0.0879
+```
+
+---
+# tidy data
+
+- Pivoting
+ - `pivot_longer()` 把資料變成長表格
+ - `cols` = 放進去的欄位, `names_to` = 名稱欄位叫做什麼, `values_to` = 值欄位叫做什麼
+ - `pivot_wider()` 把資料變成寬表格
+ - `id_cols` = 不要動的欄位, `names_from` = 名稱來自哪, `values_from` = 值來自哪
+- Splitting and Combining
+ - `separate()` 把一個欄位切開(split)成多個欄位
+ - `unite()` 把多個欄位合併(combine)成多個欄位
+ - `col` = 要動的欄位, `into` = 要變成什麼名字, `sep` = 切分的符號, `remove` = 是否要保留原本的欄位
+
+---
+# tidy data
+
+- df_main_agg 是一個 wide data
+
+
+```r
+df_main_agg &lt;- df_main_clean %&gt;% group_by(board) %&gt;%
+  summarise(article = n(), comments = sum(comments), author = n_distinct(author))
+
+df_main_agg
+```
+
+```
+## # A tibble: 4 x 4
+##   board       article comments author
+## * &lt;chr&gt;         &lt;int&gt;    &lt;dbl&gt;  &lt;int&gt;
+## 1 China-Drama     361    38491    181
+## 2 EAseries        383    12397    167
+## 3 KoreaDrama      369    61846    133
+## 4 TaiwanDrama     344    24864    119
+```
+
+---
+# tidy data
+
+- 把它變長
+
+```r
+df_main_agg_long &lt;- 
+  df_main_agg %&gt;% 
+  pivot_longer(cols = -board, names_to = "type", values_to = "n")
+df_main_agg_long
+```
+
+```
+## # A tibble: 12 x 3
+##    board       type         n
+##    &lt;chr&gt;       &lt;chr&gt;    &lt;dbl&gt;
+##  1 China-Drama article    361
+##  2 China-Drama comments 38491
+##  3 China-Drama author     181
+##  4 EAseries    article    383
+##  5 EAseries    comments 12397
+##  6 EAseries    author     167
+##  7 KoreaDrama  article    369
+##  8 KoreaDrama  comments 61846
+##  9 KoreaDrama  author     133
+## 10 TaiwanDrama article    344
+## 11 TaiwanDrama comments 24864
+## 12 TaiwanDrama author     119
+```
+
+---
+# tidy data
+
+- 把它變寬
+
+
+```r
+df_main_agg_wide &lt;- 
+  df_main_agg_long %&gt;%
+  pivot_wider(id = board, names_from = type, values_from = n)
+
+df_main_agg_wide
+```
+
+```
+## # A tibble: 4 x 4
+##   board       article comments author
+##   &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+## 1 China-Drama     361    38491    181
+## 2 EAseries        383    12397    167
+## 3 KoreaDrama      369    61846    133
+## 4 TaiwanDrama     344    24864    119
+```
+
+---
+# tidy data
+
+- 把它合併
+
+```r
+df_main_sep &lt;- 
+  df_main_agg %&gt;% 
+  unite(col = "metric", 2:4, sep = "-")
+
+df_main_sep
+```
+
+```
+## # A tibble: 4 x 2
+##   board       metric       
+##   &lt;chr&gt;       &lt;chr&gt;        
+## 1 China-Drama 361-38491-181
+## 2 EAseries    383-12397-167
+## 3 KoreaDrama  369-61846-133
+## 4 TaiwanDrama 344-24864-119
+```
+
+---
+# tidy data
+
+- 把它切開
+
+
+```r
+df_main_uni &lt;- 
+  df_main_sep %&gt;%
+  separate(col = metric, into = c("article", "comments", "author"))
+
+df_main_uni
+```
+
+```
+## # A tibble: 4 x 4
+##   board       article comments author
+##   &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt; 
+## 1 China-Drama 361     38491    181   
+## 2 EAseries    383     12397    167   
+## 3 KoreaDrama  369     61846    133   
+## 4 TaiwanDrama 344     24864    119
+```
+
+---
+
+class: inverse, center, middle
+
+# [Lab05](https://p4css.github.io/R4CSS_TA/Lab05_Homework_Data-Manipulation-Joining.html)
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"self_contained": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

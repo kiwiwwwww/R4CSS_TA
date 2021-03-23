@@ -1,0 +1,235 @@
+---
+title: "AS03_Know-Your-Data"
+author: "你是誰 R09342000 新聞所碩五"
+date: "2021/03/16"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Know Your Data
+
+這份作業希望能夠讓你熟悉讀取不同檔案型態的資料，並利用 `dplyr` 與 管線運算子操作資料表，讓你可以認識自己要分析的資料！共有兩個題組，每個題組有七題，前五題計分、後兩題不計分。
+
+題目大部分都要求印出 tibble/dataframe，若你的資料是 tibble，直接印出即可，若是 dataframe，請印出前三列即可。
+
+## 作業: Know Your Data
+
+滿分 100 分
+
+### data importing & data manipulation (i) (50 分)
+
+> The world cannot be understood without numbers. But the world cannot be understood with numbers alone.
+
+― Hans Rosling, Factfulness (漢斯・羅斯林，《真確》)
+
+[GapMinder Foundation](https://www.gapminder.org/tools/#$chart-type=bubbles) 是一個致力於「利用統計數字理解世界上各個國家社會、經濟、環境發展」的基金會，除了開發軟體視覺化呈現前述的統計數字以外，他們也將蒐集到的資料公開上網。
+
+若你對他們做的事情有興趣，可以先看這一篇介紹文 [如何用 30 秒了解台灣發展與全球趨勢：用 GapMinder 培養正確世界觀](https://leemeng.tw/gapminder.html)。但跟文中所說不同的是，現在 GapMinder Foundation 已經有提供台灣的資料了！因此，底下我們將利用 R 語言，來探索這份資料。
+
+1. data importing and renaming columns: 
+請讀取請右方路徑的 csv 檔，路徑為 `data 資料夾 -> AS03 資料夾 -> gapminder_raw.tsv`，並取名為 `df_gapminder_raw`。這個檔案是 tsv 而非 csv，而且它的欄位名稱 (column names) 遺失了，請小心謹慎！將檔案讀進來之後，請依序更改 `df_gapminder_raw` 的欄位名稱成 country, continent, year, lifeExp(預期壽命), pop(人口數), gdpPercap(人均GDP)，括弧內是我的說明，請用英文命名欄位即可，最後印出改名後的`df_gapminder_raw`
+
+```{r message=FALSE, warning=FALSE}
+### your code
+library(tidyverse)
+library(lubridate)
+df_gapminder_raw <- read_tsv("data/AS03/gapminder_raw.tsv", col_names = F)
+# using rename()
+df_gapminder_raw <- df_gapminder_raw %>% rename(country = 1, continent = 2, year = 3, lifeExp = 4, pop = 5, gdpPercap = 6)
+# using `colnames<-`
+df_gapminder_raw <- df_gapminder_raw %>% `colnames<-`(c("country", "continent", "year", "lifeExp", "pop", "gdpPercap"))
+# using colnames()
+colnames(df_gapminder_raw) <- c("country", "continent", "year", "lifeExp", "pop", "gdpPercap")
+
+df_gapminder_raw
+```
+
+2. detecting NAs: `df_gapminder_raw` 當中有 missing value 嗎？請利用程式碼研究每個欄位的 missing value 情形，回報哪些國家的哪些欄位有 missing value，並請闡述你認為該怎麼處理這些 missing value ，要手動補上嗎？要直接把有 missing value 的列都踢掉嗎？還是計算相關欄位再踢掉？最後將你處理過 missing value 的結果(如果你認為都不用動，就不用動沒關係)儲存在 `df_gapminder_clean` 中並將它印出
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_gapminder_raw %>% filter(is.na(country))
+df_gapminder_raw %>% filter(is.na(continent))
+df_gapminder_raw %>% filter(is.na(year))
+df_gapminder_raw %>% filter(is.na(lifeExp))
+df_gapminder_raw %>% filter(is.na(pop))
+df_gapminder_raw %>% filter(is.na(gdpPercap))
+
+df_gapminder_clean <- df_gapminder_raw %>%
+  mutate(continent = if_else(country == "Nepal", "Asia", continent))
+
+### your text (把文字描述寫在 code chunk 中)
+# country 沒有
+# continent 有, Nepal, 所以應該是 Asia
+# year 沒有
+# lifeExp 有, Portugal, 這樣這幾筆資料算 lifeExp 就無法使用，但不用踢掉
+# pop 有, Puerto Rico, 這樣這幾筆資料算 pop 就無法使用，但不用踢掉
+# gdpPercap 有, Reunion, 這樣這幾筆資料算 gdpPercap 就無法使用，但不用踢掉
+```
+
+3. checking on Taiwan: 利用 `df_gapminder_clean` 篩選出台灣的資料，請用文字描述你的觀察，你看到什麼趨勢？
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_gapminder_clean %>% filter(country == "Taiwan")
+
+### your text
+# 台灣的lifeExp, pop, gdpPercap 逐年成長沒有停過
+```
+
+4. mutating, filtering, and counting: 請在 `df_gapminder_clean` 中新增欄位，判斷每筆資料的預期壽命介於以下哪個區間（小於 60、大於等於 60 但小於 70、大於等於 70），接著計算歐洲的國家中，各年裡面預期壽命各區間的資料各有多少筆。務必在計算時考慮該如何處理 missing value，如果你前面選擇留著，這邊要留著嗎，如果你前面刪掉，對你現在的運算會有影響嗎？請印出結果，並用文字說明理由
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_gapminder_clean %>%
+  filter(!is.na(lifeExp)) %>%
+  mutate(life_interval = case_when(
+    lifeExp < 60 ~ "<60",
+    lifeExp >= 60 & lifeExp < 70 ~ "60-70",
+    lifeExp >= 70 ~ ">=70",
+    TRUE ~ "others"
+  )) %>%
+  filter(continent == "Europe") %>%
+  count(year, life_interval)
+
+### your text
+# 我踢掉 missing value，因為本來就是缺值，所以計算時不該納入
+```
+
+5. creating variables and ordering: 利用 `df_gapminder_clean`，先計算**亞洲**各國 1972 年的總額 GDP (人口數 x 人均GDP)，再依照預期壽命**由大到小**排列，最後印出國家、總額 GDP、預期壽命三個欄位的 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_gapminder_clean %>% filter(continent == "Asia") %>%
+  mutate(GDP = gdpPercap*pop) %>%
+  arrange(desc(lifeExp)) %>%
+  select(country, GDP, lifeExp)
+```
+
+6. advanced - subsetting: 利用 `df_gapminder_clean`，先篩選出歐洲各國**各自人口最多**的年份(e.g. A國 1992 年的人口多於 2007, 2002, etc.，因此留下 A國 1992 年的資料)，接著再依照預期壽命篩選出最高的十個國家(e.g. A國 1992年人口最多, B國 2002年的人口最多，比較兩國這兩年各自的預期壽命)，然後依照國家名稱由 A 到 Z 排列，最後印出國家、年份、預期壽命、人口數的 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_gapminder_clean %>% filter(continent == "Europe") %>%
+  group_by(country) %>%
+  mutate(pop_max = max(pop)) %>%
+  filter(pop == pop_max) %>%
+  ungroup() %>%
+  arrange(desc(lifeExp)) %>%
+  slice(1:10) %>%
+  arrange(country) %>%
+  select(country, year, lifeExp, pop)
+```
+
+7. advanced - in-group comparing: 利用 `df_gapminder_clean`，比較各國 1992 年和 2007 年的預期壽命差距，接著留下**各洲中**預期壽命差距最大與最小的國家，最後印出洲、國家、預期壽命差距的 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_gapminder_clean %>%
+  filter(!is.na(lifeExp)) %>%
+  filter(year %in% c(1992, 2007)) %>%
+  group_by(continent, country) %>%
+  summarise(lifeExp_diff = max(lifeExp) - min(lifeExp)) %>%
+  ungroup() %>%
+  group_by(continent) %>%
+  arrange(continent, desc(lifeExp_diff)) %>%
+  mutate(lifeExp_diff_rank = row_number()) %>%
+  filter(lifeExp_diff_rank %in% c(min(lifeExp_diff_rank), max(lifeExp_diff_rank))) %>%
+  select(continent, country, lifeExp_diff)
+  
+```
+
+
+### data importing & data manipulation (ii) (50 分)
+
+PTT 上面有好幾個和影集(drama)有關的子板(board)，下方提供 03/02 當天所抓取的相關資料，請載入這份資料後回答問題。
+
+1. data importing: 請讀取請右方路徑的 csv 檔，路徑為 `data 資料夾 -> AS03 資料夾 -> df_main_clean.csv`，取名為 `df_main_clean`後印出
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_main_clean <- read_csv("data/AS03/df_main_clean.csv")
+df_main_clean
+```
+
+2. counting: 這份資料來自好幾個不同的子板 e.g. 韓劇版，請問各子板各有多少篇文章？請印出 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_main_clean %>% count(board)
+```
+
+3. filtering: 請找出韓劇版(KoreaDrama)中文章留言數介於 50 到 100 之間（包含）的文章，並印出 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_main_clean %>% filter(board == "KoreaDrama") %>%
+  filter(comments >= 50 & comments <= 100)
+```
+
+4. mutating and counting: 請先增加一個每則文章月份的欄位，接著計算各版中各個月份各自有多少篇文章，最後印出板名、月份、文章數的 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_main_clean %>% mutate(month = month(date)) %>% count(board, month)
+```
+
+5. counting and comparing: "2021-02-23"到"2021-03-01"之間(包含這兩天)，哪個板的文章數量最多？請留下文章數最多的板，接著依照**文章數、板名的順序**印出 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+library(lubridate)
+df_main_clean %>%
+  filter(date >= as_date("2021-02-23") & date <= as_date("2021-03-01")) %>%
+  count(board) %>%
+  arrange(desc(n)) %>%
+  slice(1) %>%
+  select(n, board)
+```
+
+6. advanced - in-group subsetting: 請找出各板中"發文數量最多的一天"當天"留言數前兩多"的文章，請印出板名、標題、日期、留言數的 tibble/dataframe
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_main_clean %>%
+  group_by(board, date) %>%
+  mutate(n = n()) %>%
+  ungroup() %>%
+  group_by(board) %>%
+  filter(n == max(n)) %>%
+  arrange(board, desc(comments)) %>%
+  filter(row_number() %in% c(1:2)) %>%
+  select(board, title, date, comments)
+```
+
+7. advanced - transforming variables and counting: 文章類型(type)非常多樣，譬如"[心得]", "[閒聊]" 等，請保留"[心得]"、"[閒聊]"、"[新聞]"、"[情報]"，並將"[LIVE]"與"[Live]"合併成"[LIVE]"，剩下其他種類或是 missing value 都改成"[其他]"，修改後再計算各板的文章類型**比例**(百分比)，最後按照每個版的名稱由 A 到 Z、比例由大到小排列，並印出板名、類型、類型文章數、類型文章數占比的 tibble/dataframe
+
+提示：你可以查一下 `case_when()` 的用法，或是你想要用 `ifelse()` 或者 `if_else()` 都行
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_main_clean %>% mutate(type = case_when(type == "[LIVE]" ~ "[LIVE]",
+                                          type == "[Live]" ~ "[LIVE]",
+                                          type %in% c("[心得]","[閒聊]","[新聞]","[情報]") ~ type,
+                                          is.na(type) ~ "[其他]",
+                                          TRUE ~ "[其他]")) %>%
+  group_by(board, type) %>% summarise(n = n()) %>%
+  ungroup() %>%
+  group_by(board) %>%
+  mutate(per = n/sum(n)) %>%
+  ungroup() %>%
+  arrange(board, desc(per))
+```
+
+
