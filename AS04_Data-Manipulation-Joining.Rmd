@@ -92,12 +92,16 @@ as_tibble(df_education_wide)
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 df_education_wide %>% count(key)
 
 as.tibble(df_education_wide %>%
   mutate(key = str_replace(key,"edu_illiterate_f","edu_illiterate_all_f"))%>%
   mutate(key = str_replace(key,"edu_juniorcollege_2ys_graduated_m","edu_juniorcollege2ys_graduated_m"))%>%
   separate(key,c("edu","level","edu_status","gender")))
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
 =======
 # df_education_wide %>% count(key)
 >>>>>>> parent of b16c82b... update AS04 expected result
