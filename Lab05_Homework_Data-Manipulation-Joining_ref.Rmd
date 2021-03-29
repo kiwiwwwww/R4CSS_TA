@@ -1,0 +1,155 @@
+---
+title: "Lab05_Homework_Data-Manipulation-Joining_ref"
+author: "曾子軒 Teaching Assiatant"
+date: "2021/03/23"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Data Manipulation and Joining
+
+這份作業希望能夠讓你熟悉於資料處理(data manipulation)，利用這兩週所學的 filter, mutate, select, group by, summarize, join, pivot 等動詞完成任務。請一律印出 tibble()，你可以利用 `as_tibble()` 將 dataframe 轉換成 tibble。作業的滿分為 100 分。
+
+資料內容是台大 105 學年度雙主修的榜單，請參考[雙主修榜單](https://reg227.aca.ntu.edu.tw/TMD/stuquery/doc/105%E9%9B%99%E4%B8%BB%E4%BF%AE%E6%A6%9C%E5%96%AE.pdf)，但是 105 年的掛了，給你看 [108年](http://reg227.aca.ntu.edu.tw/tmd/stuquery/doc/108%E9%9B%99%E4%B8%BB%E4%BF%AE%E6%A6%9C%E5%96%AE.pdf) 的參考，為了上課需要，將內容做了一些改動喔！
+
+## 作業: Data Manipulation and Joining
+
+```{r message=FALSE, warning=FALSE}
+### 這邊不要動
+library(tidyverse)
+df_college_join <- read_csv("data/Lab05/df_college_join.csv")
+df_dmajor_105 <- read_csv("data/Lab05/df_dmajor_105.csv")
+
+### 給你看資料長這樣
+df_dmajor_105 %>% head(5)
+df_college_join %>% head(5)
+```
+
+### 0. 練習尋找並處理 `NA`
+
+```{r message=FALSE, warning=FALSE}
+### 看是誰有 NA
+
+# 一個一個看
+df_dmajor_105 %>%
+    filter(is.na(ID_year)|is.na(ID_dept)|is.na(ID_order)|is.na(dept_original)|is.na(grade)|is.na(name)|is.na(dept_dmajor))
+
+# 進階
+# df_dmajor_105 %>% anti_join(df_dmajor_105 %>% drop_na())
+
+# 進階
+# df_dmajor_105 %>% filter(if_any(everything(), is.na))
+
+### 處理 NA
+# 全部踢掉
+df_dmajor_105 %>% drop_na() %>% head(5)
+
+# 按照預設值修改
+df_dmajor_105 %>% replace_na(list(ID_year = "missing", dept_original = "unknown", grade = 0)) %>% head(5)
+
+### 因為這題資料的缺失值會影響結果計算，因此全數踢掉
+df_dmajor_105 <- df_dmajor_105 %>% drop_na()
+```
+
+
+### 1. `unite()` 和 `separte()`：
+
+A. 現在的學號分開了，請幫我用 `"-"` 拼起來，欄位命名為 `ID`，存成 `df_dmajor_105_tmp` 後印出   
+B. 再幫我把 `df_dmajor_105_tmp` 分開成三個欄位分別叫做 "ID_year", "ID_dept", "ID_order"，分開以後<span style="color: white;">回到一個人生活</span>   
+這題給你看答案喔！
+
+```{r message=FALSE, warning=FALSE}
+### your code (A)
+df_dmajor_105_tmp <- df_dmajor_105 %>% unite(col = "ID", c(ID_year, ID_dept, ID_order), sep = "-")
+df_dmajor_105_tmp
+### your code (B)
+df_dmajor_105_tmp %>% separate(col = ID, into = c("ID_year", "ID_dept", "ID_order"), sep = "-")
+
+```
+
+
+### 2. `group_by()` and `summarize()`:
+
+利用 `df_dmajor_105`
+
+A. 請幫我找出**向外**雙主修人數最多的系所   
+B. 請幫我找出**向外**雙主修科系最多元的系所   
+這題給你看答案喔！
+
+```{r message=FALSE, warning=FALSE}
+### your code (A)
+df_dmajor_105 %>%
+  group_by(dept_original) %>%
+  summarise(n = n()) %>%
+  ungroup() %>%
+  filter(n == max(n))
+
+### your code (B)
+df_dmajor_105 %>%
+  group_by(dept_original) %>%
+  summarise(n_major = n_distinct(dept_dmajor)) %>%
+  ungroup() %>%
+  filter(n_major == max(n_major))
+
+### your result should be
+
+```
+
+
+### 3. `join()` and `count()` and `mutate()`:
+
+利用 `df_dmajor_105` 和 `df_college_join` 串接，請幫我計算各學院**向外**雙主修的人數以及佔據總體的比例
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_dmajor_105 %>%
+  left_join(df_college_join, by = c("dept_original" = "dept")) %>%
+  count(college) %>%
+  mutate(per = n/sum(n))
+
+### your result should be
+
+```
+
+### 4. `join()` and `mutate()`:
+
+利用 `df_dmajor_105` 和 `df_college_join` 串接，請幫我計算各學院之間雙主修的人數，並且增加一個欄位，以原本學院為基礎，計算該學院雙主修到各學院的人數佔比。舉例來說，社科院有 5 人雙文學院、3 人雙工學院、2 人雙管理學院，請幫我計算出這些人數，以及社科雙文學院的佔比為 50%、雙工學院的佔比為 30%、雙管理學院的佔比為 20%，最後將結果儲存成 `df_dmajor_105_college` 並印出。
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_dmajor_105_college <- df_dmajor_105 %>%
+  left_join(df_college_join, by = c("dept_original" = "dept")) %>%
+  rename(college_original = college) %>%
+  left_join(df_college_join, by = c("dept_dmajor" = "dept")) %>%
+  rename(college_dmajor = college) %>%
+  count(college_original, college_dmajor) %>%
+  group_by(college_original) %>%
+  mutate(per = n/sum(n))
+
+df_dmajor_105_college
+### your result should be
+
+```
+
+### 5. `pivot_wider()`：
+
+請將 `df_dmajor_105_college` 轉成寬表格後印出，表格中的值使用 `per`， `n` 可以刪掉了
+
+```{r message=FALSE,warning=FALSE}
+### your code
+df_dmajor_105_college %>% select(-n) %>%
+  pivot_wider(names_from = college_dmajor, values_from = per, values_fill = list(per = 0))
+
+### your result should be 
+```
+
