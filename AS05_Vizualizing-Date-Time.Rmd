@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 
 這份作業希望能夠讓你熟悉於處理日期與時間資料，並且利用視覺化的文法(grammar of graphics) 呈現結果。過程中會用到前幾週學過 dplyr 的動詞，以及 lubridate 和 ggplot2。每個小題都請寫下你的原始碼並且畫出圖表。
 
-這次的作業使用 readr 提供的原始資料，主題是台灣的電影票房，有興趣的話可以點進 [【數讀國片票房】全球影視寒冬，2020 臺灣電影如何逆勢崛起](https://www.readr.tw/post/2522) 看一下這篇資料新聞。每一個小題都是新聞上的一張圖表！
+這次的作業使用 readr 提供的[原始資料](https://github.com/readr-media/readr-data/tree/master/movie_tickets)，主題是台灣的電影票房，有興趣的話可以點進 [【數讀國片票房】全球影視寒冬，2020 臺灣電影如何逆勢崛起](https://www.readr.tw/post/2522) 看一下這篇資料新聞。每一個小題都是新聞上的一張圖表！
 
 ## 作業: Data Visualization (01) Datetime
 
