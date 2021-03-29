@@ -94,6 +94,8 @@ source: [Datacamp - Introduction to Data Visualization with ggplot2](https://www
 
 # `ggplot2` 的簡單注意事項
 
+- 想看各大洲中預期壽命和人均GDP的關係
+
 ```{r message=F, warning=F}
 library(gapminder)
 library(ggplot2)
