@@ -1,5 +1,13 @@
 # R4CSS_TA
 
+### week06_03/30
+
+* LAB 06 Tutorial Data-Manipulation-Joining [slide](https://p4css.github.io/R4CSS_TA/Lab06_Tutorial_Visualizing-Date-Time.html)
+* LAB 06 Homework Data-Manipulation-Joining [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab06_Homework_Visualizing-Date-Time.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab06_Homework_Visualizing-Date-Time.html) 
+* AS 05 Data-Manipulation-Joining [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS05_Visualizing-Date-Time.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS05_Visualizing-Date-Time.html) 
+* LAB 05 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab05_Homework_Data-Manipulation-Joining_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab05_Homework_Data-Manipulation-Joining_ref.html)    
+* AS 04 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS04_Data-Manipulation-Joining_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS04_Data-Manipulation-Joining_ref.html)    
+
 ### week05_03/23
 
 * LAB 05 Tutorial Data-Manipulation-Joining [slide](https://p4css.github.io/R4CSS_TA/Lab05_Tutorial_Data-Manipulation-Joining.html)

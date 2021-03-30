@@ -1,0 +1,160 @@
+---
+title: "Lab06_Vizualizing-Date-Time"
+subtitle: "Lab06_ggplot2-cleaning-data"
+author: "曾子軒 Dennis Tseng"
+institute: "台大新聞所 NTU Journalism"
+date: "2021/03/30"
+output:
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      self_contained: true
+---
+<style type="text/css">
+
+.remark-slide-content {
+    padding: 1em 1em 1em 1em;
+    font-size: 28px;
+}
+
+.my-one-page-font {
+  padding: 1em 1em 1em 1em;
+  font-size: 20px;
+  /*xaringan::inf_mr()*/
+}
+
+</style>
+
+
+# 今日重點
+
+- AS05 Preview
+- AS04 檢討
+- `ggplot2` 的簡單注意事項
+- Lab06 Practice
+
+---
+
+class: inverse, center, middle
+
+# [AS05](https://p4css.github.io/R4CSS_TA/AS05_Visualizing-Date-Time.html)
+
+---
+
+# 作業檢討
+
+- [Lab05 範例解答](https://p4css.github.io/R4CSS_TA/Lab05_Homework_Data-Manipulation-Joining_ref)、[AS04 範例解答](https://p4css.github.io/R4CSS_TA/AS04_Data-Manipulation-Joining_ref.html)
+- AS04 要注意的地方
+ - `%in%` 跟 `==` 之間的差別
+ - `left_join()` 完之後檢查 missing value
+ - 負相關的詮釋：
+     - "高等教育程度人口比例越高，贊成公投第10案的投票人口比例越低。"
+     - "高等教育程度人口比例高，贊成公投第10案的投票人口比例低。"
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+- Overview
+ - ggplot2 is a system for declaratively creating graphics, based on The [Grammar of Graphics](https://byrneslab.net/classes/biol607/readings/wickham_layered-grammar.pdf). 
+ - You provide the data, tell ggplot2 how to map variables to aesthetics(美學), what graphical primitives to use, and it takes care of the details.
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+- 引用自[淺談資料視覺化以及 ggplot2 實踐](https://leemeng.tw/data-visualization-from-matplotlib-to-ggplot2.html)
+ - 資料視覺化是資料與圖的直接映射？
+     - e.g. 想分析 x, y -> 都是定量資料 -> 散佈圖 (scatter plot)
+     - e.g. 想分析 x, z -> 一定量一定性 -> 長條圖 (bar chart)
+ - 資料視覺化是將資料中的變數映射到視覺變數上，進而有效且有意義地呈現資料的樣貌！
+     - Mappings(映射) link data to things you see
+     - 視覺變數 / 刻度（visual variables / scales）
+     - 包含位置（x / y axis）, 顏色（color）, 大小（size）, 透明程度（alpha）, 填滿（fill）, 形狀（shape）
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+- 組成
+ - data + `ggplot(aes( ))` + `geom_**()` + ...
+ - 資料層 + 美學層 + 幾何層 + ...
+
+```{r out.width='55%', out.height='55%', echo=FALSE}
+knitr::include_graphics("photo/Lab06_ggplot01.jpg")
+```
+
+source: [Datacamp - Introduction to Data Visualization with ggplot2](https://www.datacamp.com/courses/data-visualization-with-ggplot2-1)
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+- 想看各大洲中預期壽命和人均GDP的關係
+
+```{r message=F, warning=F}
+library(gapminder)
+library(ggplot2)
+
+head(gapminder, 3)
+```
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+```{r message=F, warning=F}
+# 把變數映射到視覺變數上: 
+# the property ‘color’ will represent the variable continent
+p_01 <- ggplot(data = gapminder,
+               mapping = aes(x = gdpPercap, y = lifeExp,
+                             color = continent))
+p_01 + geom_point() + scale_x_log10()
+```
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+```{r message=F, warning=F}
+# 把變數映射到視覺變數上: 
+# aes() wants to map a variable to the color aesthetic, which is a string "purple"
+p_02 <- ggplot(data = gapminder,
+               mapping = aes(x = gdpPercap, y = lifeExp,
+                             color = "purple"))
+p_02 + geom_point() + scale_x_log10()
+```
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+```{r message=F, warning=F}
+# 把變數映射到視覺變數上: 
+# the property ‘color’ will represent the variable continent
+p_01 <- ggplot(data = gapminder,
+               mapping = aes(x = gdpPercap, y = lifeExp,
+                             color = continent))
+# aes() wants to map a variable to the color aesthetic, which is a string "purple"
+p_02 <- ggplot(data = gapminder,
+               mapping = aes(x = gdpPercap, y = lifeExp,
+                             color = "purple"))
+```
+
+- 因為只有一個值所以 R recycle 了，變成紅色因為預設顏色是紅色
+- `aes()` 是變數、而不是用來讓你創造變數
+- 概念上是想指定顏色，但實質效果變成創造變數了
+
+source: [Data Visualization by Kieran Healy Chapter03](https://socviz.co/)
+
+---
+
+class: inverse, center, middle
+
+# [Lab06](https://p4css.github.io/R4CSS_TA/Lab06_Homework_Visualizing-Date-Time.html)
+
+

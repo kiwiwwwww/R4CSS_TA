@@ -1,0 +1,217 @@
+---
+title: "Lab06_Homework_Visualizing-Date-Time"
+author: "你是誰 R09342000 新聞所碩五"
+date: "2021/03/30"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Data Manipulation and Joining
+
+這份作業希望能夠讓你熟悉於清理資料(cleaning data)，並且利用視覺化的文法(grammar of graphics) 呈現結果。過程中會用到前幾週學過 dplyr 的動詞，以及 lubridate 和 ggplot2。每個小題都請寫下你的原始碼並且畫出圖表。
+
+這次的作業使用 readr 提供的[原始資料](https://github.com/readr-media/readr-data/tree/master/reservoir)，主題是台灣的電影票房，有興趣的話可以點進 [【讀 + 數據】咦！颱風都不來！水庫預警之歷年水庫水位最低是⋯⋯？](https://www.readr.tw/post/2500) 看一下這篇資料新聞
+
+## 作業: Data Manipulation and Joining
+
+```{r message=FALSE, warning=FALSE}
+### 這邊不要動
+library(tidyverse)
+library(lubridate)
+
+df_reservoir_2020 <- 
+  read_csv("data/Lab06/reservoir_data_2020.csv", col_names = F)
+
+df_reservoir_2019 <- 
+  read_csv("data/Lab06/reservoir_data_2019.csv", col_names = F)
+
+df_reservoir_2018 <- 
+  read_csv("data/Lab06/reservoir_data_2018.csv", col_names = F)
+
+df_reservoir_raw <- df_reservoir_2020 %>%
+  bind_rows(df_reservoir_2019) %>%
+  bind_rows(df_reservoir_2018 ) %>% 
+  rename(name = 1, year = 2, area = 3, town = 4, date = 5, height = 6, value = 7, percentage = 8)
+
+### 給你看資料長這樣
+df_reservoir_raw %>% head(5)
+```
+
+### 1. `dplyr` & `ggplot2::geom_col()`
+
+水庫有多少
+
+A. 各個區域(area)有多少縣市有水庫？   
+B. 各個區域(area)有多少水庫？   
+C. 請先分別畫，再想辦法畫在一起！   
+
+```{r message=FALSE, warning=FALSE}
+# 第一步：找縣市
+df_reservoir_raw %>% mutate(county = str_sub(town, 1, 3))
+
+# 第二步：以區域跟縣市為單位計算有水庫的縣市、水庫數量
+df_reservoir_raw %>% mutate(county = str_sub(town, 1, 3)) %>%
+  group_by(area) %>% 
+  summarise(n_town = n_distinct(county),
+            n_name = n_distinct(name))
+
+# 第三步：畫畫
+df_reservoir_agg_area <- df_reservoir_raw %>% mutate(county = str_sub(town, 1, 3)) %>%
+  group_by(area) %>% 
+  summarise(n_town = n_distinct(county),
+            n_name = n_distinct(name))
+
+# A. 畫各個區域(area)有多少縣市有水庫
+df_reservoir_agg_area %>%
+  # ggplot...
+  # theme(text = element_text(family = "Noto Sans CJK TC Medium")) 
+  # theme(text = element_text(family = "微軟正黑體"))
+
+# B. 畫各個區域(area)有多少水庫
+df_reservoir_agg_area %>%
+  # ggplot...
+  # theme(text = element_text(family = "Noto Sans CJK TC Medium")) 
+  # theme(text = element_text(family = "微軟正黑體"))
+
+# C. 畫在一起
+df_reservoir_agg_area %>%
+  # ggplot...
+  facet_wrap(type ~ .) +
+  # theme(text = element_text(family = "Noto Sans CJK TC Medium")) 
+  # theme(text = element_text(family = "微軟正黑體"))
+  
+```
+
+### 2. `dplyr` & `ggplot2::geom_col()`
+
+台灣本島 2018-2020  02/01 蓄水量各區域蓄水量百分比
+
+A. 台灣本島蓄水量各區域蓄水量百分比的堆疊長條圖   
+B. 台灣本島蓄水量各區域蓄水量百分比的併排長條圖   
+
+```{r message=FALSE, warning=FALSE}
+# 為什麼看本島而已幹嘛欺負澎湖人
+df_reservoir_raw %>%
+  filter(date == "2/1") %>% 
+  group_by(year, area) %>%
+  summarise(value = sum(value))
+
+# 第一步: 計算每年、每區的蓄水量
+df_reservoir_raw %>%
+  filter(area != "澎湖地區") %>%
+  filter(date == "2/1") %>% 
+  group_by(year, area) %>%
+  summarise(value = sum(value)) %>% ungroup()
+
+# 第二步: 計算每年、每區的蓄水量佔比
+df_reservoir_raw %>%
+  filter(area != "澎湖地區") %>%
+  filter(date == "2/1") %>% 
+  group_by(year, area) %>%
+  summarise(value = sum(value)) %>% ungroup() %>%
+  group_by(year) %>% mutate(per = value/sum(value))
+
+# 第三步：畫畫
+df_reservoir_agg_year <- df_reservoir_raw %>%
+  filter(area != "澎湖地區") %>%
+  filter(date == "2/1") %>% 
+  group_by(year, area) %>%
+  summarise(value = sum(value)) %>% ungroup() %>%
+  group_by(year) %>% mutate(per = value/sum(value))
+
+# A. 台灣本島蓄水量各區域蓄水量百分比的堆疊長條圖
+df_reservoir_agg_year %>%
+  # ggplot...
+  # theme(text = element_text(family = "Noto Sans CJK TC Medium")) 
+  # theme(text = element_text(family = "微軟正黑體"))
+
+# B. 台灣本島蓄水量各區域蓄水量百分比的併排長條圖
+df_reservoir_agg_year %>%
+  # ggplot...
+  # theme(text = element_text(family = "Noto Sans CJK TC Medium")) 
+  # theme(text = element_text(family = "微軟正黑體"))
+
+```
+
+### 3. `lubridate` & `ggplot2::geom_line()`
+
+石門水庫蓄水量百分比變化
+
+A. 2019 年每天的蓄水量百分比變化   
+B. 2018-2020年 1 月的蓄水量百分比變化比較   
+
+```{r message=FALSE, warning=FALSE}
+# 先來看看資料長相
+df_reservoir_raw %>% filter(name == "石門水庫") %>% count(year)
+
+# A. 2019 年每天的蓄水量百分比變化
+df_reservoir_raw %>% filter(name == "石門水庫") %>% filter(year == 2019) %>%
+  ggplot(aes(x = date, y = percentage))
+
+df_reservoir_raw %>% select(date, percentage) %>% head(5)
+
+df_reservoir_raw %>% filter(name == "石門水庫") %>% filter(year == 2019) %>%
+  mutate(percentage = str_remove_all(percentage, " |\\%")) %>%
+  mutate(percentage = as.numeric(percentage)) %>%
+  mutate(percentage = percentage/100) %>%
+  mutate(date2 = str_c(year, "/", date)) %>%
+  mutate(date2 = as_date(date2)) %>%
+  filter(!is.na(date2)) %>%
+  # ggplot...
+  # theme(text = element_text(family = "Noto Sans CJK TC Medium")) 
+  # theme(text = element_text(family = "微軟正黑體"))
+
+# B. 石門水庫蓄水量百分比變化: 想看這三年間 1 月的比較
+df_reservoir_raw %>% filter(name == "石門水庫") %>% 
+  mutate(percentage = str_remove_all(percentage, " |\\%")) %>%
+  mutate(percentage = as.numeric(percentage)) %>%
+  mutate(percentage = percentage/100) %>%
+  mutate(date2 = str_c(year, "/", date)) %>%
+  mutate(date2 = as_date(date2)) %>%
+  filter(!is.na(date2)) %>%
+  mutate(month = month(date2)) %>%
+  filter(month == 1) %>%
+  # ggplot...
+  # theme(text = element_text(family = "Noto Sans CJK TC Medium")) 
+  # theme(text = element_text(family = "微軟正黑體"))
+
+df_reservoir_raw %>% filter(name == "石門水庫") %>% 
+  mutate(percentage = str_remove_all(percentage, " |\\%")) %>%
+  mutate(percentage = as.numeric(percentage)) %>%
+  mutate(percentage = percentage/100) %>%
+  mutate(date2 = str_c(year, "/", date)) %>%
+  mutate(date2 = as_date(date2)) %>%
+  filter(!is.na(date2)) %>%
+  mutate(month = month(date2)) %>%
+  mutate(day = day(date2)) %>%
+  filter(month == 1) %>%
+  # ggplot...
+  # theme(text = element_text(family = "Noto Sans CJK TC Medium")) 
+  # theme(text = element_text(family = "微軟正黑體"))
+
+df_reservoir_raw %>% filter(name == "石門水庫") %>% 
+  mutate(percentage = str_remove_all(percentage, " |\\%")) %>%
+  mutate(percentage = as.numeric(percentage)) %>%
+  mutate(percentage = percentage/100) %>%
+  mutate(date2 = str_c(year, "/", date)) %>%
+  mutate(date2 = as_date(date2)) %>%
+  filter(!is.na(date2)) %>%
+  mutate(month = month(date2)) %>%
+  mutate(day = day(date2)) %>%
+  mutate(year = as.factor(year)) %>%
+  filter(month == 1) %>%
+  # ggplot...
+  # theme(text = element_text(family = "Noto Sans CJK TC Medium")) 
+  # theme(text = element_text(family = "微軟正黑體"))
+
+```

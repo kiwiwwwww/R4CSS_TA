@@ -1,0 +1,180 @@
+---
+title: "AS04_Data-Manipulation-Joining_ref"
+author: "曾子軒 Teaching Assistant"
+date: "2021/03/23"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Data Manipulation and Joining
+
+這份作業希望能夠讓你熟悉於資料處理(data manipulation)，利用這兩週所學的 filter, mutate, select, group by, summarize, join, pivot 等動詞完成任務。請一律印出 tibble，你可以利用 `as_tibble()` 將 dataframe 轉換成 tibble，不過按照預設的 code 應該都會是 tibble，另外印出結果不用特別打 `print()` 喔。作業的滿分為 100 分。
+
+老師在影片中示範怎麼處理各村里的婚姻狀況，清理後再與公投資料串接，這次的作業則是要處理教育資料，資料中包含全台各村里 **15歲以上現住人口** 的性別、年齡、教育程度統計。請一定要先看影片再來寫！
+
+## 作業: Data Manipulation and Joining
+
+```{r message=FALSE, warning=FALSE}
+### 這邊不要動
+library(tidyverse)
+df_education_raw <- read_csv("data/AS04/opendata107Y020.csv")
+### 給你看資料長這樣
+df_education_raw %>% glimpse()
+```
+
+將資料讀進來之後可以看到這份資料的長相，前幾列是村里的名稱與代碼，後面以 `edu_` 開頭的欄位則是代表該村里教育相關的狀態。舉例來說，`edu_doctor_graduated_m` 代表的是 `博畢_男`，`edu_juniorcollege_2ys_ungraduated_f` 代表的是 `二肄_女`，`edu_selftaughtl_m` 代表的是 `自修_男`，`edu_juniorcollege_5ys_first3y_ungraduated_f` 代表的是 `前三肄_女`。
+
+「2畢」、「2肄」、「後3畢」、「後3肄」、「前3肄」於教育程度統計上分別指專科2、3年制、5專、5專後2年、5專前3年之畢業、肄業狀況。另外，肄業包含中途輟學、休學者，或正在學校求學之學生，所以在學生也算在裡面喔！
+
+```{r message=FALSE, warning=FALSE}
+### 這邊不要動
+df_education <- df_education_raw %>%
+  slice(-1) %>%
+  select(-edu_age_15up_total, -statistic_yyy) %>%
+  mutate(across(contains("edu_"), ~as.integer(.)))
+```
+
+我把第一列刪掉後，再將用不到的欄位刪除，並且把教育相關欄位轉換成整數，接下來請用 `df_education` 作答！
+
+### 1. `pivot_longer()`:
+
+現在的資料是一個寬表格(wide)，請利用 `pivot_longer()` 或是 `gather()` 將它轉換成長表格(long)，儲存為 `df_education_long` ，並將 `df_education_long` 印出。
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_education_long <- df_education %>% 
+  pivot_longer(cols = -c(1:3), names_to = "key", values_to = "value")
+
+df_education_long
+### your result should be
+
+```
+
+### 2. `separate()`:
+
+請觀察 `df_education_long` 當中 `key` 欄位的值，將 key 利用 `separate()` 切開成四個欄位，分別是`edu`, `level`, `edu_status`, `gender`，各自代表教育前綴詞、學位、教育狀態、性別。最後將結果儲存在 `df_education_long_cut` 當中，並將 `df_education_long_cut` 印出。如果你不懂這邊在說什麼，請參考老師本週第一支影片(R04_1_1 Loading MOI demographic data)，基本上就是按照裡面的流程進行。底下會遇到好切跟不好切的情況，遇到不好切的情況時可以使用 `str_replace()` 函數。
+
+提示：
+
+1. 你可以利用 `count()` 觀察 `key` 的結構。舉例來說， `edu_doctor_graduated_m` 應該切成 `edu` = "edu", `level` = "doctor", `edu_status` = "graduated", `gender` = "m"。
+2. 不好切的情況(01)： `edu_illiterate_f` 代表不識字，沒辦法切成四塊，請想辦法將這個值切成 `edu` = "edu", `level` = "illiterate", `edu_status` = "all", `gender` = "f"。
+3. 不好切的情況(02)： `edu_juniorcollege_2ys_graduated_m` 裡面多了一個 `_`，同樣沒辦法切成四塊，請想辦法將這個值切成 `edu` = "edu", `level` = "juniorcollege2ys", `edu_status` = "graduated", `gender` = "m"。
+4. `str_replace(string = "小軒不喜歡吃肉", pattern = "不喜歡", replacement = "超討厭")` 的意思是把 `string` 參數當中滿足 `pattern` 參數的字串替換成 `replacement` 參數的值，所以結果會是 `"小軒超討厭吃肉"`。
+
+```{r message=FALSE, warning=FALSE}
+### 這邊讓你看 key 的長相
+df_education_long %>% count(key)
+
+### your result should be
+### your code
+df_education_long_cut <- df_education_long %>%
+  mutate(key = str_replace(key, "juniorcollege_2ys", "juniorcollege2ys")) %>%
+  mutate(key = str_replace(key, "juniorcollege_5ys_final2y", "juniorcollege5ysfinal2y")) %>%
+  mutate(key = str_replace(key, "juniorcollege_5ys_final3y", "juniorcollege5ysfinal3y")) %>%
+  mutate(key = str_replace(key, "juniorcollege_5ys_first3y", "juniorcollege5ysfirst3y")) %>%
+  mutate(key = str_replace(key, "_illiterate", "_illiterate_all")) %>%
+  mutate(key = str_replace(key, "_selftaughtl", "_selftaughtl_all")) %>%
+  separate(key, c("edu", "level", "graduate", "gender"), sep = "_")
+
+df_education_long_cut
+
+### your result should be
+
+```
+
+
+### 3. `group_by()` and `summarize()`:
+
+請計算以區域別(site_id) 為單位的教育統計，產出的欄位包含 n_sum(15歲以上現住人口總人數), n_female(女性15歲以上現住人口總人數), n_higher(高等教育總人數, 包含博士、碩士、大學，畢業與肄業皆計入), n_higher_female(女性高等教育總人數), n_self(自學總人數), n_illiterate(不識字總人數)，把資料儲存為 `df_education_agg`，並且將 `df_education_agg` 印出。
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_education_agg <- df_education_long_cut %>%
+  group_by(site_id) %>%
+  summarise(n_sum = sum(value),
+            n_female = sum(value[gender == "f"]),
+            n_higher = sum(value[level %in% c("doctor", "master", "university")]),
+            n_higher_female = sum(value[level %in% c("doctor", "master", "university") & gender == "f"]),
+            n_self = sum(value[level == "selftaughtl"]),
+            n_illiterate = sum(value[level == "illiterate"]))
+
+df_education_agg
+
+### your result should be
+
+```
+
+### 4. data joining:
+
+請以教育資料為基底，串接第十案公投的資料。串接後會發現兩邊資料大部分可以完成串接，但有少部分會有問題，請檢查到底問題在哪裡，將問題排除後，將串好的資料儲存成 `df_ref_edu_join`，再將 `df_ref_edu_join` 印出。
+
+提示：
+
+1. 你可以在串好之後，利用 `filter(is.na(填你要檢查的欄位))` 檢查是哪些列有問題。
+2. 發現 `site_id` 的問題之後，你會回頭重新利用 `group_by()` 和 `summarize()` 計算教育統計，再去 join 公投案資料。
+
+```{r message=FALSE, warning=FALSE}
+### 這裡不要動
+ref10 <- read_csv("data/AS04/ref10_town.csv") %>%
+  select(county = 縣市, town = 鄉鎮市區,
+         agree = 同意票數, disagree = 不同意票數,
+         legalVote = 有效票數, illegalVote = 無效票數, 
+         vote = 投票數, legalPopulation =  投票權人數)  %>%
+  mutate(site_id = str_c(county, town)) %>%
+  select(-c(county, town)) %>%
+  drop_na(site_id) %>% select(site_id, everything())
+
+### your code
+df_education_agg %>% left_join(ref10) %>% 
+  filter(is.na(legalPopulation))
+
+df_ref_edu_join <-
+  df_education_agg %>%
+  mutate(site_id = str_remove_all(site_id, " |　")) %>%
+  mutate(site_id = case_when(
+    str_detect(site_id, "高雄市鳳山") ~ "高雄市鳳山區",
+    str_detect(site_id, "高雄市三民") ~ "高雄市三民區",
+    TRUE ~ site_id
+  )) %>%
+  group_by(site_id) %>%
+  summarise(across(contains("n_"), ~sum(.))) %>%
+  left_join(ref10)
+
+df_ref_edu_join
+
+### your result should be
+
+```
+
+### 5. data visualization:
+
+請利用 `df_ref_edu_join`，計算 `agreeRate`(分母是 `legalVote`，分子是 `agree`) 以及 `per_higher` (分母是 `n_sum`，分子是 `n_higher`) ，接著利用 ggplot 和 geom_jitter() 畫出 x 軸 = `per_higher`, y 軸 = `agreeRate` 的散點圖，並用三行以內的文字**描述你的詮釋**。若不知道怎麼畫，請參考老師本週第四支影片(R04_1_4 Joining demographic and referendum data) 最後面。
+
+```{r}
+### your code
+df_ref_edu_join %>%
+  mutate(agreeRate = agree / legalVote,
+         per_higher = n_higher / n_sum) %>%
+  ggplot() + 
+  aes(per_higher, agreeRate) + 
+  geom_jitter(alpha = 0.5, color = "royalblue") + 
+  theme_light()
+
+
+### your result should be
+# 自己畫就好唷
+
+### your text
+# "高等教育程度人口比例和贊成公投第10案的投票人口比例呈現負相關，高等教育程度人口比例越高，贊成公投第10案的投票人口比例越低。"
+```

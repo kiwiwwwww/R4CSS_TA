@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lab06_Vizualizing-Date-Time</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="曾子軒 Dennis Tseng" />
+    <script src="libs/header-attrs-2.6/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lab06_Vizualizing-Date-Time
+## Lab06_ggplot2-cleaning-data
+### 曾子軒 Dennis Tseng
+### 台大新聞所 NTU Journalism
+### 2021/03/30
+
+---
+
+&lt;style type="text/css"&gt;
+
+.remark-slide-content {
+    padding: 1em 1em 1em 1em;
+    font-size: 28px;
+}
+
+.my-one-page-font {
+  padding: 1em 1em 1em 1em;
+  font-size: 20px;
+  /*xaringan::inf_mr()*/
+}
+
+&lt;/style&gt;
+
+
+# 今日重點
+
+- AS05 Preview
+- AS04 檢討
+- `ggplot2` 的簡單注意事項
+- Lab06 Practice
+
+---
+
+class: inverse, center, middle
+
+# [AS05](https://p4css.github.io/R4CSS_TA/AS05_Visualizing-Date-Time.html)
+
+---
+
+# 作業檢討
+
+- [Lab05 範例解答](https://p4css.github.io/R4CSS_TA/Lab05_Homework_Data-Manipulation-Joining_ref)、[AS04 範例解答](https://p4css.github.io/R4CSS_TA/AS04_Data-Manipulation-Joining_ref.html)
+- AS04 要注意的地方
+ - `%in%` 跟 `==` 之間的差別
+ - `left_join()` 完之後檢查 missing value
+ - 負相關的詮釋：
+     - "高等教育程度人口比例越高，贊成公投第10案的投票人口比例越低。"
+     - "高等教育程度人口比例高，贊成公投第10案的投票人口比例低。"
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+- Overview
+ - ggplot2 is a system for declaratively creating graphics, based on The [Grammar of Graphics](https://byrneslab.net/classes/biol607/readings/wickham_layered-grammar.pdf). 
+ - You provide the data, tell ggplot2 how to map variables to aesthetics(美學), what graphical primitives to use, and it takes care of the details.
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+- 引用自[淺談資料視覺化以及 ggplot2 實踐](https://leemeng.tw/data-visualization-from-matplotlib-to-ggplot2.html)
+ - 資料視覺化是資料與圖的直接映射？
+     - e.g. 想分析 x, y -&gt; 都是定量資料 -&gt; 散佈圖 (scatter plot)
+     - e.g. 想分析 x, z -&gt; 一定量一定性 -&gt; 長條圖 (bar chart)
+ - 資料視覺化是將資料中的變數映射到視覺變數上，進而有效且有意義地呈現資料的樣貌！
+     - Mappings(映射) link data to things you see
+     - 視覺變數 / 刻度（visual variables / scales）
+     - 包含位置（x / y axis）, 顏色（color）, 大小（size）, 透明程度（alpha）, 填滿（fill）, 形狀（shape）
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+- 組成
+ - data + `ggplot(aes( ))` + `geom_**()` + ...
+ - 資料層 + 美學層 + 幾何層 + ...
+
+&lt;img src="photo/Lab06_ggplot01.jpg" width="55%" height="55%" /&gt;
+
+source: [Datacamp - Introduction to Data Visualization with ggplot2](https://www.datacamp.com/courses/data-visualization-with-ggplot2-1)
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+- 想看各大洲中預期壽命和人均GDP的關係
+
+
+```r
+library(gapminder)
+library(ggplot2)
+
+head(gapminder, 3)
+```
+
+```
+## # A tibble: 3 x 6
+##   country     continent  year lifeExp      pop gdpPercap
+##   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+## 1 Afghanistan Asia       1952    28.8  8425333      779.
+## 2 Afghanistan Asia       1957    30.3  9240934      821.
+## 3 Afghanistan Asia       1962    32.0 10267083      853.
+```
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+
+```r
+# 把變數映射到視覺變數上: 
+# the property ‘color’ will represent the variable continent
+p_01 &lt;- ggplot(data = gapminder,
+               mapping = aes(x = gdpPercap, y = lifeExp,
+                             color = continent))
+p_01 + geom_point() + scale_x_log10()
+```
+
+![](Lab06_Tutorial_Visualizing-Date-Time_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+
+```r
+# 把變數映射到視覺變數上: 
+# aes() wants to map a variable to the color aesthetic, which is a string "purple"
+p_02 &lt;- ggplot(data = gapminder,
+               mapping = aes(x = gdpPercap, y = lifeExp,
+                             color = "purple"))
+p_02 + geom_point() + scale_x_log10()
+```
+
+![](Lab06_Tutorial_Visualizing-Date-Time_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+---
+
+# `ggplot2` 的簡單注意事項
+
+
+```r
+# 把變數映射到視覺變數上: 
+# the property ‘color’ will represent the variable continent
+p_01 &lt;- ggplot(data = gapminder,
+               mapping = aes(x = gdpPercap, y = lifeExp,
+                             color = continent))
+# aes() wants to map a variable to the color aesthetic, which is a string "purple"
+p_02 &lt;- ggplot(data = gapminder,
+               mapping = aes(x = gdpPercap, y = lifeExp,
+                             color = "purple"))
+```
+
+- 因為只有一個值所以 R recycle 了，變成紅色因為預設顏色是紅色
+- `aes()` 是變數、而不是用來讓你創造變數
+- 概念上是想指定顏色，但實質效果變成創造變數了
+
+source: [Data Visualization by Kieran Healy Chapter03](https://socviz.co/)
+
+---
+
+class: inverse, center, middle
+
+# [Lab06](https://p4css.github.io/R4CSS_TA/Lab06_Homework_Visualizing-Date-Time.html)
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"self_contained": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
