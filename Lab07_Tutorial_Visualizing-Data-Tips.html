@@ -39,22 +39,17 @@ class: center, middle, inverse, title-slide
 
 # 今日重點
 
-- AS05 Preview
-- AS04 檢討
-- `ggplot2` 的簡單注意事項
-- Lab06 Practice
-
----
-
-class: inverse, center, middle
-
-# [AS05](https://p4css.github.io/R4CSS_TA/AS05_Visualizing-Date-Time.html)
+- 沒有作業
+- 期中個人資料新聞
+- AS05 檢討
+- `ggplot2` layers
+- Lab067 Practice
 
 ---
 
 # 作業檢討
 
-- [Lab06 範例解答](https://p4css.github.io/R4CSS_TA/Lab05_Homework_Data-Manipulation-Joining_ref)、[AS05 範例解答](https://p4css.github.io/R4CSS_TA/AS04_Data-Manipulation-Joining_ref.html)
+- [Lab06 範例解答](https://p4css.github.io/R4CSS_TA/Lab06_Homework_Visualizing-Date-Time_ref)、[AS05 範例解答](https://p4css.github.io/R4CSS_TA/AS05_Visualizing-Date-Time_ref.html)
 
 ---
 
@@ -138,22 +133,22 @@ labels | Tick label |  Key label
  - title and lab: 標題、次標、註解
  - theme: 通常有背景、框線、字體
 
- 
- ```r
- library(tidyverse)
- diamonds %&gt;% head(5)
- ```
- 
- ```
- ## # A tibble: 5 x 10
- ##   carat cut     color clarity depth table price     x     y     z
- ##   &lt;dbl&gt; &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- ## 1 0.23  Ideal   E     SI2      61.5    55   326  3.95  3.98  2.43
- ## 2 0.21  Premium E     SI1      59.8    61   326  3.89  3.84  2.31
- ## 3 0.23  Good    E     VS1      56.9    65   327  4.05  4.07  2.31
- ## 4 0.290 Premium I     VS2      62.4    58   334  4.2   4.23  2.63
- ## 5 0.31  Good    J     SI2      63.3    58   335  4.34  4.35  2.75
- ```
+
+```r
+library(tidyverse)
+diamonds %&gt;% head(5)
+```
+
+```
+## # A tibble: 5 x 10
+##   carat cut     color clarity depth table price     x     y     z
+##   &lt;dbl&gt; &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 0.23  Ideal   E     SI2      61.5    55   326  3.95  3.98  2.43
+## 2 0.21  Premium E     SI1      59.8    61   326  3.89  3.84  2.31
+## 3 0.23  Good    E     VS1      56.9    65   327  4.05  4.07  2.31
+## 4 0.290 Premium I     VS2      62.4    58   334  4.2   4.23  2.63
+## 5 0.31  Good    J     SI2      63.3    58   335  4.34  4.35  2.75
+```
 
 ---
 class: my-one-page-font
@@ -334,6 +329,34 @@ ggplot(data = diamonds) +
 ![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 ]
 
+---
+class: my-one-page-font
+
+# ggplot2 layer: theme
+
+
+.pull-left[
+
+```r
+ggplot(data = diamonds, aes(x = carat, y = price, color = cut)) +
+  geom_point(position = position_jitter(height = 1), alpha = 0.3) +
+  scale_color_brewer(name = "cut of diamonds", palette = 1) +
+  scale_x_continuous(name = "carat of the diamond") +
+  scale_y_continuous(name = "price of the diamond", limits = c(0, 22500), breaks = c(2500, 7500, 12500, 17500, 22500), labels = scales::comma) +
+  labs(title = "Price and Carat of Diamonds are Highly Correlated",
+       subtitle = "Cut of diamonds play a part also",
+       caption = "source: library(tidyverse)") + 
+  theme(plot.title = element_text(face = "bold", size = 16),
+    panel.background = element_blank(),
+    legend.background = element_rect(fill = "white", size = 4, colour = "white"),
+    panel.grid.major = element_line(colour = "grey70", size = 0.2))
+```
+]
+
+.pull-right[
+![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+]
+
 
 ---
 
@@ -372,6 +395,11 @@ class: my-one-page-font
 ## Warning: package 'sf' was built under R version 4.0.2
 ```
 
+
+```r
+df_city_taiwan %&gt;% head(5)
+```
+
 ```
 ## # A tibble: 5 x 6
 ##   name      country.etc    pop   lat  long capital
@@ -381,6 +409,10 @@ class: my-one-page-font
 ## 3 Chengkung Taiwan       18647  24.2  121.       0
 ## 4 Chiali    Taiwan       58547  23.2  120.       0
 ## 5 Chiayi    Taiwan      266259  23.5  120.       0
+```
+
+```r
+sf_county %&gt;% head(5)
 ```
 
 ```
@@ -429,7 +461,7 @@ sf_county %&gt;%
 ## geometries
 ```
 
-![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -460,7 +492,7 @@ sf_county %&gt;%
 ## geometries
 ```
 
-![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
 ]
  
  
@@ -500,7 +532,7 @@ diamonds %&gt;%
 ## `summarise()` has grouped output by 'cut'. You can override using the `.groups` argument.
 ```
 
-![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -526,7 +558,7 @@ diamonds %&gt;%
 ## `summarise()` has grouped output by 'cut'. You can override using the `.groups` argument.
 ```
 
-![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -590,7 +622,7 @@ diamonds %&gt;%
 ]
 
 .pull-right[
-![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -627,7 +659,7 @@ diamonds %&gt;%
 ]
 
 .pull-right[
-![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
 ]
 ---
 
@@ -654,7 +686,7 @@ diamonds %&gt;%
 ]
 
 .pull-right[
-![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
 ]
 ---
 class: my-one-page-font
@@ -672,7 +704,7 @@ diamonds %&gt;%
 ]
 
 .pull-right[
-![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -691,7 +723,7 @@ diamonds %&gt;%
 ]
 
 .pull-right[
-![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
 ]
 
 ---
