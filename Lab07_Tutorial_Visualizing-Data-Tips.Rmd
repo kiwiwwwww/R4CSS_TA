@@ -46,7 +46,7 @@ output:
 
 ---
 
-# `ggplot2` 的簡單注意事項
+# ggplot2 layer
 
 - 組成
  - data + `ggplot(aes( ))` + `geom_**()` + ...
@@ -92,7 +92,8 @@ source: [Datacamp - Introduction to Data Visualization with ggplot2](https://www
 
 Argument name | Axis  | Legend
 --------------|-------|------
-name | Ticks & grid line |  Key 
+name | Label |  Title
+breaks | Ticks & grid line |  Key 
 labels | Tick label |  Key label
 
 
@@ -129,6 +130,10 @@ knitr::include_graphics("photo/Lab07_ggplot_guides.png")
  - legend and axis: 視覺變數如何對應回去資料變數
  - title and lab: 標題、次標、註解
  - theme: 通常有背景、框線、字體
+
+---
+
+# ggplot2 layer
 
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -378,8 +383,8 @@ sf_county <- twmap::tw_county
 ```
 
 ```{r message=F, warnings=F}
-df_city_taiwan %>% head(5)
-sf_county %>% head(5)
+df_city_taiwan %>% head(2)
+sf_county %>% head(2)
 ```
 
 ---
@@ -392,7 +397,8 @@ class: my-one-page-font
 sf_county %>% 
   st_crop(xmin=119,xmax=123,ymin=20,ymax=26) %>%
   ggplot() +
-  geom_sf()
+  geom_sf() +
+  theme_void()
 ```
 ]
 
@@ -496,7 +502,7 @@ diamonds %>%
 ]
 
 .pull-right[
-```{r ref.label='plot2-color-alpha', echo=FALSE}
+```{r ref.label='plot2-aes-color-alpha', echo=FALSE}
 ```
 ]
 
@@ -556,7 +562,7 @@ diamonds %>%
 ]
 
 .pull-right[
-```{r ref.label='coord-trans-raw', echo=FALSE}
+```{r ref.label='coord-coord-trans-raw', echo=FALSE}
 ```
 ]
 

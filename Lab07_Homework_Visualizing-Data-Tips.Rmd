@@ -58,6 +58,9 @@ df_hot_agg %>%
 
 ### 熱門度統計: 文章數、推文數
 knitr::include_graphics('data/Lab07/plot_popularity_article.png')
+# plot_popularity_article %>% 
+  # ggsave(filename = str_c("photo/","plot_popularity_article_test", ".png"), dpi = 600, height = 8, width = 12)
+
 ```
 
 ### 2. alpha + position

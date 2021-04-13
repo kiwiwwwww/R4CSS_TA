@@ -53,7 +53,7 @@ class: center, middle, inverse, title-slide
 
 ---
 
-# `ggplot2` 的簡單注意事項
+# ggplot2 layer
 
 - 組成
  - data + `ggplot(aes( ))` + `geom_**()` + ...
@@ -97,7 +97,8 @@ source: [Datacamp - Introduction to Data Visualization with ggplot2](https://www
 
 Argument name | Axis  | Legend
 --------------|-------|------
-name | Ticks &amp; grid line |  Key 
+name | Label |  Title
+breaks | Ticks &amp; grid line |  Key 
 labels | Tick label |  Key label
 
 
@@ -132,6 +133,10 @@ labels | Tick label |  Key label
  - legend and axis: 視覺變數如何對應回去資料變數
  - title and lab: 標題、次標、註解
  - theme: 通常有背景、框線、字體
+
+---
+
+# ggplot2 layer
 
 
 ```r
@@ -397,42 +402,33 @@ class: my-one-page-font
 
 
 ```r
-df_city_taiwan %&gt;% head(5)
+df_city_taiwan %&gt;% head(2)
 ```
 
 ```
-## # A tibble: 5 x 6
-##   name      country.etc    pop   lat  long capital
-##   &lt;chr&gt;     &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt;
-## 1 Changhwa  Taiwan      227178  24.1  121.       0
-## 2 Chaochou  Taiwan       58839  22.6  121.       0
-## 3 Chengkung Taiwan       18647  24.2  121.       0
-## 4 Chiali    Taiwan       58547  23.2  120.       0
-## 5 Chiayi    Taiwan      266259  23.5  120.       0
+## # A tibble: 2 x 6
+##   name     country.etc    pop   lat  long capital
+##   &lt;chr&gt;    &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt;
+## 1 Changhwa Taiwan      227178  24.1  121.       0
+## 2 Chaochou Taiwan       58839  22.6  121.       0
 ```
 
 ```r
-sf_county %&gt;% head(5)
+sf_county %&gt;% head(2)
 ```
 
 ```
-## Simple feature collection with 5 features and 4 fields
+## Simple feature collection with 2 features and 4 fields
 ## geometry type:  MULTIPOLYGON
 ## dimension:      XY
-## bbox:           xmin: 119.9089 ymin: 23.43541 xmax: 124.5611 ymax: 26.38528
+## bbox:           xmin: 119.9089 ymin: 24.30943 xmax: 124.5611 ymax: 26.38528
 ## geographic CRS: TWD97
 ##   COUNTYID COUNTYCODE COUNTYNAME         COUNTYENG
 ## 1        Z      09007     連江縣 Lienchiang County
 ## 2        G      10002     宜蘭縣      Yilan County
-## 3        N      10007     彰化縣   Changhua County
-## 4        M      10008     南投縣     Nantou County
-## 5        P      10009     雲林縣     Yunlin County
 ##                         geometry
 ## 1 MULTIPOLYGON (((119.9645 25...
 ## 2 MULTIPOLYGON (((121.9597 24...
-## 3 MULTIPOLYGON (((120.4566 24...
-## 4 MULTIPOLYGON (((121.2709 24...
-## 5 MULTIPOLYGON (((120.0811 23...
 ```
 
 ---
@@ -446,7 +442,8 @@ class: my-one-page-font
 sf_county %&gt;% 
   st_crop(xmin=119,xmax=123,ymin=20,ymax=26) %&gt;%
   ggplot() +
-  geom_sf()
+  geom_sf() +
+  theme_void()
 ```
 ]
 
@@ -581,6 +578,11 @@ diamonds %&gt;%
 
 .pull-right[
 
+```
+## `summarise()` has grouped output by 'cut'. You can override using the `.groups` argument.
+```
+
+![](Lab07_Tutorial_Visualizing-Data-Tips_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
 ]
 
 ---
