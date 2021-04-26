@@ -1,0 +1,265 @@
+---
+title: "Lab06_Visualizing-Text-Data"
+subtitle: "Lab06_ggplot2-string-text"
+author: "曾子軒 Dennis Tseng"
+institute: "台大新聞所 NTU Journalism"
+date: "2021/04/13"
+output:
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      self_contained: true
+---
+```{r setup, cache = F, echo=F}
+knitr::opts_chunk$set(error = TRUE)
+```
+
+<style type="text/css">
+
+.remark-slide-content {
+    padding: 1em 1em 1em 1em;
+    font-size: 28px;
+}
+
+.my-one-page-font {
+  padding: 1em 1em 1em 1em;
+  font-size: 20px;
+  /*xaringan::inf_mr()*/
+}
+
+</style>
+
+
+# 今日重點
+
+- 分組
+- AS06 Preview
+- dplyr: more
+- Lab08 Practice
+
+---
+
+class: inverse, center, middle
+
+# 分組
+
+---
+
+class: inverse, center, middle
+
+# [AS06](https://p4css.github.io/R4CSS_TA/AS06_Visualizing-Date-Time.html)
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- 懶人的福音，幫助你快速選 column
+- operator: `:`, `!`, `&`, `|`, `c()`
+- selection helpers: 
+      - specific columns: `everything()`, `last_col()`
+      - matching patterns: `starts_with()`, `ends_with()`, `contains()`, `matches()`, `num_range()`
+      - character vector: `all_of()`, `any_of()`
+      - 搭配 function: `where()`
+
+---
+
+```{r message=F, warning=F}
+library(tidyverse)
+
+df_marriage <- read_csv("data/Lab04/109Q4_county_marriage.csv") %>%
+   mutate(across(where(is.character), ~iconv(.,from = "BIG5", to = "UTF8"))) %>% slice(-1) %>% mutate(across(matches("MARRY"), ~as.integer(.))) %>%
+  `colnames<-`(str_to_lower(colnames(.)))
+
+head(df_marriage, 3)
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- operator: `:`, `!`, `&`, `|`, `c()`
+
+```{r message=F, warning=F}
+df_marriage %>% slice(1)
+df_marriage %>% select(county:marry_cnt) %>% slice(1)
+df_marriage %>% select(1:2, 4) %>% slice(1)
+df_marriage %>% select(!marry_cnt) %>% slice(1)
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- specific columns: `everything()`, `last_col()`
+
+```{r message=F, warning=F}
+df_marriage %>% select(info_time, everything()) %>% slice(1)
+df_marriage %>% select(-county_id, everything(), county_id) %>% slice(1)
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- specific columns: `everything()`, `last_col()`
+
+```{r message=F, warning=F}
+df_marriage %>% select(last_col()) %>% slice(1)
+df_marriage %>% select(1:last_col(1)) %>% slice(1)
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- matching patterns: `starts_with()`, `ends_with()`, `contains()`, `matches()`, `num_range()`
+
+```{r message=F, warning=F}
+df_marriage %>% select(starts_with("marry")) %>% slice(1)
+df_marriage %>% select(starts_with(c("marry_cp", "county"))) %>% slice(1)
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- matching patterns: `starts_with()`, `ends_with()`, `contains()`, `matches()`, `num_range()`
+
+```{r message=F, warning=F}
+df_marriage %>% select(contains("marry")) %>% slice(1)
+df_marriage %>% select(contains("marry.*cnt")) %>% slice(1)
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- matching patterns: `starts_with()`, `ends_with()`, `contains()`, `matches()`, `num_range()`
+- 注意！ `matches()` 放正規表示式
+
+```{r message=F, warning=F}
+df_marriage %>% select(matches("marry.*cnt")) %>% slice(1)
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- selection helpers: 
+      - character vector: `all_of()`, `any_of()`
+
+```{r message=F, warning=F}
+vars <- c("marry_m_cnt", "marry_f_cnt")
+vars2 <- c("marry_m_cnt", "marry_f_cnt", "divorce_m_cnt", "divorce_f_cnt")
+
+df_marriage %>% select(all_of(vars)) %>% slice(1)
+df_marriage %>% select(all_of(vars2)) %>% slice(1)
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- selection helpers: 
+      - character vector: `all_of()`, `any_of()`
+
+```{r message=F, warning=F}
+df_marriage %>% select(any_of(vars)) %>% slice(1)
+df_marriage %>% select(any_of(vars2)) %>% slice(1)
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- selection helpers: 
+      - 搭配 function: `where()`
+      - 通常跟 `across()` 一起使用
+
+---
+
+# dplyr 的未竟之業 - across()
+
+- 懶人的福音，幫助你對不同 column 使用 function
+- Apply a function (or functions) across multiple columns
+- 動詞裡面放 `across(.cols = everything(), .fns = NULL, ..., .names = NULL)`
+- 先選你要的欄位，接著指定函數
+- 欄位部分可以活用上面的教的 selection 方法，函數可以使用完整的或匿名函數
+
+---
+
+# dplyr 的未竟之業 - across()
+
+```{r message=F, warning=F}
+df_marriage %>% mutate(across(matches("marry_"), ~(./100))) %>% slice(1)
+df_marriage %>% summarise(across(where(is.numeric), ~sum(.)))
+```
+
+
+---
+
+# Anonymous Function 匿名函數
+
+- function
+      - 平常寫函數
+      - 但為了方便也可以不要寫完整，一次性使用
+      - `.` 點點代表前面的變數/資料
+- 匿名函數的形式
+      - `~ function(x){x + 5}`
+      - `~ as.integer(.) + 5`
+
+---
+
+# dplyr 的未竟之業 - across()
+
+```{r message=F, warning=F}
+df_marriage %>% slice(1)
+df_marriage %>% mutate(across(starts_with("county"), ~str_c(., "-bad"))) %>% slice(1)
+```
+
+---
+
+# dplyr 的未竟之業 - across()
+
+```{r message=F, warning=F}
+df_marriage %>% mutate(across(matches("marry") & -matches("marry_cp"), ~(./marry_cnt))) %>% slice(1)
+df_marriage %>% select(matches("marry_.*_cnt"), -starts_with("county"), matches("marry")) %>% 
+  mutate(across(matches("marry") & -matches("marry_cp"), ~(./marry_cnt))) %>% slice(1)
+```
+ 
+---
+
+# dplyr 的未竟之業 - across()
+
+```{r message=F, warning=F}
+df_marriage <- read_csv("data/Lab04/109Q4_county_marriage.csv") %>%
+   mutate(across(where(is.character), ~iconv(.,from = "BIG5", to = "UTF8"))) %>%
+  slice(-1) %>% 
+  mutate(across(matches("MARRY"), ~as.integer(.))) %>%
+  `colnames<-`(str_to_lower(colnames(.)))
+```
+
+---
+
+# dplyr 的未竟之業 - rowwise(), c_across()
+
+
+```{r message=F, warning=F}
+df_marriage %>% rowwise() %>% mutate(
+    marry_sum = sum(c_across(marry_cp_cnt:marry_f_cnt)),
+    marry_mean = mean(c_across(marry_cp_cnt:marry_f_cnt))
+ ) %>% ungroup()
+```
+
+---
+
+class: inverse, center, middle
+
+# [Lab08](https://p4css.github.io/R4CSS_TA/Lab06_Homework_Visualizing-Date-Time.html)
+
+
+
