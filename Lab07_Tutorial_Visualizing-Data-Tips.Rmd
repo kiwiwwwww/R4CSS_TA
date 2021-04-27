@@ -130,7 +130,7 @@ knitr::include_graphics("photo/Lab07_ggplot_guides.png")
  - title and lab: 標題、次標、註解
  - theme: 通常有背景、框線、字體
 
-```{r message=FALSE, warning=FALSE}
+ ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 diamonds %>% head(5)
 ```
@@ -307,18 +307,8 @@ ggplot(data = diamonds) +
 
 .pull-right[
 ```{r ref.label='plot-labs', echo=FALSE}
-```
-]
-
----
-class: my-one-page-font
-
-# ggplot2 layer: theme
-
-
-.pull-left[
-```{r plot-theme, eval=FALSE}
-ggplot(data = diamonds, aes(x = carat, y = price, color = cut)) +
+ggplot(data = diamonds) +
+  aes(x = carat, y = price, color = cut) +
   geom_point(position = position_jitter(height = 1), alpha = 0.3) +
   scale_color_brewer(name = "cut of diamonds", palette = 1) +
   scale_x_continuous(name = "carat of the diamond") +
@@ -326,15 +316,14 @@ ggplot(data = diamonds, aes(x = carat, y = price, color = cut)) +
   labs(title = "Price and Carat of Diamonds are Highly Correlated",
        subtitle = "Cut of diamonds play a part also",
        caption = "source: library(tidyverse)") + 
-  theme(plot.title = element_text(face = "bold", size = 16),
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
     panel.background = element_blank(),
     legend.background = element_rect(fill = "white", size = 4, colour = "white"),
-    panel.grid.major = element_line(colour = "grey70", size = 0.2))
-```
-]
-
-.pull-right[
-```{r ref.label='plot-theme', echo=FALSE}
+    legend.position = "bottom",
+    panel.grid.major = element_line(colour = "grey70", size = 0.2),
+    panel.grid.minor = element_blank()
+  )
 ```
 ]
 
@@ -371,13 +360,9 @@ class: my-one-page-font
 library(maps)
 library(sf)
 library(twmap)
-
 df_city_taiwan <- world.cities %>% 
   filter(country.etc=="Taiwan") %>% as_tibble()
 sf_county <- twmap::tw_county
-```
-
-```{r message=F, warnings=F}
 df_city_taiwan %>% head(5)
 sf_county %>% head(5)
 ```

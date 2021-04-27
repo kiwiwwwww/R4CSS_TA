@@ -1,13 +1,5 @@
 # R4CSS_TA
 
-### week08_04/13
-
-* LAB 07 Tutorial Visualizing-Data-Tips [slide](https://p4css.github.io/R4CSS_TA/Lab07_Tutorial_Visualizing-Data-Tips.html)
-* LAB 07 Homework Visualizing-Data-Tips [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab07_Homework_Visualizing-Data-Tips.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab07_Homework_Visualizing-Data-Tips.html) 
-* LAB 06 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab06_Homework_Visualizing-Date-Time_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab06_Homework_Visualizing-Date-Time_ref.html)    
-* AS 05 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS05_Visualizing-Date-Time_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS05_Visualizing-Date-Time_ref.html) 
- 
-
 ### week06_03/30
 
 * LAB 06 Tutorial Visualizing-Date-Time [slide](https://p4css.github.io/R4CSS_TA/Lab06_Tutorial_Visualizing-Date-Time.html)
