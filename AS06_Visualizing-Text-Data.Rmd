@@ -25,6 +25,8 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 ](https://www.cna.com.tw/project/20200520-inauguraladdress/) 以及 readr 的 [少了「年輕人」多了「防疫」：臺灣歷屆民選總統就職演說字詞分析
 ](https://www.readr.tw/post/2433)。國外的則可以參考 [“I Have The Best Words.” Here's How Trump’s First SOTU Compares To All The Others.](https://www.buzzfeednews.com/article/peteraldhous/trump-state-of-the-union-words#.tbr8QJvA7) by BuzzFeed, [Word Aanalysis of 2016 Presidential debates - Clinton vs. Trump](http://mkweb.bcgsc.ca/debates2016/) by Martin Krzywinski, and [Trump used words like 'invasion' and 'killer' to discuss immigrants at rallies 500 times: USA TODAY analysis](https://www.usatoday.com/story/news/politics/elections/2019/08/08/trump-immigrants-rhetoric-criticized-el-paso-dayton-shootings/1936742001/) by USA today.
 
+小小的反思：直接用[資料](https://zh.wikisource.org/wiki/%E4%B8%AD%E8%8F%AF%E6%B0%91%E5%9C%8B%E7%AC%AC%E5%8D%81%E5%9B%9B%E4%BB%BB%E7%B8%BD%E7%B5%B1%E5%B0%B1%E8%81%B7%E6%BC%94%E8%AA%AA)、直接用斷詞結果(台灣 vs. 臺灣)可能會出錯喔！
+
 ## 作業: Data Visualization (02) Text
 
 ```{r message=FALSE, warning=FALSE}
