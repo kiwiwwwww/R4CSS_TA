@@ -23,7 +23,7 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 
 這次的作業使用維基文庫提供的歷任中華民國總統就職演說。因為總統就職演說本身代表了每一屆總統任期的，以其重要性，因此國內外媒體時常使用演說的內文當作素材，利用文字探勘的技巧寫出報導，以 2020 年為例，大家可以參考中央社的[蔡總統關心什麼 文字會說話
 ](https://www.cna.com.tw/project/20200520-inauguraladdress/) 以及 readr 的 [少了「年輕人」多了「防疫」：臺灣歷屆民選總統就職演說字詞分析
-](https://www.readr.tw/post/2433)。
+](https://www.readr.tw/post/2433)。國外的則可以參考 [“I Have The Best Words.” Here's How Trump’s First SOTU Compares To All The Others.](https://www.buzzfeednews.com/article/peteraldhous/trump-state-of-the-union-words#.tbr8QJvA7) by BuzzFeed, [Word Aanalysis of 2016 Presidential debates - Clinton vs. Trump](http://mkweb.bcgsc.ca/debates2016/) by Martin Krzywinski, and [Trump used words like 'invasion' and 'killer' to discuss immigrants at rallies 500 times: USA TODAY analysis](https://www.usatoday.com/story/news/politics/elections/2019/08/08/trump-immigrants-rhetoric-criticized-el-paso-dayton-shootings/1936742001/) by USA today.
 
 ## 作業: Data Visualization (02) Text
 

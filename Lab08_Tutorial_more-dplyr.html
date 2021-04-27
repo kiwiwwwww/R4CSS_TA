@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lab08_more-dplyr</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="曾子軒 Dennis Tseng" />
+    <script src="libs/header-attrs-2.6/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lab08_more-dplyr
+## Lab06_dplyr-select-across
+### 曾子軒 Dennis Tseng
+### 台大新聞所 NTU Journalism
+### 2021/04/27
+
+---
+
+
+
+&lt;style type="text/css"&gt;
+
+.remark-slide-content {
+    padding: 1em 1em 1em 1em;
+    font-size: 28px;
+}
+
+.my-one-page-font {
+  padding: 1em 1em 1em 1em;
+  font-size: 20px;
+  /*xaringan::inf_mr()*/
+}
+
+&lt;/style&gt;
+
+
+# 今日重點
+
+- 分組
+- AS06 Preview
+- dplyr: more
+- Lab08 Practice
+
+---
+
+class: inverse, center, middle
+
+# 分組
+
+---
+
+class: inverse, center, middle
+
+# [AS06](https://p4css.github.io/R4CSS_TA/AS06_Visualizing-Text-Data.html)
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- 懶人的福音，幫助你快速選 column
+- operator: `:`, `!`, `&amp;`, `|`, `c()`
+- selection helpers: 
+      - specific columns: `everything()`, `last_col()`
+      - matching patterns: `starts_with()`, `ends_with()`, `contains()`, `matches()`, `num_range()`
+      - character vector: `all_of()`, `any_of()`
+      - 搭配 function: `where()`
+
+---
+
+
+```r
+library(tidyverse)
+
+df_marriage &lt;- read_csv("data/Lab04/109Q4_county_marriage.csv") %&gt;%
+   mutate(across(where(is.character), ~iconv(.,from = "BIG5", to = "UTF8"))) %&gt;% slice(-1) %&gt;% mutate(across(matches("MARRY"), ~as.integer(.))) %&gt;%
+  `colnames&lt;-`(str_to_lower(colnames(.)))
+
+head(df_marriage, 3)
+```
+
+```
+## # A tibble: 3 x 7
+##   county_id county marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt info_time
+##   &lt;chr&gt;     &lt;chr&gt;         &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt; &lt;chr&gt;    
+## 1 65000     新北市         6529       580         189         391 109Y4S   
+## 2 63000     臺北市         3856       422         207         215 109Y4S   
+## 3 68000     桃園市         3986       370         107         263 109Y4S
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- operator: `:`, `!`, `&amp;`, `|`, `c()`
+
+
+```r
+df_marriage %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 7
+##   county_id county marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt info_time
+##   &lt;chr&gt;     &lt;chr&gt;         &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt; &lt;chr&gt;    
+## 1 65000     新北市         6529       580         189         391 109Y4S
+```
+
+```r
+df_marriage %&gt;% select(county:marry_cnt) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 3
+##   county marry_cp_cnt marry_cnt
+##   &lt;chr&gt;         &lt;int&gt;     &lt;int&gt;
+## 1 新北市         6529       580
+```
+
+```r
+df_marriage %&gt;% select(1:2, 4) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 3
+##   county_id county marry_cnt
+##   &lt;chr&gt;     &lt;chr&gt;      &lt;int&gt;
+## 1 65000     新北市       580
+```
+
+```r
+df_marriage %&gt;% select(!marry_cnt) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 6
+##   county_id county marry_cp_cnt marry_m_cnt marry_f_cnt info_time
+##   &lt;chr&gt;     &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;       &lt;int&gt; &lt;chr&gt;    
+## 1 65000     新北市         6529         189         391 109Y4S
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- specific columns: `everything()`, `last_col()`
+
+
+```r
+df_marriage %&gt;% select(info_time, everything()) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 7
+##   info_time county_id county marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt
+##   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;         &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
+## 1 109Y4S    65000     新北市         6529       580         189         391
+```
+
+```r
+df_marriage %&gt;% select(-county_id, everything(), county_id) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 7
+##   county marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt info_time county_id
+##   &lt;chr&gt;         &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;    
+## 1 新北市         6529       580         189         391 109Y4S    65000
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- specific columns: `everything()`, `last_col()`
+
+
+```r
+df_marriage %&gt;% select(last_col()) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 1
+##   info_time
+##   &lt;chr&gt;    
+## 1 109Y4S
+```
+
+```r
+df_marriage %&gt;% select(1:last_col(1)) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 6
+##   county_id county marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt
+##   &lt;chr&gt;     &lt;chr&gt;         &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
+## 1 65000     新北市         6529       580         189         391
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- matching patterns: `starts_with()`, `ends_with()`, `contains()`, `matches()`, `num_range()`
+
+
+```r
+df_marriage %&gt;% select(starts_with("marry")) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 4
+##   marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt
+##          &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
+## 1         6529       580         189         391
+```
+
+```r
+df_marriage %&gt;% select(starts_with(c("marry_cp", "county"))) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 3
+##   marry_cp_cnt county_id county
+##          &lt;int&gt; &lt;chr&gt;     &lt;chr&gt; 
+## 1         6529 65000     新北市
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- matching patterns: `starts_with()`, `ends_with()`, `contains()`, `matches()`, `num_range()`
+
+
+```r
+df_marriage %&gt;% select(contains("marry")) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 4
+##   marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt
+##          &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
+## 1         6529       580         189         391
+```
+
+```r
+df_marriage %&gt;% select(contains("marry.*cnt")) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 0
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- matching patterns: `starts_with()`, `ends_with()`, `contains()`, `matches()`, `num_range()`
+- 注意！ `matches()` 放正規表示式
+
+
+```r
+df_marriage %&gt;% select(matches("marry.*cnt")) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 4
+##   marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt
+##          &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
+## 1         6529       580         189         391
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- selection helpers: 
+      - character vector: `all_of()`, `any_of()`
+
+
+```r
+vars &lt;- c("marry_m_cnt", "marry_f_cnt")
+vars2 &lt;- c("marry_m_cnt", "marry_f_cnt", "divorce_m_cnt", "divorce_f_cnt")
+
+df_marriage %&gt;% select(all_of(vars)) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 2
+##   marry_m_cnt marry_f_cnt
+##         &lt;int&gt;       &lt;int&gt;
+## 1         189         391
+```
+
+```r
+df_marriage %&gt;% select(all_of(vars2)) %&gt;% slice(1)
+```
+
+```
+## Error: Can't subset columns that don't exist.
+## x Columns `divorce_m_cnt` and `divorce_f_cnt` don't exist.
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- selection helpers: 
+      - character vector: `all_of()`, `any_of()`
+
+
+```r
+df_marriage %&gt;% select(any_of(vars)) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 2
+##   marry_m_cnt marry_f_cnt
+##         &lt;int&gt;       &lt;int&gt;
+## 1         189         391
+```
+
+```r
+df_marriage %&gt;% select(any_of(vars2)) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 2
+##   marry_m_cnt marry_f_cnt
+##         &lt;int&gt;       &lt;int&gt;
+## 1         189         391
+```
+
+---
+
+# dplyr 的未竟之業 - select()
+
+- selection helpers: 
+      - 搭配 function: `where()`
+      - 通常跟 `across()` 一起使用
+
+---
+
+# dplyr 的未竟之業 - across()
+
+- 懶人的福音，幫助你對不同 column 使用 function
+- Apply a function (or functions) across multiple columns
+- 動詞裡面放 `across(.cols = everything(), .fns = NULL, ..., .names = NULL)`
+- 先選你要的欄位，接著指定函數
+- 欄位部分可以活用上面的教的 selection 方法，函數可以使用完整的或匿名函數
+
+---
+
+# dplyr 的未竟之業 - across()
+
+
+```r
+df_marriage %&gt;% mutate(across(matches("marry_"), ~(./100))) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 7
+##   county_id county marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt info_time
+##   &lt;chr&gt;     &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;    
+## 1 65000     新北市         65.3       5.8        1.89        3.91 109Y4S
+```
+
+```r
+df_marriage %&gt;% summarise(across(where(is.numeric), ~sum(.)))
+```
+
+```
+## # A tibble: 1 x 4
+##   marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt
+##          &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
+## 1        36607      3153         993        2160
+```
+
+
+---
+
+# Anonymous Function 匿名函數
+
+- function
+      - 平常寫函數
+      - 但為了方便也可以不要寫完整，一次性使用
+      - `.` 點點代表前面的變數/資料
+- 匿名函數的形式
+      - `~ function(x){x + 5}`
+      - `~ as.integer(.) + 5`
+
+---
+
+# dplyr 的未竟之業 - across()
+
+
+```r
+df_marriage %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 7
+##   county_id county marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt info_time
+##   &lt;chr&gt;     &lt;chr&gt;         &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt; &lt;chr&gt;    
+## 1 65000     新北市         6529       580         189         391 109Y4S
+```
+
+```r
+df_marriage %&gt;% mutate(across(starts_with("county"), ~str_c(., "-bad"))) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 7
+##   county_id county     marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt info_time
+##   &lt;chr&gt;     &lt;chr&gt;             &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt; &lt;chr&gt;    
+## 1 65000-bad 新北市-bad         6529       580         189         391 109Y4S
+```
+
+---
+
+# dplyr 的未竟之業 - across()
+
+
+```r
+df_marriage %&gt;% mutate(across(matches("marry") &amp; -matches("marry_cp"), ~(./marry_cnt))) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 7
+##   county_id county marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt info_time
+##   &lt;chr&gt;     &lt;chr&gt;         &lt;int&gt;     &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;    
+## 1 65000     新北市         6529         1         189         391 109Y4S
+```
+
+```r
+df_marriage %&gt;% select(matches("marry_.*_cnt"), -starts_with("county"), matches("marry")) %&gt;% 
+  mutate(across(matches("marry") &amp; -matches("marry_cp"), ~(./marry_cnt))) %&gt;% slice(1)
+```
+
+```
+## # A tibble: 1 x 4
+##   marry_cp_cnt marry_m_cnt marry_f_cnt marry_cnt
+##          &lt;int&gt;       &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+## 1         6529       0.326       0.674         1
+```
+ 
+---
+
+# dplyr 的未竟之業 - across()
+
+
+```r
+df_marriage &lt;- read_csv("data/Lab04/109Q4_county_marriage.csv") %&gt;%
+   mutate(across(where(is.character), ~iconv(.,from = "BIG5", to = "UTF8"))) %&gt;%
+  slice(-1) %&gt;% 
+  mutate(across(matches("MARRY"), ~as.integer(.))) %&gt;%
+  `colnames&lt;-`(str_to_lower(colnames(.)))
+```
+
+---
+
+# dplyr 的未竟之業 - rowwise(), c_across()
+
+
+
+```r
+df_marriage %&gt;% rowwise() %&gt;% mutate(
+    marry_sum = sum(c_across(marry_cp_cnt:marry_f_cnt)),
+    marry_mean = mean(c_across(marry_cp_cnt:marry_f_cnt))
+ ) %&gt;% ungroup()
+```
+
+```
+## # A tibble: 22 x 9
+##    county_id county marry_cp_cnt marry_cnt marry_m_cnt marry_f_cnt info_time
+##    &lt;chr&gt;     &lt;chr&gt;         &lt;int&gt;     &lt;int&gt;       &lt;int&gt;       &lt;int&gt; &lt;chr&gt;    
+##  1 65000     新北市         6529       580         189         391 109Y4S   
+##  2 63000     臺北市         3856       422         207         215 109Y4S   
+##  3 68000     桃園市         3986       370         107         263 109Y4S   
+##  4 66000     臺中市         4837       381         130         251 109Y4S   
+##  5 67000     臺南市         2706       185          57         128 109Y4S   
+##  6 64000     高雄市         4139       343         112         231 109Y4S   
+##  7 10002     宜蘭縣          725        62          11          51 109Y4S   
+##  8 10004     新竹縣         1003        71          13          58 109Y4S   
+##  9 10005     苗栗縣          859        75          19          56 109Y4S   
+## 10 10007     彰化縣         1882       161          32         129 109Y4S   
+## # … with 12 more rows, and 2 more variables: marry_sum &lt;int&gt;, marry_mean &lt;dbl&gt;
+```
+
+---
+
+class: inverse, center, middle
+
+# [Lab08](https://p4css.github.io/R4CSS_TA/Lab06_Homework_Visualizing-Date-Time.html)
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"self_contained": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
