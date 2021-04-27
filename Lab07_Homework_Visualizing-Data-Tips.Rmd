@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 
 這份作業希望你可以利用視覺化的文法(grammar of graphics) 呈現結果。
 
-這次的作業使用我自己抓的 PTT 棒球版資料，有興趣的話可以點進完整的文章 [誰是中職人氣王？哪隊球迷愛出征？PTT資料全解析](https://medium.com/dd-story-hub/%E4%B8%AD%E8%8F%AF%E8%81%B7%E6%A3%92-ptt%E6%95%B8%E6%93%9A-13778b43234a) 。
+這次的作業使用我自己抓的 PTT 棒球版資料，有興趣的話可以點進我可能會截取一部分拿來當期中報吿的 [誰是中職人氣王？哪隊球迷愛出征？PTT資料全解析](https://medium.com/dd-story-hub/%E4%B8%AD%E8%8F%AF%E8%81%B7%E6%A3%92-ptt%E6%95%B8%E6%93%9A-13778b43234a) 。
 
 因為重點是練習畫圖，所以我都先畫好基本的圖，請你改成範例的樣子。
 
