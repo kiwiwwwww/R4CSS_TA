@@ -5,7 +5,7 @@
 * LAB 08 Tutorial Visualizing-Data-Tips [slide](https://p4css.github.io/R4CSS_TA/Lab08_Tutorial_more-dplyr.html)
 * LAB 08 Homework  [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab08_Homework_more-dplyr.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab08_Homework_more-dplyr.html) 
 * AS 06 Visualizing-Data-Tips [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS06_Visualizing-Text-Data.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS06_Visualizing-Text-Data.html) 
-* LAB 07 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab07_Tutorial_Visualizing-Data-Tips_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab07_Tutorial_Visualizing-Data-Tips_ref.html)    
+* LAB 07 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab07_Homework_Visualizing-Data-Tips_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab07_Homework_Visualizing-Data-Tips_ref.html)    
 
 ### week08_04/13
 
