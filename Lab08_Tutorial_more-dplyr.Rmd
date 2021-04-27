@@ -259,7 +259,7 @@ df_marriage %>% rowwise() %>% mutate(
 
 class: inverse, center, middle
 
-# [Lab08](https://p4css.github.io/R4CSS_TA/Lab06_Homework_Visualizing-Date-Time.html)
+# [Lab08](https://p4css.github.io/R4CSS_TA/Lab08_Homework_more-dplyr.html)
 
 
 
