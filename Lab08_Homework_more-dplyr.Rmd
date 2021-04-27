@@ -1,0 +1,137 @@
+---
+title: "Lab08_Homework_more-dplyr"
+author: "你是誰 R09342000 新聞所碩五"
+date: "2021/04/13"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: more dplyr
+
+這份作業希望能夠讓你熟悉於利用 dprly 當中 `select()` 相關的 helper function 與 `across()`。
+
+這次的作業使用美國 Cencus Bureau 提供的[普查資料](https://data.census.gov/)，主要挑選人口變數與社經地位變數，並額外利用 2016 和 2020 總統大選[選舉結果](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/)，練習不同資料表之間的串接，並查看可能影響選舉結果的變數。
+
+## 作業: more dplyr
+
+```{r message=FALSE, warning=FALSE}
+### 這邊不要動
+library(tidyverse)
+
+##### import data
+df_demo <- read_csv("data/Lab08/DEMOGRAPHIC AND HOUSING ESTIMATES.csv")
+df_demo %>% head(1)
+
+df_social <- read_csv("data/Lab08/SOCIAL CHARACTERISTICS.csv")
+df_social %>% head(1)
+
+df_vote_agg_2020 <- read_csv("data/Lab08/df_vote_agg_2020.csv")
+df_vote_agg_2020 %>% head(1)
+
+```
+
+### 1. 幫我抓性別
+
+從 `df_demo` 抓出男性人數、女性人數、男性佔比、女性佔比。
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_gender <- df_demo %>% select(matches("E")) %>% select(-matches("PE")) %>% select(GEO_ID:DP05_0004E)
+df_gender <- df_gender %>% `colnames<-`(df_gender %>% head(1) %>% unlist() %>% unname() %>% str_to_lower() %>% str_remove_all("estimate!!") %>%
+                             str_replace_all(" ", "-") %>% str_replace_all("!!", "_")) %>%
+  rename(pop = 3, pop_m = 4, pop_f= 5) %>% select(-6) %>%
+  filter(`geographic-area-name` !="Puerto Rico") %>%
+  slice(-1) %>% mutate(across(-matches("id|geographic"), ~as.numeric(.))) %>%
+  mutate(per_m = pop_m/pop, per_f = pop_f/pop)
+df_gender %>% head(1)
+```
+
+### 2. 幫我抓投票人口
+
+從 `df_demo` 抓出投票人口、投票女性人口、投票男性人口、投票女性佔比、投票男性佔比。
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_vote <- df_demo %>% select(matches("E")) %>% select(-matches("PE")) %>% select(-(DP05_0001E:DP05_0085E))
+df_vote <- df_vote %>% `colnames<-`(df_vote %>% head(1) %>% unlist() %>% unname() %>% str_to_lower() %>% str_remove_all("estimate!!") %>%
+                                      str_replace_all(" ", "-") %>% str_replace_all("!!", "_")) %>%
+  rename(unit_housing = 3, vote_all = 4, vote_m = 5, vote_f = 6) %>%
+  filter(`geographic-area-name` !="Puerto Rico") %>%
+  slice(-1) %>% mutate(across(-matches("id|geographic"), ~as.numeric(.))) %>%
+  mutate(per_vote_m = vote_m/vote_all, per_vote_f = vote_f/vote_all)
+df_vote %>% head(1)
+```
+
+
+### 3. 幫我抓種族人口
+
+從 `df_race` 抓出種族相關變數，不用全抓，抓 one race, two or more races, one race - white, one race - asian, one race - black/african american, one race - native, one race - some other.
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+# df_race %>% head(1)
+```
+
+
+### 4. 幫我抓種族人口
+
+從 `df_social` 抓出教育相關變數，不用全抓，抓 25-years-and-over 人口, less-than-9th-grade, 9th-to-12th-grade,-no-diploma, high-school-graduate, some-college,-no-degree, associate's-degree, bachelor's-degree, graduate-or-professional-degree.
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+# df_educational_attainment %>% head(1)
+```
+
+### 5. 串起來畫圖
+
+把所有資料表串起來後畫圖，你的變數命名可能跟我不一樣！
+
+```{r message=FALSE, warning=FALSE}
+### your code
+# df_state_metric <- 
+#   df_gender %>% 
+#   left_join(df_vote, by = c("id", "geographic-area-name")) %>%
+#   left_join(df_race, by = c("id", "geographic-area-name")) %>% 
+#   left_join(df_educational_attainment, by = c("id", "geographic-area-name")) %>% 
+#   rename(state=2)
+# 
+# df_presidential_2020 <- 
+#   df_vote_agg_2020 %>% 
+#   left_join(df_state_metric, by = "state") %>%
+#   mutate(gop_change = if_else(votes_gop_per > votes_gop_per_2016, "up", "down"),
+#          dem_change = if_else(votes_dem_per > votes_dem_per_2016, "up", "down"))
+
+##### Viz
+# df_presidential_2020 %>%
+#   ggplot(aes(x = education_high_gradu, y = votes_gop_per, color = gop_change)) +
+#   geom_point() +
+#   theme_bw() +
+#   scale_x_continuous(labels = scales::percent) +
+#   scale_y_continuous(labels = scales::percent)
+# 
+# df_presidential_2020 %>%
+#   ggplot(aes(x = per_m, y = votes_gop_per)) +
+#   geom_point() +
+#   theme_bw() +
+#   scale_x_continuous(labels = scales::percent) +
+#   scale_y_continuous(labels = scales::percent)
+# 
+# df_presidential_2020 %>%
+#   ggplot(aes(x = race_one_asian, y = votes_gop_per)) +
+#   geom_point() +
+#   theme_bw() +
+#   scale_x_continuous(labels = scales::percent) +
+#   scale_y_continuous(labels = scales::percent)
+```
