@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="你是誰 R09342000 新聞所碩五" />
+<meta name="author" content="林綺薇 R09342008 新聞所碩一" />
 
 
 <title>Lab02_Homework_R-Basic</title>
@@ -41,7 +41,6 @@
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -346,7 +345,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Lab02_Homework_R-Basic</h1>
-<h4 class="author">你是誰 R09342000 新聞所碩五</h4>
+<h4 class="author">林綺薇 R09342008 新聞所碩一</h4>
 <h4 class="date">2021/03/02</h4>
 
 </div>
@@ -362,8 +361,10 @@ div.tocify {
 <div id="a.-vector-50-分" class="section level3">
 <h3>A. vector (50 分)</h3>
 <ol style="list-style-type: decimal">
-<li>底下的 code chunk 中，有兩個長度不同的向量，<code>vector_01_left</code> 與 <code>vector_01_right</code> ，兩者相乘後並沒有出現錯誤。請解釋為什麼他們可以相乘而不會出現 error，結果的值又是怎麼計算得到的？<br> <strong>把解釋寫在這</strong>:</li>
+<li>底下的 code chunk 中，有兩個長度不同的向量，<code>vector_01_left</code> 與 <code>vector_01_right</code> ，兩者相乘後並沒有出現錯誤。請解釋為什麼他們可以相乘而不會出現 error，結果的值又是怎麼計算得到的？<br></li>
 </ol>
+<p><strong>把解釋寫在這</strong>: R會自動回收長度不同的向量，vector_01_left 跟 vector_01_right 相乘時，因為 vector_01_right 比較短，R 會自動將 vector_01_right 向量重複計算直到與 vector_01_left 的長度相同為止。</p>
+<p>計算方式： 1<em>2 3</em>3 5<em>2 10</em>3 12*2</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>vector_01_left <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">10</span>,<span class="dv">12</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>vector_01_right <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>)</span>
@@ -376,8 +377,12 @@ div.tocify {
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>vector_02 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># method01</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># method02</span></span></code></pre></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>vector_03 <span class="ot">&lt;-</span> vector_02 <span class="sc">+</span> x</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># method02</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>vector_02[<span class="dv">1</span>] <span class="ot">&lt;-</span><span class="dv">2</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>vector_04<span class="ot">&lt;-</span> vector_02</span></code></pre></div>
 </div>
 <div id="b.-list-50-分" class="section level3">
 <h3>B. list (50 分)</h3>
@@ -391,19 +396,24 @@ div.tocify {
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># expected output</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] TRUE</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>list_true[[<span class="dv">4</span>]][[<span class="dv">3</span>]][[<span class="dv">1</span>]]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># expected output</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] TRUE</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># (2)</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># check</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(list_true, list_final)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># expected output</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] TRUE</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 現在是 FALSE 若你改動成功會變成 TRUE</span></span></code></pre></div>
-<pre><code>#&gt; [1] FALSE</code></pre>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>list_true[<span class="dv">1</span>] <span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>list_true[[<span class="dv">1</span>]][[<span class="dv">2</span>]] <span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>list_true[[<span class="dv">3</span>]][[<span class="dv">3</span>]][[<span class="dv">1</span>]] <span class="ot">&lt;-</span><span class="cn">FALSE</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># check</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(list_true,list_final)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># expected output</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] TRUE</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 現在是 FALSE 若你改動成功會變成 TRUE</span></span></code></pre></div>
+<pre><code>#&gt; [1] TRUE
+#&gt; [1] TRUE</code></pre>
 </div>
 </div>
 
