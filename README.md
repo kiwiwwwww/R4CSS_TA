@@ -1,5 +1,11 @@
 # R4CSS_TA
 
+### week11_05/04
+
+* No Lab Tutorial or Lab Homework - Take a break!
+* AS 06 reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS06_Visualizing-Text-Data_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS06_Visualizing-Text-Data_ref.html)    
+* Lab 08 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab08_Tutorial_more-dplyr_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab08_Tutorial_more-dplyr_ref.html)    
+
 ### week10_04/27
 
 * LAB 08 Tutorial Visualizing-Data-Tips [slide](https://p4css.github.io/R4CSS_TA/Lab08_Tutorial_more-dplyr.html)
