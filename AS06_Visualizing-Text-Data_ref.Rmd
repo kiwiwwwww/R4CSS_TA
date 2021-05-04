@@ -64,6 +64,8 @@ df_speech_seg <-
   mutate(text = str_remove_all(text, "[a-zA-Z0-9]+")) %>%
   mutate(text_segment = purrr::map(text, function(x)segment(x, cutter))) %>%
   mutate(text_POS = purrr::map(text_segment, function(x)names(x)))
+
+# df_speech_seg %>% write_rds("data/AS06/df_speech_seg.rds")
 ```
 
 ### 1. 整體熱門詞彙:
@@ -72,6 +74,7 @@ df_speech_seg <-
 
 ```{r message=FALSE, warning=FALSE}
 ### your code
+# df_speech_seg <- read_rds("data/AS06/df_speech_seg.rds")
 df_speech_seg_unnest <- df_speech_seg %>%
   unnest(c(text_segment, text_POS))
 

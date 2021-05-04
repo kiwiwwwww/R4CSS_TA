@@ -3,6 +3,7 @@
 ### week11_05/04
 
 * No Lab Tutorial or Lab Homework - Take a break!
+* AS 07 Web-Scraping-JSON [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS07_Web-Scraping-JSON.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS07_Web-Scraping-JSON.html) 
 * AS 06 Visualizing-Text-Data reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS06_Visualizing-Text-Data_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS06_Visualizing-Text-Data_ref.html)    
 * Lab 08 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab08_Homework_more-dplyr_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab08_Homework_more-dplyr_ref.html)    
 
