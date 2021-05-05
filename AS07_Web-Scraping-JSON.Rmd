@@ -1,0 +1,56 @@
+---
+title: "AS07_Web-Scraping-JSON"
+author: "你是誰 R09342000 新聞所碩五"
+date: "2021/05/04"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Web Scraping (01) JSON
+
+這份作業希望能夠讓你熟悉 Web Scraping 的流程。
+
+## 作業: Web Scraping (01) JSON
+
+### 1. Scraping 104.com and Comparing salary:
+
+我們在課程中爬取了104.com的工作列表，上面會有行業種類、工作場所和薪資等等。扣除」面議」的薪資不計，請嘗試爬取「資料科學」和「軟體工程」兩種職業的搜尋結果。請嘗試撰寫程式比較兩種職業的薪資差異。並用視覺化方式來表示兩種職業的差異。長條圖上應清楚顯示你所抓取的職業名稱。
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+```
+
+### 2. Scraping page with JSON data:
+
+通常社群網站或者新聞網站都會有兩種頁面，一種是「文章列表」、另一種是每一則「文章內容」。我們在課程中示範了如何爬取104.com的工作列表，而且通常我可能只需要這樣的資料列表就可以做資料分析。但有時候你必須要把該列表裡的每一則文章內容給爬出來，才能夠近一步分析，如新聞網站或者DCard等。
+
+請寫code以爬取鉅亨網的頭條新聞列表（https://news.cnyes.com/news/cat/headline?exp=a），或者爬取DCard某版貼文列表（如 https://www.dcard.tw/f/relationship?latest=true），請用for-loop至少爬取200則文章。
+
+每篇新聞或每篇文章都有自己的id，請你用`nrow (連結到外部網站。)(distinct(df))`來列印出你確實抓到200則文章以上。
+
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+```
+
+### 3. 加分題:
+
+前題僅能爬取鉅亨網和DCard的文章列表，但事實上他們每一則新聞或貼文也都是以JSON格式來儲存，請讀取剛剛你所爬取下來的貼文或新聞連結，把每一則新聞內容補完全。
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+```

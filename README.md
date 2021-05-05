@@ -1,10 +1,17 @@
 # R4CSS_TA
 
+### week11_05/04
+
+* No Lab Tutorial or Lab Homework - Take a break!
+* AS 07 Web-Scraping-JSON [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS07_Web-Scraping-JSON.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS07_Web-Scraping-JSON.html) 
+* AS 06 Visualizing-Text-Data reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS06_Visualizing-Text-Data_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS06_Visualizing-Text-Data_ref.html)    
+* Lab 08 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab08_Homework_more-dplyr_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab08_Homework_more-dplyr_ref.html)    
+
 ### week10_04/27
 
-* LAB 08 Tutorial Visualizing-Data-Tips [slide](https://p4css.github.io/R4CSS_TA/Lab08_Tutorial_more-dplyr.html)
-* LAB 08 Homework  [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab08_Homework_more-dplyr.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab08_Homework_more-dplyr.html) 
-* AS 06 Visualizing-Data-Tips [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS06_Visualizing-Text-Data.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS06_Visualizing-Text-Data.html) 
+* LAB 08 Tutorial more dplyr [slide](https://p4css.github.io/R4CSS_TA/Lab08_Tutorial_more-dplyr.html)
+* LAB 08 Homework more dplyr [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab08_Homework_more-dplyr.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab08_Homework_more-dplyr.html) 
+* AS 06 Visualizing-Text-Data [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS06_Visualizing-Text-Data.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS06_Visualizing-Text-Data.html) 
 * LAB 07 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab07_Homework_Visualizing-Data-Tips_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab07_Homework_Visualizing-Data-Tips_ref.html)    
 
 ### week08_04/13
