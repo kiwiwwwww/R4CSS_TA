@@ -85,17 +85,20 @@ ten_word <- c("台灣", "國家", "民主", "發展", "社會", "國際", "經�
 unnested.df %>%
   filter(word %in% c("台灣", "國家", "民主", "發展", "社會", "國際", "經濟", "自由", "和平", "中華民國")) %>%
   count(year,word) %>%
-  ggplot(aes(x = year , y = word)) +
-  geom_tile(aes(fill = n)) +
+  select("次數" = n , year, word) %>%
+  mutate(year = as.factor(year)) %>%
+  ggplot(aes(x = year , y = word , fill = 次數)) +
+  geom_tile() +
   scale_fill_gradient(low = "white",high = "red")+
   ylab("詞彙")+
   xlab("年份")+
   theme_bw()+
   theme(text=element_text(family="黑體-繁 中黑", size=10),
-        legend.title=element_blank(),
+        #legend.title=element_blank(),
         legend.position = "top",
         panel.border = element_blank(),
-        panel.grid.minor = element_blank())+
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank())+
   labs(title = "歷屆總統就職演說熱門詞彙")
 
 #scale_x_discrete(limits=c("1948","1954","1960","1966","1972","1978","1984","1990","1996","2000","2004","2008","2012","2016","2020"))+
@@ -151,6 +154,7 @@ knitr::include_graphics('data/AS06/plot02.png')
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+
 unnested.df %>%
   group_by(word) %>%
   filter(n() > 5) %>%
@@ -162,11 +166,11 @@ unnested.df %>%
   slice(1:10) %>%
   mutate(word = fct_reorder(word,n)) %>%
   ungroup() %>%
-  ggplot(aes(x = n , y = word))+
+  ggplot(aes(x = tf , y = word))+
   geom_col() +
   facet_wrap(~president, scales = "free_y")+
   ylab("詞彙")+
-  xlab("次數")+
+  xlab("tf_idf")+
   theme_bw()+
   theme(text=element_text(family="黑體-繁 中黑", size=10),
         legend.title=element_blank(),
