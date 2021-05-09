@@ -2,7 +2,8 @@
 
 ### week12_05/11
 
-* AS 08 Web-Scraping-HTML [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS08_Web-Scraping-HTML.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS07_Web-Scraping-HTML.html) 
+* AS 08 Web-Scraping-HTML [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS08_Web-Scraping-HTML.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS08_Web-Scraping-HTML.html) 
+* LAB 09 Homework Web-Scraping-HTML [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab09_Web-Scraping-HTML.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab09_Homework_Web-Scraping-HTML.html) 
 * AS 07 Web-Scraping-JSON reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS07_Web-Scraping-JSON_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS07_Web-Scraping-JSON_ref.html)    
 
 ### week11_05/04
