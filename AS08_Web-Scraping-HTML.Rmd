@@ -25,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE, results = 'markup', comment = '#>', error = T
 
 ### 題目說明
 
-這份作業希望能夠讓你熟悉 Web Scraping 的流程。本次作業的案例為蘋果基金會的捐款平台。對於這樣的捐款平台，就資料新聞的角度來說，我們可以去看哪些人是常見的捐款者？甚至用文字探勘的方法去了解哪些類型的案子是常見的捐款案？就資料科學的角度來說，我們可以抽取出捐款新聞文字描述、記者姓名、捐款類別等來預估最後捐款的總數。
+這份作業希望能夠讓你熟悉 Web Scraping 的流程。本次作業的案例為[蘋果基金會的捐款平台](https://tw.feature.appledaily.com/charity/projlist/1)。對於這樣的捐款平台，就資料新聞的角度來說，我們可以去看哪些人是常見的捐款者？甚至用文字探勘的方法去了解哪些類型的案子是常見的捐款案？就資料科學的角度來說，我們可以抽取出捐款新聞文字描述、記者姓名、捐款類別等來預估最後捐款的總數。
 
 本作業是上述案例的第一步驟，就是獲取資料。請盡可能獲取所有蘋果基金會捐款案的近10頁資料。並且應可獲得每一筆捐款案的以下欄位，前為tibble的指定名稱，括號內為指定變數名稱。
 
@@ -55,9 +55,12 @@ knitr::opts_chunk$set(echo = TRUE, results = 'markup', comment = '#>', error = T
 
 ### 作答區 - 爬蟲程式碼
 
+你可以把結果匯出成 `csv`，這樣就不用每次 knit 都要重抓一次資料，不過爬蟲的 code 要留著喔！加上 # comment 就好。
+
 ```{r message=FALSE, warning=FALSE}
 ### your code
 library(tidyverse)
+# url = "https://tw.feature.appledaily.com/charity/projlist/1"
 
 # df_case_list %>% write_csv("data/AS08/df_case_list.csv")
 # df_case_donation %>% write_csv("data/AS08/df_case_donation.csv")

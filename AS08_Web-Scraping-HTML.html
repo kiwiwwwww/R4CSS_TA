@@ -360,7 +360,7 @@ div.tocify {
 <h2>作業: Web Scraping (02) HTML</h2>
 <div id="題目說明" class="section level3">
 <h3>題目說明</h3>
-<p>這份作業希望能夠讓你熟悉 Web Scraping 的流程。本次作業的案例為蘋果基金會的捐款平台。對於這樣的捐款平台，就資料新聞的角度來說，我們可以去看哪些人是常見的捐款者？甚至用文字探勘的方法去了解哪些類型的案子是常見的捐款案？就資料科學的角度來說，我們可以抽取出捐款新聞文字描述、記者姓名、捐款類別等來預估最後捐款的總數。</p>
+<p>這份作業希望能夠讓你熟悉 Web Scraping 的流程。本次作業的案例為<a href="https://tw.feature.appledaily.com/charity/projlist/1">蘋果基金會的捐款平台</a>。對於這樣的捐款平台，就資料新聞的角度來說，我們可以去看哪些人是常見的捐款者？甚至用文字探勘的方法去了解哪些類型的案子是常見的捐款案？就資料科學的角度來說，我們可以抽取出捐款新聞文字描述、記者姓名、捐款類別等來預估最後捐款的總數。</p>
 <p>本作業是上述案例的第一步驟，就是獲取資料。請盡可能獲取所有蘋果基金會捐款案的近10頁資料。並且應可獲得每一筆捐款案的以下欄位，前為tibble的指定名稱，括號內為指定變數名稱。</p>
 <ol style="list-style-type: decimal">
 <li><p>df_case_list，包含捐款案id(case_id)、新聞標題(title)、捐款案時間(date)、捐款案狀態(status)、捐款總額(amount)、新聞鏈結(link)、捐款明細鏈結(link_detail)</p></li>
@@ -391,12 +391,14 @@ div.tocify {
 </div>
 <div id="作答區---爬蟲程式碼" class="section level3">
 <h3>作答區 - 爬蟲程式碼</h3>
+<p>你可以把結果匯出成 <code>csv</code>，這樣就不用每次 knit 都要重抓一次資料，不過爬蟲的 code 要留著喔！加上 # comment 就好。</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_list %&gt;% write_csv(&quot;data/AS08/df_case_list.csv&quot;)</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_donation %&gt;% write_csv(&quot;data/AS08/df_case_donation.csv&quot;)</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_news %&gt;% write_csv(&quot;data/AS08/df_case_news.csv&quot;)</span></span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># url = &quot;https://tw.feature.appledaily.com/charity/projlist/1&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_list %&gt;% write_csv(&quot;data/AS08/df_case_list.csv&quot;)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_donation %&gt;% write_csv(&quot;data/AS08/df_case_donation.csv&quot;)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_news %&gt;% write_csv(&quot;data/AS08/df_case_news.csv&quot;)</span></span></code></pre></div>
 </div>
 <div id="作答區---作業要求檢查" class="section level3">
 <h3>作答區 - 作業要求檢查</h3>
