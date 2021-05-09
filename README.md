@@ -1,5 +1,10 @@
 # R4CSS_TA
 
+### week12_05/11
+
+* AS 08 Web-Scraping-HTML [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS08_Web-Scraping-HTML.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS07_Web-Scraping-HTML.html) 
+* AS 07 Web-Scraping-JSON reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS07_Web-Scraping-JSON_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS07_Web-Scraping-JSON_ref.html)    
+
 ### week11_05/04
 
 * No Lab Tutorial or Lab Homework - Take a break!
