@@ -38,11 +38,11 @@ library(jsonlite)
 df_ds <- tibble()
 for(i in 1:10){
   url_ds <- str_c("https://www.104.com.tw/jobs/search/list?ro=0&kwop=7&keyword=%E8%B3%87%E6%96%99%E7%A7%91%E5%AD%B8&expansionType=area%2Cspec%2Ccom%2Cjob%2Cwf%2Cwktm&order=15&asc=0&page=", i, "&mode=s&jobsource=2018indexpoc")
-  json_ds <- url_ds %>% GET(add_headers('User-Agent' = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36', 
-                                        'Accept' = 'application/json, text/javascript, */*; q=0.01', 
+  json_ds <- url_ds %>% GET(add_headers('User-Agent' = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36',
+                                        'Accept' = 'application/json, text/javascript, */*; q=0.01',
                                         'Referer' = 'https://www.104.com.tw')) %>% content("text") %>%fromJSON()
   df_tmp <- json_ds$data$list %>% as_tibble()
-  
+
   df_ds <- df_ds %>% bind_rows(df_tmp)
   print(i)
   Sys.sleep(10)
@@ -52,51 +52,68 @@ for(i in 1:10){
 df_se <- tibble()
 for(i in 1:10){
   url_se <- str_c("https://www.104.com.tw/jobs/search/list?ro=0&kwop=7&keyword=%E8%BB%9F%E9%AB%94%E5%B7%A5%E7%A8%8B&expansionType=area%2Cspec%2Ccom%2Cjob%2Cwf%2Cwktm&order=15&asc=0&page=", i, "&mode=s&jobsource=2018indexpoc")
-  json_se <- url_se %>% GET(add_headers('User-Agent' = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36', 
-                                        'Accept' = 'application/json, text/javascript, */*; q=0.01', 
+  json_se <- url_se %>% GET(add_headers('User-Agent' = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36',
+                                        'Accept' = 'application/json, text/javascript, */*; q=0.01',
                                         'Referer' = 'https://www.104.com.tw')) %>% content("text") %>%fromJSON()
-  df_tmp <- json_ds$data$list %>% as_tibble()
-  
+  df_tmp <- json_se$data$list %>% as_tibble()
+
   df_se <- df_se %>% bind_rows(df_tmp)
   print(i)
   Sys.sleep(10)
 }
 
+df_ds %>% write_rds("data/AS07/df_ds.rds")
+df_se %>% write_rds("data/AS07/df_se.rds")
+df_ds <- read_rds("data/AS07/df_ds.rds")
+df_se <- read_rds("data/AS07/df_se.rds")
+
 ### 確認有沒有奇怪的東西混在裡面
-# df_se %>% filter(str_detect(jobNameSnippet, "軟體|工程")|str_detect(description, "軟體|工程")) %>% select(jobNameSnippet) %>% sample_n(10)
-# df_se %>% select(description) %>% sample_n(10)
+df_se %>% filter(str_detect(jobNameSnippet, "軟體|工程|[Ss]ofware [Ee]ngineer")|str_detect(description, "軟體|工程|[Ss]ofware [Ee]ngineer")) %>% select(jobNameSnippet) %>% sample_n(10)
+df_se %>% filter(str_detect(jobNameSnippet, "軟體|工程|[Ss]ofware [Ee]ngineer")|str_detect(description, "軟體|工程|[Ss]ofware [Ee]ngineer")) %>% select(description) %>% sample_n(10)
+
+df_ds %>% filter(str_detect(jobNameSnippet, "資料科學|資料分析|[Da]ata [Ss]cientist")|str_detect(description, "資料科學|資料分析")) %>% select(jobNameSnippet) %>% sample_n(10)
+df_ds %>% filter(str_detect(jobNameSnippet, "資料科學|資料分析|[Da]ata [Ss]cientist")|str_detect(description, "資料科學|資料分析")) %>% select(description) %>% sample_n(10)
 
 ### 清理資料
-df_se_clean <- df_se %>% filter(str_detect(jobNameSnippet, "軟體|工程")|str_detect(description, "軟體|工程")) %>%
+df_se_clean <- df_se %>% filter(str_detect(jobNameSnippet, "軟體|工程|[Ss]ofware [Ee]ngineer")|str_detect(description, "軟體|工程|ata scientist")) %>%
   filter(!str_detect(jobNameSnippet, "QA|軟體測試")) %>%
-  select(matches("salary")) %>% filter(!str_detect(salaryDesc, "待遇面議")) %>%
+  select(matches("salary|period")) %>% filter(!str_detect(salaryDesc, "待遇面議")) %>%
   mutate(salaryLow = as.integer(salaryLow), salaryHigh = as.integer(salaryHigh)) %>%
   mutate(salaryLow = if_else(str_detect(salaryDesc, "時薪"), as.integer(salaryLow*8*22), salaryLow), 
          salaryHigh = if_else(str_detect(salaryDesc, "時薪"), as.integer(salaryHigh*8*22), salaryHigh)) %>%
   mutate(salaryLow = if_else(str_detect(salaryDesc, "年薪"), as.integer(salaryLow/12), salaryLow), 
          salaryHigh = if_else(str_detect(salaryDesc, "年薪"), as.integer(salaryHigh/12), salaryHigh)) %>%
   mutate(salaryHigh = if_else(salaryHigh == 9999999, as.integer(salaryLow + 40000), salaryHigh)) %>%
-  mutate(salary_mean = (salaryLow+salaryHigh)/2) %>% summarise(salary_mean = mean(salary_mean)) %>% mutate(type = "軟體工程")
+  mutate(salary_mean = (salaryLow+salaryHigh)/2) %>% 
+  mutate(periodDesc = if_else(str_detect(periodDesc, "不拘"), "經歷不拘", "要求年資")) %>%
+  mutate(type = "軟體工程")
 
-df_ds_clean <- df_ds %>% filter(str_detect(jobNameSnippet, "資料科學|資料分析")|str_detect(description, "資料科學|資料分析")) %>%
-  select(matches("salary")) %>% filter(!str_detect(salaryDesc, "待遇面議")) %>%
+df_ds_clean <- df_ds %>% filter(str_detect(jobNameSnippet, "資料科學|資料分析|[Da]ata [Ss]cientist")|str_detect(description, "資料科學|資料分析")) %>%
+  select(matches("salary|period")) %>% filter(!str_detect(salaryDesc, "待遇面議")) %>%
   mutate(salaryLow = as.integer(salaryLow), salaryHigh = as.integer(salaryHigh)) %>%
   mutate(salaryLow = if_else(str_detect(salaryDesc, "時薪"), as.integer(salaryLow*8*22), salaryLow), 
          salaryHigh = if_else(str_detect(salaryDesc, "時薪"), as.integer(salaryHigh*8*22), salaryHigh)) %>%
   mutate(salaryLow = if_else(str_detect(salaryDesc, "年薪"), as.integer(salaryLow/12), salaryLow), 
          salaryHigh = if_else(str_detect(salaryDesc, "年薪"), as.integer(salaryHigh/12), salaryHigh)) %>%
   mutate(salaryHigh = if_else(salaryHigh == 9999999, as.integer(salaryLow + 40000), salaryHigh)) %>%
-  mutate(salary_mean = (salaryLow+salaryHigh)/2) %>% summarise(salary_mean = mean(salary_mean)) %>% mutate(type = "資料科學")
+  mutate(salary_mean = (salaryLow+salaryHigh)/2) %>% 
+  mutate(periodDesc = if_else(str_detect(periodDesc, "不拘"), "經歷不拘", "要求年資")) %>%
+  mutate(type = "資料科學") 
 
 ### 畫圖
 df_se_clean %>% bind_rows(df_ds_clean) %>%
-  ggplot(aes(salary_mean, type, fill = type)) + geom_col() +
+  ggplot(aes(x = type, y = salary_mean, fill = type)) + geom_boxplot() +
+  coord_flip() +
+  facet_wrap(periodDesc ~ ., nrow = 2) +
+  scale_y_continuous(labels = scales::number_format(suffix = "k", scale = 1e-3)) +
   theme_bw() +
   guides(fill = FALSE) +
-  labs(x= "職缺類型",y= "平均月薪", title = "104人力銀行資料科學與軟體工程職缺的薪資平均", caption = "資料：各爬取約 200 筆後剔除無關者") +
+  labs(x= "職缺類型",y= "平均月薪", title = "104人力銀行資料科學與軟體工程職缺的薪資分佈", caption = "資料：各爬取約 200 筆後剔除無關者") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   theme(text = element_text(family = "Noto Sans CJK TC Medium"))
+
+
 ```
 
 ### 2. Scraping page with JSON data:
@@ -119,10 +136,11 @@ for(i in 1:7){
   print(i)
   Sys.sleep(20)
 }
+df_cnyes %>% write_rds("data/AS07/df_cnyes.rds")
+df_cnyes <- read_rds("data/AS07/df_cnyes.rds")
 
 nrow(df_cnyes)
-df_cnyes %>% distinct()
-df_cnyes %>% distinct(newsId)
+df_cnyes %>% summarize(n_distinct(newsId))
 ```
 
 ### 3. 加分題:
@@ -132,5 +150,5 @@ df_cnyes %>% distinct(newsId)
 ```{r message=FALSE, warning=FALSE}
 ### your code
 "我第二題就搞定了！不信給你看～"
-df_cnyes %>% select(content) %>% head(1) %>% pull()
+df_cnyes %>% select(content) %>% head(1) %>% pull() %>% str_remove_all("&lt;|/p&gt;|\\n|em&gt;|p&gt;")
 ```
