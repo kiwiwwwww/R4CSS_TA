@@ -1,6 +1,6 @@
 ---
 title: "AS07_Web-Scraping-JSON"
-author: "你是誰 R09342000 新聞所碩五"
+author: "林綺薇 R09342000 新聞所碩一"
 date: "2021/05/04"
 output:
   html_document:
@@ -15,6 +15,14 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+options(scipen = 999)
+```
+
+```{r}
+library(tidyverse)
+library(httr)
+library(jsonlite)
+options(stringsAsFactors = F)
 ```
 
 ## 作業目的: Web Scraping (01) JSON
@@ -25,10 +33,63 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 
 ### 1. Scraping 104.com and Comparing salary:
 
-我們在課程中爬取了104.com的工作列表，上面會有行業種類、工作場所和薪資等等。扣除」面議」的薪資不計，請嘗試爬取「資料科學」和「軟體工程」兩種職業的搜尋結果。請嘗試撰寫程式比較兩種職業的薪資差異。並用視覺化方式來表示兩種職業的差異。長條圖上應清楚顯示你所抓取的職業名稱。
+我們在課程中爬取了104.com的工作列表，上面會有行業種類、工作場所和薪資等等。扣除「面議」的薪資不計，請嘗試爬取「資料科學」和「軟體工程」兩種職業的搜尋結果。請嘗試撰寫程式比較兩種職業的薪資差異。並用視覺化方式來表示兩種職業的差異。長條圖上應清楚顯示你所抓取的職業名稱。
 
 ```{r message=FALSE, warning=FALSE}
 ### your code
+
+
+url_1 <- "https://www.104.com.tw/jobs/search/list?ro=0&kwop=7&keyword=%E8%B3%87%E6%96%99%E7%A7%91%E5%AD%B8&expansionType=area%2Cspec%2Ccom%2Cjob%2Cwf%2Cwktm&order=12&asc=0&page=4&mode=s&jobsource=2018indexpoc"
+
+refer_url <- "https://www.104.com.tw"
+
+res_1 <- GET(url_1,add_headers("referer" = refer_url)) %>% content("text") %>%fromJSON()
+
+res_1 <- res_1$data$list
+
+res_1 <- res_1 %>%
+  filter(!salaryDesc %in% c("待遇面議","時薪160元"),
+         salaryHigh != "9999999") %>%
+  select(salaryHigh) %>%
+  mutate(salaryHigh = str_replace(salaryHigh, ".*?([1-9])", "\\1"),
+         set = "資料科學相關",
+         salaryHigh_mean = mean(as.numeric(salaryHigh))) %>%
+  distinct(set,salaryHigh_mean)
+
+url_2 <- "https://www.104.com.tw/jobs/search/list?ro=0&kwop=7&keyword=%E8%BB%9F%E9%AB%94%E5%B7%A5%E7%A8%8B&expansionType=area%2Cspec%2Ccom%2Cjob%2Cwf%2Cwktm&order=12&asc=0&page=4&mode=s&jobsource=2018indexpoc"
+
+refer_url <- "https://www.104.com.tw"
+
+res_2 <- GET(url_2,add_headers("referer" = refer_url)) %>% content("text") %>%fromJSON()
+
+res_2 <- res_2$data$list
+
+res_2 <- res_2 %>%
+  filter(!salaryDesc %in% "待遇面議",
+         salaryHigh != "9999999") %>%
+  select(salaryHigh,salaryDesc) %>%
+  mutate(salaryHigh = str_replace(salaryHigh, ".*?([1-9])", "\\1"),
+         type = substring(salaryDesc,1,2),
+         set = "軟體工程相關") %>%
+  filter(type =="月薪") %>%
+  mutate(salaryHigh_mean = mean(as.numeric(salaryHigh))) %>%
+  distinct(set,salaryHigh_mean)
+
+res_1 %>%
+  bind_rows(res_2) %>% 
+  ggplot(aes(x = set , y = salaryHigh_mean ,width = 0.5 , fill = set)) +
+  geom_col() +
+  ylab("新台幣（元）")+
+  xlab(NULL)+
+  scale_fill_manual(values =c("#FF9797","#DCB5FF")) +
+  theme_bw()+
+  theme(text=element_text(family="黑體-繁 中黑", size=10),
+        legend.title=element_blank(),
+        legend.position = "top",
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank())+
+  labs(title = "104人力銀行「資料科學」與「軟體工程」搜尋結果最高薪資平均")
 
 ```
 
@@ -44,6 +105,44 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+all.df <- tibble()
+refer_url <- "https://news.cnyes.com/"
+
+for(p in 1:7){
+  url <- str_c("https://api.cnyes.com/media/api/v1/newslist/category/headline?limit=30&startAt=1619280000&endAt=1620230399&page=",
+            p)
+  print(p)
+  res <- GET(url,add_headers("referer" = refer_url)) %>% content("text") %>%fromJSON()
+  
+  res$items$data$newsId <- NULL
+  res$items$data$hasCoverPhoto <- NULL
+  res$items$data$isIndex<- NULL
+  res$items$data$isCategoryHeadline <- NULL
+  res$items$data$payment <- NULL
+  res$items$data$publishAt <- NULL
+  res$items$data$coverSrc <- NULL
+  res$items$data$abTesting <- NULL
+  res$items$data$categoryId <- NULL
+  res$items$data$columnists <- NULL
+  res$items$data$etf <- NULL
+  res$items$data$fbShare <- NULL
+  res$items$data$fbComment <- NULL
+  res$items$data$fbCommentPluginCount <- NULL
+  res$items$data$market <- NULL
+  res$items$data$fundCategoryAbbr <- NULL
+  res$items$data$status <- NULL
+  res$items$data$video <- NULL
+  
+  all.df <- bind_rows(all.df,res$items$data)
+  }
+
+
+#all.df %>% select(content)%>% head(2) %>% pull()看某個東西的全文
+
+
+nrow (all.df)
+distinct(all.df)
+
 ```
 
 ### 3. 加分題:
@@ -52,5 +151,10 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 
 ```{r message=FALSE, warning=FALSE}
 ### your code
+
+#第二題我已經抓到全文了，可以加分咪(ﾉ>ω<)ﾉ
+  
+
+
 
 ```
