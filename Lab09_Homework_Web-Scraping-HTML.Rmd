@@ -1,0 +1,44 @@
+---
+title: "Lab09_Homework_Web-Scraping-HTML"
+author: "你是誰 R09342000 新聞所碩五"
+date: "2021/05/11"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Web Scraping HTML
+
+這份作業希望能夠讓你熟悉 Web Scraping 的流程。
+
+## 作業: Web Scraping HTML
+
+### 嘖嘖 - 目錄頁面
+
+請幫我從 `page = 1` 到 `page = 5`，抓取 5 頁嘖嘖的[目錄頁面](https://www.zeczec.com/categories?page=1)。抓取欄位包含標題(title)、連結(title_link)、日程(day)、提案人(author)、提案人連結(author_link)、類別(cattext)，並額外增加一個欄位代表現在的頁面(page)。
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+### template FYI
+df_zec_main <- read_rds("data/Lab09/df_zec_main_template.rds")
+df_zec_main %>% glimpse()
+```
+
+### 嘖嘖 - 提案頁面
+
+承接上提，請幫我抓下上面的所有提案，應該有 60 則。抓取欄位包含連結(title_link)、內文(page_text)、支持者(page_backers)、時程(page_dayrange)、類別文字(page_cattext)、金錢相關(page_money_goal)、專案內容/留言/常見問答數量(page_meta)、專案文字(page_projecttext)、產品文字(page_producttext)。
+
+```{r message=FALSE, warning=FALSE}
+### template FYI
+df_zec_page <- read_rds("data/Lab09/df_zec_page_template.rds")
+df_zec_page %>% glimpse()
+```

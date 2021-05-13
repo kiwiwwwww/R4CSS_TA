@@ -1,0 +1,154 @@
+---
+title: "AS07_Web-Scraping-JSON_ref"
+author: "曾子軒 Teaching Assistant"
+date: "2021/05/04"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Web Scraping (01) JSON
+
+這份作業希望能夠讓你熟悉 Web Scraping 的流程。
+
+## 作業: Web Scraping (01) JSON
+
+### 1. Scraping 104.com and Comparing salary:
+
+我們在課程中爬取了104.com的工作列表，上面會有行業種類、工作場所和薪資等等。扣除」面議」的薪資不計，請嘗試爬取「資料科學」和「軟體工程」兩種職業的搜尋結果。請嘗試撰寫程式比較兩種職業的薪資差異。並用視覺化方式來表示兩種職業的差異。長條圖上應清楚顯示你所抓取的職業名稱。
+
+```{r message=FALSE, warning=FALSE}
+### your code
+library(httr)
+library(rvest)
+library(tidyverse)
+library(jsonlite)
+
+### 爬 data science
+df_ds <- tibble()
+for(i in 1:10){
+  url_ds <- str_c("https://www.104.com.tw/jobs/search/list?ro=0&kwop=7&keyword=%E8%B3%87%E6%96%99%E7%A7%91%E5%AD%B8&expansionType=area%2Cspec%2Ccom%2Cjob%2Cwf%2Cwktm&order=15&asc=0&page=", i, "&mode=s&jobsource=2018indexpoc")
+  json_ds <- url_ds %>% GET(add_headers('User-Agent' = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36',
+                                        'Accept' = 'application/json, text/javascript, */*; q=0.01',
+                                        'Referer' = 'https://www.104.com.tw')) %>% content("text") %>%fromJSON()
+  df_tmp <- json_ds$data$list %>% as_tibble()
+
+  df_ds <- df_ds %>% bind_rows(df_tmp)
+  print(i)
+  Sys.sleep(10)
+}
+
+### 爬 software engineering
+df_se <- tibble()
+for(i in 1:10){
+  url_se <- str_c("https://www.104.com.tw/jobs/search/list?ro=0&kwop=7&keyword=%E8%BB%9F%E9%AB%94%E5%B7%A5%E7%A8%8B&expansionType=area%2Cspec%2Ccom%2Cjob%2Cwf%2Cwktm&order=15&asc=0&page=", i, "&mode=s&jobsource=2018indexpoc")
+  json_se <- url_se %>% GET(add_headers('User-Agent' = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36',
+                                        'Accept' = 'application/json, text/javascript, */*; q=0.01',
+                                        'Referer' = 'https://www.104.com.tw')) %>% content("text") %>%fromJSON()
+  df_tmp <- json_se$data$list %>% as_tibble()
+
+  df_se <- df_se %>% bind_rows(df_tmp)
+  print(i)
+  Sys.sleep(10)
+}
+
+df_ds %>% write_rds("data/AS07/df_ds.rds")
+df_se %>% write_rds("data/AS07/df_se.rds")
+df_ds <- read_rds("data/AS07/df_ds.rds")
+df_se <- read_rds("data/AS07/df_se.rds")
+
+### 確認有沒有奇怪的東西混在裡面
+df_se %>% filter(str_detect(jobNameSnippet, "軟體|工程|[Ss]ofware [Ee]ngineer")|str_detect(description, "軟體|工程|[Ss]ofware [Ee]ngineer")) %>% select(jobNameSnippet) %>% sample_n(10)
+df_se %>% filter(str_detect(jobNameSnippet, "軟體|工程|[Ss]ofware [Ee]ngineer")|str_detect(description, "軟體|工程|[Ss]ofware [Ee]ngineer")) %>% select(description) %>% sample_n(10)
+
+df_ds %>% filter(str_detect(jobNameSnippet, "資料科學|資料分析|[Da]ata [Ss]cientist")|str_detect(description, "資料科學|資料分析")) %>% select(jobNameSnippet) %>% sample_n(10)
+df_ds %>% filter(str_detect(jobNameSnippet, "資料科學|資料分析|[Da]ata [Ss]cientist")|str_detect(description, "資料科學|資料分析")) %>% select(description) %>% sample_n(10)
+
+### 清理資料
+df_se_clean <- df_se %>% filter(str_detect(jobNameSnippet, "軟體|工程|[Ss]ofware [Ee]ngineer")|str_detect(description, "軟體|工程|ata scientist")) %>%
+  filter(!str_detect(jobNameSnippet, "QA|軟體測試")) %>%
+  select(matches("salary|period")) %>% filter(!str_detect(salaryDesc, "待遇面議")) %>%
+  mutate(salaryLow = as.integer(salaryLow), salaryHigh = as.integer(salaryHigh)) %>%
+  mutate(salaryLow = if_else(str_detect(salaryDesc, "時薪"), as.integer(salaryLow*8*22), salaryLow), 
+         salaryHigh = if_else(str_detect(salaryDesc, "時薪"), as.integer(salaryHigh*8*22), salaryHigh)) %>%
+  mutate(salaryLow = if_else(str_detect(salaryDesc, "年薪"), as.integer(salaryLow/12), salaryLow), 
+         salaryHigh = if_else(str_detect(salaryDesc, "年薪"), as.integer(salaryHigh/12), salaryHigh)) %>%
+  mutate(salaryHigh = if_else(salaryHigh == 9999999, as.integer(salaryLow + 40000), salaryHigh)) %>%
+  mutate(salary_mean = (salaryLow+salaryHigh)/2) %>% 
+  mutate(periodDesc = if_else(str_detect(periodDesc, "不拘"), "經歷不拘", "要求年資")) %>%
+  mutate(type = "軟體工程")
+
+df_ds_clean <- df_ds %>% filter(str_detect(jobNameSnippet, "資料科學|資料分析|[Da]ata [Ss]cientist")|str_detect(description, "資料科學|資料分析")) %>%
+  select(matches("salary|period")) %>% filter(!str_detect(salaryDesc, "待遇面議")) %>%
+  mutate(salaryLow = as.integer(salaryLow), salaryHigh = as.integer(salaryHigh)) %>%
+  mutate(salaryLow = if_else(str_detect(salaryDesc, "時薪"), as.integer(salaryLow*8*22), salaryLow), 
+         salaryHigh = if_else(str_detect(salaryDesc, "時薪"), as.integer(salaryHigh*8*22), salaryHigh)) %>%
+  mutate(salaryLow = if_else(str_detect(salaryDesc, "年薪"), as.integer(salaryLow/12), salaryLow), 
+         salaryHigh = if_else(str_detect(salaryDesc, "年薪"), as.integer(salaryHigh/12), salaryHigh)) %>%
+  mutate(salaryHigh = if_else(salaryHigh == 9999999, as.integer(salaryLow + 40000), salaryHigh)) %>%
+  mutate(salary_mean = (salaryLow+salaryHigh)/2) %>% 
+  mutate(periodDesc = if_else(str_detect(periodDesc, "不拘"), "經歷不拘", "要求年資")) %>%
+  mutate(type = "資料科學") 
+
+### 畫圖
+df_se_clean %>% bind_rows(df_ds_clean) %>%
+  ggplot(aes(x = type, y = salary_mean, fill = type)) + geom_boxplot() +
+  coord_flip() +
+  facet_wrap(periodDesc ~ ., nrow = 2) +
+  scale_y_continuous(labels = scales::number_format(suffix = "k", scale = 1e-3)) +
+  theme_bw() +
+  guides(fill = FALSE) +
+  labs(x= "職缺類型",y= "平均月薪", title = "104人力銀行資料科學與軟體工程職缺的薪資分佈", caption = "資料：各爬取約 200 筆後剔除無關者") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(text = element_text(family = "Noto Sans CJK TC Medium"))
+
+
+```
+
+### 2. Scraping page with JSON data:
+
+通常社群網站或者新聞網站都會有兩種頁面，一種是「文章列表」、另一種是每一則「文章內容」。我們在課程中示範了如何爬取104.com的工作列表，而且通常我可能只需要這樣的資料列表就可以做資料分析。但有時候你必須要把該列表裡的每一則文章內容給爬出來，才能夠近一步分析，如新聞網站或者DCard等。
+
+請寫code以爬取鉅亨網的頭條新聞列表（https://news.cnyes.com/news/cat/headline?exp=a），或者爬取DCard某版貼文列表（如 https://www.dcard.tw/f/relationship?latest=true），請用for-loop至少爬取200則文章。
+
+每篇新聞或每篇文章都有自己的id，請你用`nrow (連結到外部網站。)(distinct(df))`來列印出你確實抓到200則文章以上。
+
+
+```{r message=FALSE, warning=FALSE}
+### your code
+df_cnyes <- tibble()
+for(i in 1:7){
+  url <- str_c("https://api.cnyes.com/media/api/v1/newslist/category/headline?limit=30&startAt=1619539200&endAt=1620489599&page=", i)
+  json_tmp <- url %>% fromJSON()
+  df_tmp = json_tmp$items$data %>% as_tibble() %>% select(newsId, title, content, summary, payment, publishAt, categoryId, categoryName, fbShare, fbComment)
+  df_cnyes <- df_cnyes %>% bind_rows(df_tmp)
+  print(i)
+  Sys.sleep(20)
+}
+df_cnyes %>% write_rds("data/AS07/df_cnyes.rds")
+df_cnyes <- read_rds("data/AS07/df_cnyes.rds")
+
+nrow(df_cnyes)
+df_cnyes %>% summarize(n_distinct(newsId))
+```
+
+### 3. 加分題:
+
+前題僅能爬取鉅亨網和DCard的文章列表，但事實上他們每一則新聞或貼文也都是以JSON格式來儲存，請讀取剛剛你所爬取下來的貼文或新聞連結，把每一則新聞內容補完全。
+
+```{r message=FALSE, warning=FALSE}
+### your code
+"我第二題就搞定了！不信給你看～"
+df_cnyes %>% select(content) %>% head(1) %>% pull() %>% str_remove_all("&lt;|/p&gt;|\\n|em&gt;|p&gt;")
+```
