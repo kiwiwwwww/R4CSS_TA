@@ -363,30 +363,28 @@ div.tocify {
 <p>這份作業希望能夠讓你熟悉 Web Scraping 的流程。本次作業的案例為<a href="https://tw.feature.appledaily.com/charity/projlist/1">蘋果基金會的捐款平台</a>。對於這樣的捐款平台，就資料新聞的角度來說，我們可以去看哪些人是常見的捐款者？甚至用文字探勘的方法去了解哪些類型的案子是常見的捐款案？就資料科學的角度來說，我們可以抽取出捐款新聞文字描述、記者姓名、捐款類別等來預估最後捐款的總數。</p>
 <p>本作業是上述案例的第一步驟，就是獲取資料。請盡可能獲取所有蘋果基金會捐款案的近10頁資料。並且應可獲得每一筆捐款案的以下欄位，前為tibble的指定名稱，括號內為指定變數名稱。</p>
 <ol style="list-style-type: decimal">
-<li><p>df_case_list，包含捐款案id(case_id)、新聞標題(title)、捐款案時間(date)、捐款案狀態(status)、捐款總額(amount)、新聞鏈結(link)、捐款明細鏈結(link_detail)</p></li>
-<li><p>df_case_donation，包含捐款案id(case_id)、捐款者(donator)、捐款金額(donation)、捐款時間(donate_date)。</p></li>
-<li><p>df_case_news，包含新聞鏈結(link)、新聞內容(text)、新聞發布時間(time)、記者或攝影師(reporter)、首圖圖說(caption)、<strong>配圖數量(n_figure)</strong>(這很難抓可以放棄)</p></li>
+<li><p>df_case_list，包含捐款案id(case_id)、新聞標題(title)、捐款案時間(date)、捐款案狀態(status)、捐款總額(amount)、新聞連結(link)、捐款明細連結(link_detail)</p></li>
+<li><p>df_case_donation，包含捐款案id(case_id)、捐款明細連結(link_detail)、捐款者(donator)、捐款金額(donation)、捐款時間(donate_date)</p></li>
+<li><p>df_case_news，包含新聞連結(link)、新聞內容(text)、新聞發布時間(time)、記者或攝影師(reporter)、首圖圖說(caption)、<strong>配圖數量(n_figure)</strong>(這很難抓可以放棄)</p></li>
 </ol>
 </div>
 <div id="作業要求" class="section level3">
 <h3>作業要求</h3>
 <ul>
-<li>請用<code>df_case_list %&gt;% summarise(n_distinct(case_id))</code>驗證你所抓到的資料未有重複</li>
-<li>請用<code>df_case_list %&gt;% summarise(n_distinct(link))</code>驗證你所抓取到的超鏈結未有重複</li>
-<li>請用<code>df_case_donation %&gt;% summarise(n_distinct(link))</code>驗證你所抓取到的超鏈結未有重複</li>
+<li>請去掉下方程式碼的註解(檢查部分) 以驗證你所抓到的資料未有重複</li>
 <li>用橫向 bar chart 印出捐款次數最多的前十大單位或個體（注意，個體可能是以全形或半形逗號分隔。先不處理填錯名字的問題、也暫時不考慮如「XXX全家」的問題）</li>
 <li>請用 <code>glimpse()</code> 分別呈現上述 tibble 的長相</li>
 </ul>
 </div>
 <div id="計分方式" class="section level3">
 <h3>計分方式</h3>
-<ol style="list-style-type: decimal">
+<ul>
 <li>上述作業要求的驗證與 bar chart</li>
-<li><code>df_case_list</code> 爬蟲過程與內容，包含捐款案id(case_id)、新聞標題(title)、捐款案時間(date)、捐款案狀態(status)、捐款總額(amount)、新聞鏈結(link)</li>
-<li><code>df_case_donation</code> 爬蟲過程與內容，包含捐款案id(case_id)、捐款者(donator)、捐款金額(donation)、捐款時間(donate_date)</li>
-<li>`df_case_news`` 爬蟲過程與內容，包含新聞鏈結(link)、新聞內容(text)</li>
+<li><code>df_case_list</code> 爬蟲過程與內容，包含捐款案id(case_id)、新聞標題(title)、捐款案時間(date)、捐款案狀態(status)、捐款總額(amount)、新聞連結(link)、捐款明細連結(link_detail)</li>
+<li><code>df_case_donation</code> 爬蟲過程與內容，包含捐款案id(case_id)、捐款明細連結(link_detail)、捐款者(donator)、捐款金額(donation)、捐款時間(donate_date)</li>
+<li><code>df_case_news</code> 爬蟲過程與內容，包含新聞連結(link)、新聞內容(text)</li>
 <li>bonus: <code>df_case_news</code> 抓到的欄位越多加分越多，你可以多抓新聞標題(title)、捐款案時間(date)、新聞發布時間(time)、記者或攝影師(reporter)、首圖配字(caption)、圖片數量(n_figure)，並 join <code>df_case_list</code> and <code>df_case_news</code> 再呈現結果</li>
-</ol>
+</ul>
 <p><strong>再次重申：圖片數量很難抓，不要花太多時間在上面，我也抓不到！</strong></p>
 </div>
 <div id="作答區---爬蟲程式碼" class="section level3">
@@ -402,27 +400,27 @@ div.tocify {
 </div>
 <div id="作答區---作業要求檢查" class="section level3">
 <h3>作答區 - 作業要求檢查</h3>
-<p>這邊的 code 請去掉 comment 後執行喔！可以用來確認結果！</p>
+<p>請去掉「檢查部分!!! 請去掉!!!」的 comment 後執行喔！可以用來確認結果！</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">### your code</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_list &lt;- read_csv(&quot;data/AS08/df_case_list.csv&quot;)</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_donation &lt;- read_csv(&quot;data/AS08/df_case_donation.csv&quot;)</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_news &lt;- read_csv(&quot;data/AS08/df_case_news.csv&quot;)</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 檢查</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 檢查部分!!! 請去掉!!!</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_list %&gt;% summarise(n_distinct(case_id))</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_list %&gt;% summarise(n_distinct(link))</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_donation %&gt;% summarise(n_distinct(link_detail))</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_news %&gt;% summarise(n_distinct(link))</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="do">## bar chart</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 看長相</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_list %&gt;% glimpse()</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_donation %&gt;% glimpse()</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_news %&gt;% glimpse()</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 加分題</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_news %&gt;% glimpse()</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_list %&gt;% summarise(n_distinct(link_detail))</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_donation %&gt;% summarise(n_distinct(link_detail))</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_news %&gt;% summarise(n_distinct(link))</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="do">## bar chart</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 看長相</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_list %&gt;% glimpse()</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_donation %&gt;% glimpse()</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_news %&gt;% glimpse()</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 加分題</span></span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_list %&gt;% left_join(df_case_news) %&gt;% count(is.na(reporter))</span></span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_list %&gt;% left_join(df_case_news) %&gt;% count(is.na(time))</span></span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># df_case_list %&gt;% left_join(df_case_news) %&gt;%</span></span>

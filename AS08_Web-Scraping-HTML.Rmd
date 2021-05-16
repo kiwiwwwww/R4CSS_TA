@@ -29,27 +29,25 @@ knitr::opts_chunk$set(echo = TRUE, results = 'markup', comment = '#>', error = T
 
 本作業是上述案例的第一步驟，就是獲取資料。請盡可能獲取所有蘋果基金會捐款案的近10頁資料。並且應可獲得每一筆捐款案的以下欄位，前為tibble的指定名稱，括號內為指定變數名稱。
 
-1. df_case_list，包含捐款案id(case_id)、新聞標題(title)、捐款案時間(date)、捐款案狀態(status)、捐款總額(amount)、新聞鏈結(link)、捐款明細鏈結(link_detail)
+1. df_case_list，包含捐款案id(case_id)、新聞標題(title)、捐款案時間(date)、捐款案狀態(status)、捐款總額(amount)、新聞連結(link)、捐款明細連結(link_detail)
 
-2. df_case_donation，包含捐款案id(case_id)、捐款者(donator)、捐款金額(donation)、捐款時間(donate_date)。
+2. df_case_donation，包含捐款案id(case_id)、捐款明細連結(link_detail)、捐款者(donator)、捐款金額(donation)、捐款時間(donate_date)
 
-3. df_case_news，包含新聞鏈結(link)、新聞內容(text)、新聞發布時間(time)、記者或攝影師(reporter)、首圖圖說(caption)、**配圖數量(n_figure)**(這很難抓可以放棄)
+3. df_case_news，包含新聞連結(link)、新聞內容(text)、新聞發布時間(time)、記者或攝影師(reporter)、首圖圖說(caption)、**配圖數量(n_figure)**(這很難抓可以放棄)
 
 ### 作業要求
 
-- 請用`df_case_list %>% summarise(n_distinct(case_id))`驗證你所抓到的資料未有重複
-- 請用`df_case_list %>% summarise(n_distinct(link))`驗證你所抓取到的超鏈結未有重複
-- 請用`df_case_donation %>% summarise(n_distinct(link))`驗證你所抓取到的超鏈結未有重複
+- 請去掉下方程式碼的註解(檢查部分) 以驗證你所抓到的資料未有重複
 - 用橫向 bar chart 印出捐款次數最多的前十大單位或個體（注意，個體可能是以全形或半形逗號分隔。先不處理填錯名字的問題、也暫時不考慮如「XXX全家」的問題）
 - 請用 `glimpse()` 分別呈現上述 tibble 的長相
 
 ### 計分方式
 
-1. 上述作業要求的驗證與 bar chart
-2. `df_case_list` 爬蟲過程與內容，包含捐款案id(case_id)、新聞標題(title)、捐款案時間(date)、捐款案狀態(status)、捐款總額(amount)、新聞鏈結(link)
-3. `df_case_donation` 爬蟲過程與內容，包含捐款案id(case_id)、捐款者(donator)、捐款金額(donation)、捐款時間(donate_date)
-4. `df_case_news`` 爬蟲過程與內容，包含新聞鏈結(link)、新聞內容(text)
-5. bonus: `df_case_news` 抓到的欄位越多加分越多，你可以多抓新聞標題(title)、捐款案時間(date)、新聞發布時間(time)、記者或攝影師(reporter)、首圖配字(caption)、圖片數量(n_figure)，並 join `df_case_list` and `df_case_news` 再呈現結果
+- 上述作業要求的驗證與 bar chart
+- `df_case_list` 爬蟲過程與內容，包含捐款案id(case_id)、新聞標題(title)、捐款案時間(date)、捐款案狀態(status)、捐款總額(amount)、新聞連結(link)、捐款明細連結(link_detail)
+- `df_case_donation` 爬蟲過程與內容，包含捐款案id(case_id)、捐款明細連結(link_detail)、捐款者(donator)、捐款金額(donation)、捐款時間(donate_date)
+- `df_case_news` 爬蟲過程與內容，包含新聞連結(link)、新聞內容(text)
+- bonus: `df_case_news` 抓到的欄位越多加分越多，你可以多抓新聞標題(title)、捐款案時間(date)、新聞發布時間(time)、記者或攝影師(reporter)、首圖配字(caption)、圖片數量(n_figure)，並 join `df_case_list` and `df_case_news` 再呈現結果
 
 **再次重申：圖片數量很難抓，不要花太多時間在上面，我也抓不到！**
 
@@ -69,7 +67,7 @@ library(tidyverse)
 
 ### 作答區 - 作業要求檢查
 
-這邊的 code 請去掉 comment 後執行喔！可以用來確認結果！
+請去掉「檢查部分!!! 請去掉!!!」的 comment 後執行喔！可以用來確認結果！
 
 ```{r message=FALSE, warning=FALSE}
 ### your code
@@ -77,9 +75,10 @@ library(tidyverse)
 # df_case_donation <- read_csv("data/AS08/df_case_donation.csv")
 # df_case_news <- read_csv("data/AS08/df_case_news.csv")
 
-## 檢查
+## 檢查部分!!! 請去掉!!!
 # df_case_list %>% summarise(n_distinct(case_id))
 # df_case_list %>% summarise(n_distinct(link))
+# df_case_list %>% summarise(n_distinct(link_detail))
 # df_case_donation %>% summarise(n_distinct(link_detail))
 # df_case_news %>% summarise(n_distinct(link))
 
@@ -91,7 +90,6 @@ library(tidyverse)
 # df_case_news %>% glimpse()
 
 ## 加分題
-# df_case_news %>% glimpse()
 # df_case_list %>% left_join(df_case_news) %>% count(is.na(reporter))
 # df_case_list %>% left_join(df_case_news) %>% count(is.na(time))
 # df_case_list %>% left_join(df_case_news) %>%
