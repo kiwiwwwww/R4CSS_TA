@@ -2,6 +2,7 @@
 
 ### week14_05/25
 
+* LAB 10 Homework Web-Scraping-HTML [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab10_Homework_Web-Scraping-HTML.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab10_Homework_Web-Scraping-HTML.html) 
 * LAB 09 Tutorial purrr basic [slide](https://p4css.github.io/R4CSS_TA/Lab09_Tutorial_purrr-basic.html)
 * AS 08 Web-Scraping-HTML reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS08_Web-Scraping-HTML_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS08_Web-Scraping-HTML_ref.html)    
 * Lab 09 Homework reference [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab09_Homework_Web-Scraping-HTML_ref.Rmd), [html](https://p4css.github.io/R4CSS_TA/Lab09_Homework_Web-Scraping-HTML_ref.html)    

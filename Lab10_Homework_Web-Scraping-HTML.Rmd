@@ -1,0 +1,48 @@
+---
+title: "Lab10_Homework_Web-Scraping-HTML"
+author: "你是誰 R09342000 新聞所碩五"
+date: "2021/05/25"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Web Scraping HTML
+
+這份作業希望能夠讓你熟悉 Web Scraping 的流程。
+
+## 作業: Web Scraping HTML
+
+### PTT - 目錄頁面
+
+請幫我從 `index1` 到 `index5`，抓取 5 頁 PTT 中信兄弟的[隊版](https://www.ptt.cc/bbs/Elephants/index1.html) 最舊午夜。抓取欄位包含標題(article_title)、連結(article_link)、發文人(author_name)。
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+### template FYI
+df_index <- read_rds("data/Lab10/df_index_template.rds")
+df_index %>% glimpse()
+```
+
+### PTT - 文章頁面
+
+承接上題目，請幫我抓下上面的所有文章主文，應該有 100 則，但有些可能掛掉了。抓取欄位包含連結(article_link)、內文(main_text)、作者(meta_author)、標題(meta_title)、時間(meta_time)、推文總數(meta_comments)、作者 IP (main_IP)。
+
+若想要練習，請幫再抓抓看推文。抓取欄位包含連結(article_link)、推文(push_content)、推文作者(push_author)、推文時間(push_time)、推文推噓(push_tag)。
+
+```{r message=FALSE, warning=FALSE}
+### template FYI
+df_main_template <- read_rds("data/Lab10/df_main_template.rds")
+df_push_template <- read_rds("data/Lab10/df_push_template.rds")
+df_main_template %>% glimpse()
+df_push_template %>% glimpse()
+```

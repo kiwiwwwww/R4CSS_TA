@@ -41,10 +41,101 @@ class: center, middle, inverse, title-slide
 
 # 今日重點
 
-- purrr
 - AS08 Review
+- purrr
 - Lab09 Review
 - Lab10 Practice
+
+---
+
+# Web Scraping - HTML
+
+- 基本架構
+     - 試錯: 先拿單一網址練習，確定可以再寫回圈
+     - 迴圈外: 迴圈外放空的 tibble、index(現在在哪)、length(迴圈長度)
+     - 迴圈內: 切分讀 html, 讀每個 nodes, 把讀到的 nodes 合併, index 和訊息, **以及休息**
+
+---
+
+# Web Scraping - HTML
+
+
+```r
+# test
+library(tidyverse)
+library(httr)
+library(rvest)
+url_test &lt;- "https://tw.feature.appledaily.com/charity/projlist/1"
+html &lt;- url %&gt;% 
+  curl::curl(handle = curl::new_handle("useragent" = "Mozilla/5.0")) %&gt;% read_html()
+link &lt;- html %&gt;% 
+  html_nodes(".artcatdetails") %&gt;% html_attr("href")
+link_detail &lt;- html %&gt;% 
+  html_nodes(".details") %&gt;% html_attr("href")
+```
+
+---
+
+# Web Scraping - HTML
+
+
+```r
+# loop
+p_read_html &lt;- possibly(read_html, otherwise = NULL)
+
+df_case_list &lt;- tibble()
+for(i in 1:10){
+  url &lt;- str_c("https://tw.feature.appledaily.com/charity/projlist/", i)
+  html &lt;- url %&gt;% 
+    curl::curl(handle = curl::new_handle("useragent" = "Mozilla/5.0")) %&gt;% p_read_html()
+  link &lt;- html %&gt;% html_nodes(".artcatdetails") %&gt;% html_attr("href")
+  link_detail &lt;- html %&gt;% html_nodes(".details") %&gt;% html_attr("href")
+  df_case_list_tmp &lt;- dtibble(link = link, link_detail = link_detail)
+  df_case_list &lt;- df_case_list %&gt;% bind_rows(df_case_list_tmp)
+  print(i)
+  Sys.sleep(20)
+}
+```
+---
+
+# Web Scraping - HTML
+
+- 考慮
+     - 如果網址掛了怎麼辦？
+     - 缺 nodes 產生空值？長度不一樣？
+     - 如果跑到一半網路斷了怎麼辦？
+     - 怎樣才比較不容易被發現是爬蟲？
+     - 怎樣才比較不會出事被告？
+     - 爬很久怎麼辦？
+---
+
+# Web Scraping - HTML
+
+- 對策
+     - 寫 `ifelse` 處理網址掛掉
+     - 不管結果如何都要補空值
+     - 可以考慮把錯誤存起來
+     - 列印 index 並儲存當下進度
+     - 對人家有禮貌一點
+     - 用 map 爬快點
+
+---
+
+
+```r
+library(polite)
+session &lt;- bow("https://tw.feature.appledaily.com/charity/projlist/1", force = TRUE)
+result &lt;- scrape(session) %&gt;%
+  html_node(".artcatdetails") %&gt;% 
+  html_text()
+```
+  
+---
+
+class: inverse, center, middle
+
+# [AS08](https://p4css.github.io/R4CSS_TA/AS08_Web-Scraping-HTML_ref.html)
+
 
 ---
 
@@ -214,28 +305,6 @@ df_zec_main[j:k,] %&gt;%
       })
 ```
 
-
----
-
-class: inverse, center, middle
-
-# [AS08](https://p4css.github.io/R4CSS_TA/AS08_Web-Scraping-HTML_ref.html)
-
-
----
-
-# Web Scraping - HTML
-
-- 基本架構
-     - 試錯: 先拿單一網址練習，確定可以再寫回圈
-     - 迴圈外: 迴圈外放空的 tibble、index(現在在哪)、length(迴圈長度)
-     - 迴圈內: 切分讀 html, 讀每個 nodes, 把讀到的 nodes 合併, index 和訊息, **以及休息**
-- 考慮
-     - 如果網址掛了怎麼辦？
-     - 缺 nodes 產生空值？長度不一樣？
-     - 如果跑到一半網路斷了怎麼辦？
-     - 怎樣才比較不容易被發現是爬蟲？
-     - 爬很久怎麼辦？
 
 ---
 
