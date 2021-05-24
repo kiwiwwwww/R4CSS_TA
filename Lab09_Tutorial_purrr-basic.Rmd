@@ -1,0 +1,241 @@
+---
+title: "Lab09_purrr-basic"
+subtitle: "Lab09_map-for-scrape"
+author: "曾子軒 Dennis Tseng"
+institute: "台大新聞所 NTU Journalism"
+date: "2021/05/25"
+output:
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      self_contained: true
+---
+```{r setup, cache = F, echo=F}
+knitr::opts_chunk$set(error = TRUE)
+```
+
+<style type="text/css">
+
+.remark-slide-content {
+    padding: 1em 1em 1em 1em;
+    font-size: 28px;
+}
+
+.my-one-page-font {
+  padding: 1em 1em 1em 1em;
+  font-size: 20px;
+  /*xaringan::inf_mr()*/
+}
+
+</style>
+
+
+# 今日重點
+
+- purrr
+- AS08 Review
+- Lab09 Review
+- Lab10 Practice
+
+---
+
+# purrr
+
+- `map(.x, .f, ...)`
+- Apply a function to each element of a list or atomic vector
+- 前面放對象，後面放函數 e.g. 
+
+```{r, out.width='65%', out.height='65%', echo=FALSE, message=F, warning=F}
+library(tidyverse)
+knitr::include_graphics('photo/Lab09_map_description.png')
+```
+
+ref: [數據科學中的 R 語言](https://bookdown.org/wangminjie/R4DS/purrr.html#purrr-1)
+
+---
+
+# purrr
+
+- 問：底下的 list 要怎麼取每個同學的平均分數？
+
+```{r, message=F,warning=F}
+exams <- list(
+  student1 = c(100,80,70),
+  student2 = c(90,60,50),
+  student3 = c(20,90,55)
+)
+
+exams
+```
+
+---
+
+# purrr
+
+```{r, message=F,warning=F,eval=F}
+# base
+mean(exams$student1)
+mean(exams$student2)
+mean(exams$student3)
+
+# purrr
+exams %>% map(mean)
+exams %>% map_dbl(mean)
+exams %>% map_df(mean)
+```
+
+---
+
+# purrr
+
+- 圖解
+
+```{r, out.width='65%', out.height='65%', echo=FALSE}
+knitr::include_graphics('photo/Lab09_map_description02.png')
+```
+
+---
+
+# purrr
+
+- 換一張圖解
+
+```{r, out.width='45%', out.height='45%', echo=FALSE}
+knitr::include_graphics('photo/Lab09_map_01.jpeg')
+```
+
+ref: [@_ColinFay](https://twitter.com/_ColinFay/status/1045257504446443520)
+
+---
+
+# purrr
+
+- 前面放對象，後面放函數 e.g. `map(.x, .f, ...)`
+- 前面的對象可以是 vector，也可以是 list
+- 函數可以正規表達，也可以用匿名函數
+
+```{r, message=F,warning=F,eval=F}
+# .x 放 vector
+url <- str_c("https://tw.feature.appledaily.com/charity/projdetail/", c("A5135", "A5134", "A5133"))
+url %>% map(read_html)
+# .x 放 list
+exams %>% map(mean)
+```
+---
+
+# purrr
+
+- 前面放對象，後面放函數 e.g. `map(.x, .f, ...)`
+- 前面的對象可以是 vector，也可以是 list
+- 函數可以正規表達，也可以用匿名函數
+
+```{r, message=F,warning=F,eval=F}
+# .f
+exams %>% map(function(x){(x + 5)^2})
+exams %>% map(~(. + 5)^2)
+exams %>% map(. %>% mean() %>% sqrt())
+exams %>% map(. %>% mean() %>% `^`(3))
+```
+
+---
+
+# Anonymous Function 匿名函數
+
+- function
+      - 平常寫函數
+      - 但為了方便也可以不要寫完整，一次性使用
+      - `.` 點點代表前面的變數/資料
+- 匿名函數的形式
+      - `~ function(x){sqrt(mean(x))}`
+      - `~ (sqrt(mean(.)))`
+      - `~ . %>% mean() %>% sqrt()`
+
+---
+
+# purrr
+
+- 有 `map(.x)`, `map2(.x, .y)`, `pmap(.l)`
+
+```{r, out.width='45%', out.height='45%', echo=FALSE}
+knitr::include_graphics('photo/Lab09_map_03.jpeg')
+knitr::include_graphics('photo/Lab09_map2_02.jpeg')
+```
+
+---
+
+# purrr
+
+- 有 `map(.x)`, `map2(.x, .y)`, `pmap(.l)`
+
+```{r message=F, warning=F,eval=F}
+weight <- c(1,1,2)
+weight_diff <- list(c(1, 1, 2), c(1, 2, 1), c(2, 1, 1))
+
+mean_weight <- function(x, y){
+  if(length(x)==length(y)){sum(x*y)/sum(y)}
+  else{print("length - bad")}
+}
+map(exams, ~mean_weight(x=., y=weight))
+map2(exams, weight, mean_weight)
+```
+
+---
+
+# purrr
+
+- 運用在 web scraping 的好時機
+- 一次爬**多個網址**的時候
+- 舉例來說，爬文章列表不需要 `map`，但是爬每篇文章的時候就可以用
+
+```{r message=F, warning=F,eval=F}
+df_zec_main[j:k,] %>% 
+  pull(title_link) %>% 
+  str_c("https://www.zeczec.com", .) %>%
+    map(function(x){
+      x %>% 
+        curl::curl(handle = curl::new_handle("useragent" = "Mozilla/5.0")) %>% 
+        read_html()
+      })
+```
+
+
+---
+
+class: inverse, center, middle
+
+# [AS08](https://p4css.github.io/R4CSS_TA/AS08_Web-Scraping-HTML_ref.html)
+
+
+---
+
+# Web Scraping - HTML
+
+- 基本架構
+     - 試錯: 先拿單一網址練習，確定可以再寫回圈
+     - 迴圈外: 迴圈外放空的 tibble、index(現在在哪)、length(迴圈長度)
+     - 迴圈內: 切分讀 html, 讀每個 nodes, 把讀到的 nodes 合併, index 和訊息, **以及休息**
+- 考慮
+     - 如果網址掛了怎麼辦？
+     - 缺 nodes 產生空值？長度不一樣？
+     - 如果跑到一半網路斷了怎麼辦？
+     - 怎樣才比較不容易被發現是爬蟲？
+     - 爬很久怎麼辦？
+
+---
+
+class: inverse, center, middle
+
+# [Lab09](https://p4css.github.io/R4CSS_TA/Lab09_Homework_Web-Scraping-HTML_ref.html)
+
+---
+
+class: inverse, center, middle
+
+# [Lab10](https://p4css.github.io/R4CSS_TA/Lab10_Homework_more-dplyr.html)
+
+
+

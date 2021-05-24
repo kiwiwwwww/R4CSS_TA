@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lab09_purrr-basic</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="曾子軒 Dennis Tseng" />
+    <script src="libs/header-attrs-2.6/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lab09_purrr-basic
+## Lab09_map-for-scrape
+### 曾子軒 Dennis Tseng
+### 台大新聞所 NTU Journalism
+### 2021/05/25
+
+---
+
+
+
+&lt;style type="text/css"&gt;
+
+.remark-slide-content {
+    padding: 1em 1em 1em 1em;
+    font-size: 28px;
+}
+
+.my-one-page-font {
+  padding: 1em 1em 1em 1em;
+  font-size: 20px;
+  /*xaringan::inf_mr()*/
+}
+
+&lt;/style&gt;
+
+
+# 今日重點
+
+- purrr
+- AS08 Review
+- Lab09 Review
+- Lab10 Practice
+
+---
+
+# purrr
+
+- `map(.x, .f, ...)`
+- Apply a function to each element of a list or atomic vector
+- 前面放對象，後面放函數 e.g. 
+
+&lt;img src="photo/Lab09_map_description.png" width="65%" height="65%" /&gt;
+
+ref: [數據科學中的 R 語言](https://bookdown.org/wangminjie/R4DS/purrr.html#purrr-1)
+
+---
+
+# purrr
+
+- 問：底下的 list 要怎麼取每個同學的平均分數？
+
+
+```r
+exams &lt;- list(
+  student1 = c(100,80,70),
+  student2 = c(90,60,50),
+  student3 = c(20,90,55)
+)
+
+exams
+```
+
+```
+## $student1
+## [1] 100  80  70
+## 
+## $student2
+## [1] 90 60 50
+## 
+## $student3
+## [1] 20 90 55
+```
+
+---
+
+# purrr
+
+
+```r
+# base
+mean(exams$student1)
+mean(exams$student2)
+mean(exams$student3)
+
+# purrr
+exams %&gt;% map(mean)
+exams %&gt;% map_dbl(mean)
+exams %&gt;% map_df(mean)
+```
+
+---
+
+# purrr
+
+- 圖解
+
+&lt;img src="photo/Lab09_map_description02.png" width="65%" height="65%" /&gt;
+
+---
+
+# purrr
+
+- 換一張圖解
+
+&lt;img src="photo/Lab09_map_01.jpeg" width="45%" height="45%" /&gt;
+
+ref: [@_ColinFay](https://twitter.com/_ColinFay/status/1045257504446443520)
+
+---
+
+# purrr
+
+- 前面放對象，後面放函數 e.g. `map(.x, .f, ...)`
+- 前面的對象可以是 vector，也可以是 list
+- 函數可以正規表達，也可以用匿名函數
+
+
+```r
+# .x 放 vector
+url &lt;- str_c("https://tw.feature.appledaily.com/charity/projdetail/", c("A5135", "A5134", "A5133"))
+url %&gt;% map(read_html)
+# .x 放 list
+exams %&gt;% map(mean)
+```
+---
+
+# purrr
+
+- 前面放對象，後面放函數 e.g. `map(.x, .f, ...)`
+- 前面的對象可以是 vector，也可以是 list
+- 函數可以正規表達，也可以用匿名函數
+
+
+```r
+# .f
+exams %&gt;% map(function(x){(x + 5)^2})
+exams %&gt;% map(~(. + 5)^2)
+exams %&gt;% map(. %&gt;% mean() %&gt;% sqrt())
+exams %&gt;% map(. %&gt;% mean() %&gt;% `^`(3))
+```
+
+---
+
+# Anonymous Function 匿名函數
+
+- function
+      - 平常寫函數
+      - 但為了方便也可以不要寫完整，一次性使用
+      - `.` 點點代表前面的變數/資料
+- 匿名函數的形式
+      - `~ function(x){sqrt(mean(x))}`
+      - `~ (sqrt(mean(.)))`
+      - `~ . %&gt;% mean() %&gt;% sqrt()`
+
+---
+
+# purrr
+
+- 有 `map(.x)`, `map2(.x, .y)`, `pmap(.l)`
+
+&lt;img src="photo/Lab09_map_03.jpeg" width="45%" height="45%" /&gt;&lt;img src="photo/Lab09_map2_02.jpeg" width="45%" height="45%" /&gt;
+
+---
+
+# purrr
+
+- 有 `map(.x)`, `map2(.x, .y)`, `pmap(.l)`
+
+
+```r
+weight &lt;- c(1,1,2)
+weight_diff &lt;- list(c(1, 1, 2), c(1, 2, 1), c(2, 1, 1))
+
+mean_weight &lt;- function(x, y){
+  if(length(x)==length(y)){sum(x*y)/sum(y)}
+  else{print("length - bad")}
+}
+map(exams, ~mean_weight(x=., y=weight))
+map2(exams, weight, mean_weight)
+```
+
+---
+
+# purrr
+
+- 運用在 web scraping 的好時機
+- 一次爬**多個網址**的時候
+- 舉例來說，爬文章列表不需要 `map`，但是爬每篇文章的時候就可以用
+
+
+```r
+df_zec_main[j:k,] %&gt;% 
+  pull(title_link) %&gt;% 
+  str_c("https://www.zeczec.com", .) %&gt;%
+    map(function(x){
+      x %&gt;% 
+        curl::curl(handle = curl::new_handle("useragent" = "Mozilla/5.0")) %&gt;% 
+        read_html()
+      })
+```
+
+
+---
+
+class: inverse, center, middle
+
+# [AS08](https://p4css.github.io/R4CSS_TA/AS08_Web-Scraping-HTML_ref.html)
+
+
+---
+
+# Web Scraping - HTML
+
+- 基本架構
+     - 試錯: 先拿單一網址練習，確定可以再寫回圈
+     - 迴圈外: 迴圈外放空的 tibble、index(現在在哪)、length(迴圈長度)
+     - 迴圈內: 切分讀 html, 讀每個 nodes, 把讀到的 nodes 合併, index 和訊息, **以及休息**
+- 考慮
+     - 如果網址掛了怎麼辦？
+     - 缺 nodes 產生空值？長度不一樣？
+     - 如果跑到一半網路斷了怎麼辦？
+     - 怎樣才比較不容易被發現是爬蟲？
+     - 爬很久怎麼辦？
+
+---
+
+class: inverse, center, middle
+
+# [Lab09](https://p4css.github.io/R4CSS_TA/Lab09_Homework_Web-Scraping-HTML_ref.html)
+
+---
+
+class: inverse, center, middle
+
+# [Lab10](https://p4css.github.io/R4CSS_TA/Lab10_Homework_more-dplyr.html)
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"self_contained": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
