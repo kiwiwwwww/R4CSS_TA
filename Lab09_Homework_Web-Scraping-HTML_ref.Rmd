@@ -1,0 +1,139 @@
+---
+title: "Lab09_Homework_Web-Scraping-HTML_ref"
+author: "曾子軒 Teaching Assiatant"
+date: "2021/05/11"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Web Scraping HTML
+
+這份作業希望能夠讓你熟悉 Web Scraping 的流程。
+
+## 作業: Web Scraping HTML
+
+### 嘖嘖 - 目錄頁面
+
+請幫我從 `page = 1` 到 `page = 5`，抓取 5 頁嘖嘖的[目錄頁面](https://www.zeczec.com/categories?page=1)。抓取欄位包含標題(title)、連結(title_link)、日程(day)、提案人(author)、提案人連結(author_link)、類別(cattext)，並額外增加一個欄位代表現在的頁面(page)。
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+# library(rvest)
+# library(httr)
+# library(clipr)
+# 
+# ### 測試
+# url_test = "https://www.zeczec.com/categories?page=100"
+# html_test = url_test %>% read_html()
+# 
+# main_title <- html_test %>% html_nodes(".mb0.b") %>% html_text()
+# main_title_link <- html_test %>% html_nodes(".h-100 .db") %>% html_attr("href")
+# main_money <- html_test %>% html_nodes(".fr") %>% html_text()
+# main_day <- html_test %>% html_nodes(".b+ .f7") %>% html_text()
+# main_author <- html_test %>% html_nodes(".f7 a") %>% html_text()
+# main_author_link <- html_test %>% html_nodes(".f7 a") %>% html_attr("href")
+# main_money <- html_test %>% html_nodes(".fr") %>% html_text()
+# main_cattext <- html_test %>% html_nodes(".h-100 .db+ .f7") %>% html_text()
+# 
+# loop_now <- 1
+# 
+# df_zec_main <- tibble()
+# for (i in loop_now:5) {
+#   url = str_c("https://www.zeczec.com/categories?page=", loop_now)
+#   html = url %>% curl::curl(handle = curl::new_handle("useragent" = "Mozilla/5.0")) %>% read_html()
+#   main_title <- html %>% html_nodes(".mb0.b") %>% html_text()
+#   main_title_link <- html %>% html_nodes(".h-100 .db") %>% html_attr("href")
+#   main_money <- html %>% html_nodes(".fr") %>% html_text()
+#   main_day <- html %>% html_nodes(".b+ .f7") %>% html_text()
+#   main_author <- html %>% html_nodes(".f7 a") %>% html_text()
+#   main_author_link <- html %>% html_nodes(".f7 a") %>% html_attr("href")
+#   main_cattext <- html %>% html_nodes(".h-100 .db+ .f7") %>% html_text()
+# 
+#   df_zec_main_tmp <- tibble(title = main_title,
+#                             title_link = main_title_link,
+#                             money = main_money,
+#                             day = main_day,
+#                             author = main_author,
+#                             author_link = main_author_link,
+#                             cattext = main_cattext,
+#                             page = rep(loop_now, 12))
+#   df_zec_main <- df_zec_main %>% bind_rows(df_zec_main_tmp)
+#   print(str_c("finished page = ", loop_now))
+#   loop_now = loop_now + 1
+#   Sys.sleep(10)
+# }
+# df_zec_main %>% glimpse()
+# df_zec_main %>% write_rds("data/Lab09/df_zec_main_template.rds")
+df_zec_main <- read_rds("data/Lab09/df_zec_main_template.rds")
+df_zec_main %>% glimpse()
+```
+
+### 嘖嘖 - 提案頁面
+
+承接上提，請幫我抓下上面的所有提案，應該有 60 則。抓取欄位包含連結(title_link)、內文(page_text)、支持者(page_backers)、時程(page_dayrange)、類別文字(page_cattext)、金錢相關(page_money_goal)、專案內容/留言/常見問答數量(page_meta)、專案文字(page_projecttext)、產品文字(page_producttext)。
+
+```{r message=FALSE, warning=FALSE}
+# p_read_html <- possibly(read_html, otherwise = NULL)
+# 
+# loop_page_complete <- 1
+# loop_page_final <- ceiling(dim(df_zec_main)[1]/10)
+# df_zec_page <- tibble()
+# 
+# for (i in 1:loop_page_final) {#loop_long
+#   j=loop_page_complete
+#   k=j+9
+#   
+#   html = df_zec_main[j:k,] %>% pull(title_link) %>% str_c("https://www.zeczec.com", .) %>%
+#     map(function(x){x %>% curl::curl(handle = curl::new_handle("useragent" = "Mozilla/5.0")) %>% p_read_html()}) %>% 
+#     set_names(pull(df_zec_main[j:k,"title_link"])) %>% compact()
+#   
+#   html_index <- html %>% 
+#     map(function(x){x %>% html_nodes(".js-backers-count") %>% html_text() %>% '['(1)}) %>%
+#     map_lgl(function(x){!is.na(x)})
+#   
+#   html_f <- html[html_index]
+#   
+#   if(length(html_f)==0) {loop_page_complete = loop_page_complete + 10;print(str_c("all links are dead: ",loop_page_complete-10));next}
+#   
+#   ### meta data 包含作者、發文時間等
+#   page_text    <- html_f %>% map(function(x){x %>% html_nodes(".gray.mv3") %>% html_text()}) %>% map(function(x){if(length(x)==0) x = "empty" else(x)})
+#   page_backers <- html_f %>% map(function(x){x %>% html_nodes(".js-backers-count") %>% html_text()}) %>% map(function(x){if(length(x)==0) x = "empty" else(x)})
+#   page_dayrange  <- html_f %>% map(function(x){x %>% html_nodes(".mb2") %>% html_text() %>% `[`(1) %>% as.character()}) %>% map(function(x){if(length(x)==0) x = "empty" else(x)})
+#   page_cattext   <- html_f %>% map(function(x){x %>% html_nodes(".mt3 .f6.gray") %>% html_text()}) %>% map(function(x){if(length(x)==0) x = "empty" else(x)})
+#   page_money_goal  <- html_f %>% map(function(x){x %>% html_nodes(".relative.items-center") %>% html_text()}) %>% map(function(x){if(length(x)==0) x = "empty" else(x)})
+#   
+#   page_meta   <- html_f %>% map(function(x){x %>% html_nodes(".near-black") %>% html_text() %>% str_c(collapse = "::::::")}) %>% map(function(x){if(length(x)==0) x = "empty" else(x)})
+#   # page_meta_update   <- page_meta %>% map(function(x){x %>% `[`(1)}) %>% map(function(x){if(length(x)==0) x = "empty" else(x)})
+#   # page_meta_comments   <- html_f %>% map(function(x){x %>% `[`(2)}) %>% map(function(x){if(length(x)==0) x = "empty" else(x)})
+#   # page_meta_qa   <- html_f %>% map(function(x){x %>% `[`(3)}) %>% map(function(x){if(length(x)==0) x = "empty" else(x)})
+#   page_projecttext   <- html_f %>% map(function(x){x %>% html_nodes(".ph3.w-70-l") %>% html_text()}) %>% map(function(x){if(length(x)==0) x = "empty" else(x)})
+#   page_producttext   <- html_f %>% map(function(x){x %>% html_nodes(".o-60") %>% html_text() %>% str_c(collapse = "::::::")}) %>% map(function(x){if(length(x)==0) x = "empty" else(x)})
+#   Sys.sleep(5)
+#   df_zec_page_tmp <- tibble(title_link = names(page_text), page_text = unlist(page_text), 
+#                             page_backers = unlist(page_backers), page_dayrange = unlist(page_dayrange), page_cattext = unlist(page_cattext), 
+#                             page_money_goal = unlist(page_money_goal), page_meta = unlist(page_meta),
+#                             page_projecttext = unlist(page_projecttext), page_producttext = unlist(page_producttext))
+#   
+#   df_zec_page <- df_zec_page %>% bind_rows(df_zec_page_tmp)
+#   print(str_c("finished page = ", loop_page_complete))
+#   loop_page_complete = loop_page_complete + 10
+#   Sys.sleep(10)
+# }
+# closeAllConnections()
+# gc()
+# Sys.sleep(10)
+# df_zec_page %>% glimpse()
+# df_zec_page %>% write_rds("data/Lab09/df_zec_page_template.rds")
+df_zec_page <- read_rds("data/Lab09/df_zec_page_template.rds")
+df_zec_page %>% glimpse()
+```
