@@ -29,11 +29,11 @@ knitr::opts_chunk$set(echo = TRUE, results = 'markup', comment = '#>', error = T
 
 ### 作業要求
 
-本作業以資料分析和資料視覺化為主，請自由選擇你有興趣的資料，並靈活運用這學期所學，完成這次的作業。
+本作業以資料分析和資料視覺化為主，請自由選擇你有興趣的資料，並靈活運用這學期所學，寫出一篇分析文章。
 
 - 寫出二到三個分析小結論
 - 畫出二到三張圖
-- 其中一個點要使用 topic modeling 或 collocation
+- 其中一個小結論要用到 topic modeling 或 collocation
 
 ### 作答區
 
