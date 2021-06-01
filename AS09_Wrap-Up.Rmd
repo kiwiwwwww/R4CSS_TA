@@ -1,0 +1,76 @@
+---
+title: "AS09_Wrap-Up"
+author: "你是誰 R09342000 新聞所碩五"
+date: "2021/06/01"
+output:
+  html_document:
+    number_sections: no
+    theme: united
+    highlight: tango
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = 'markup', comment = '#>', error = TRUE)
+```
+
+## 作業目的: Wrap Up
+
+這次的作業是這個學期的總結。在過程中你可以自由的應用到各式學過的技巧，包含斷詞、字串處理、視覺化、文字探勘、長寬表格轉換、正規表達式、日期處理等。希望你會喜歡！
+
+## 作業: Wrap Up
+
+### 題目說明
+
+我們準備了三個不同來源、不同主題、不同類型的資料，分別是韓國瑜與蔡英文演講稿、公投相關臉書政治社會廣告、美國大選新聞，詳細內容請參考[AS09資料說明](https://docs.google.com/spreadsheets/d/1k4K_Pd1s_lyjECO51gsBq-lbeQ_les1i-dZBt-MXU5Q/edit)。
+
+### 作業要求
+
+本作業以資料分析和資料視覺化為主，請自由選擇你有興趣的資料，並靈活運用這學期所學，完成這次的作業。
+
+- 寫出二到三個分析小結論
+- 畫出二到三張圖
+- 其中一個點要使用 topic modeling 或 collocation
+
+### 作答區
+
+先看一下資料長什麼樣子。
+
+```{r message=FALSE, warning=FALSE}
+# - 公投相關社會政治廣告 from 臉書
+# - 美國大選相關新聞 from 幾間媒體
+# - 韓國瑜蔡英文演講逐字稿 from 新聞/公開資料
+library(tidyverse)
+
+### 公投相關社會政治廣告
+df_fbad <- read_csv("data/AS09/fbad/results_gongtou_ad.csv")
+df_fbad_demo <- read_csv("data/AS09/fbad/results_gongtou_demo.csv")
+df_fbad_region <- read_csv("data/AS09/fbad/results_gongtou_region.csv")
+
+### 美國大選相關新聞
+df_uselection_index_udn <- read_rds("data/AS09/us_election/df_index_udn.rds")
+df_uselection_index_ltn <- read_rds("data/AS09/us_election/df_index_ltn.rds")
+df_uselection_index_chinatimes <- read_rds("data/AS09/us_election/df_index_chinatimes.rds")
+df_uselection_index_setn <- read_rds("data/AS09/us_election/df_index_setn.rds")
+
+df_uselection_udn <- read_rds("data/AS09/us_election/df_main_udn.rds")
+df_uselection_ltn <- read_rds("data/AS09/us_election/df_main_ltn.rds")
+df_uselection_chinatimes <- read_rds("data/AS09/us_election/df_main_chinatimes.rds")
+df_uselection_setn <- read_rds("data/AS09/us_election/df_main_setn.rds")
+
+### 韓國瑜蔡英文演講逐字稿
+df_han_raw <- read_rds("data/AS09/han/df_han_raw.rds")
+df_tsai_raw <- read_rds("data/AS09/han/df_tsai_raw.rds")
+```
+
+### 作答區 - 你的程式碼和分析
+
+```{r message=FALSE, warning=FALSE}
+### your code
+
+```
+
+
