@@ -1,5 +1,11 @@
 # R4CSS_TA
 
+### week15_06/08
+* LAB 10 Tutorial Spatial Data Manipulation and Visualization [slide](https://p4css.github.io/R4CSS_TA/Lab10_Tutorial_Spatical-Data.html)
+* LAB 10 Tutorial Spatial Data Manipulation and Visualization [practice](https://github.com/P4CSS/R4CSS_TA/blob/main/Lab10_Tutorial_Spatical-Data_practice.R)
+
+
+
 ### week15_06/01
 * AS 09 Wrap-Up [Rmd](https://github.com/P4CSS/R4CSS_TA/blob/main/AS09_Wrap-Up.Rmd), [html](https://p4css.github.io/R4CSS_TA/AS09_Wrap-Up.html) 
 
