@@ -1,6 +1,6 @@
 ---
 title: "AS02_R-Intermediate"
-author: "你是誰 R09342000 新聞所碩五"
+author: "林綺薇 R09342008 新聞所碩一"
 date: "2021/03/09"
 output:
   html_document:
@@ -51,6 +51,7 @@ knitr::opts_chunk$set(echo = TRUE, results = 'hold', comment = '#>', error = TRU
 - 若用`str_detect()`，記得先安裝 `tidyverse` or `stringr`後載入套件
 
 ```{r message=FALSE, warning=FALSE}
+library(tidyverse)
 ### your code
 # install.packages("tidyverse")
 # library(tidyverse)
@@ -59,7 +60,29 @@ vector_shop <- c("五九麵館", "親來食堂", "憶馬當鮮", "揪食堂韓�
                 "找碗", "大李水餃", "李記水餃", "林師傅", "馬祖麵館")
 vector_weekday <- c("週一", "週二", "週三", "週四", "週五", "週六", "週日")
 
+#kiwiの整理
+#odd_day <-vector_weekday[seq(from=1,to=5,by=2)]
+#even_day <-vector_weekday[seq(from=2,to=5,by=2)]
+#odd_eat <-vector_shop[str_length(vector_shop)%% 2 == 1]
+#even_eat <-vector_shop[str_detect(vector_shop,"水餃")==TRUE]  
+#saturday_eat <-vector_shop[str_detect(vector_shop,"館")==TRUE]  
 
+for (x in vector_weekday){ 
+   if (x %in% vector_weekday[seq(from=1,to=5,by=2)]){
+   y <- for (y in vector_shop[str_length(vector_shop)%% 2 == 1])
+   print(str_c(x,"小軒吃",y))
+
+}else if (x %in% vector_weekday[seq(from=2,to=5,by=2)]){
+   y <- for (y in vector_shop[str_detect(vector_shop,"水餃")==TRUE] )
+   print(str_c(x,"小軒吃",y))
+
+}else if (x == vector_weekday[6]){
+   y <- for (y in vector_shop[str_detect(vector_shop,"館")==TRUE] )
+   print(str_c(x,"小軒吃",y))
+
+}else{(x == vector_weekday[7])
+   print(str_c("週日小軒都不吃"))}    
+}
 
 ### result should be
 # [1] "週一小軒吃揪食堂韓國餐館"
@@ -94,6 +117,36 @@ vector_weekday <- c("週一", "週二", "週三", "週四", "週五", "週六", 
 
 ### your code
 
+hsuan_meal <- function(x,y){
+  
+if (x %in% vector_weekday[seq(from=1,to=5,by=2)]){
+if (y %in% vector_shop[str_length(vector_shop)%%2 == 1]){
+   print(str_c(x,"小軒吃",y))
+}else{
+   print(str_c(x,"小軒不吃",y))  
+}
+  
+}else if (x %in% vector_weekday[seq(from=2,to=5,by=2)]){
+      if (y %in% vector_shop[str_detect(vector_shop,"水餃")==TRUE]){
+   print(str_c(x,"小軒吃",y))
+}else{
+   print(str_c(x,"小軒不吃",y))  
+}
+  
+}else if (x == vector_weekday[6]){
+      if (y %in% vector_shop[str_detect(vector_shop,"館")==TRUE]){
+   print(str_c(x,"小軒吃",y))
+}else{
+   print(str_c(x,"小軒不吃",y))  
+}
+}else{(x == vector_weekday[7])
+   print(str_c(x,"小軒不吃",y))}   
+}
+
+hsuan_meal("週一","林師傅")
+hsuan_meal("週二","親來食堂")
+hsuan_meal("週日","找碗")
+
 ### result should be
 
 # hsuan_meal("週一","林師傅")
@@ -125,15 +178,70 @@ vector_weekday <- c("週一", "週二", "週三", "週四", "週五", "週六", 
 
 ```{r message=F, warning=F}
 ### your code
-# get_zodiac <- function(){
-#   
-# }
+library(lubridate)
+get_zodiac <- function(x){
+  
+x <- ymd(x)
+
+if(is.na(x)){
+    print("請以'YYYY-MM-DD'格式輸入數字")
+}else if((month(x)==12)&&(day(x)>=23)){
+    print("摩羯座")  
+}else if((month(x)==01)&&(day(x)<=22)){
+    print("摩羯座") 
+}else if((month(x)==01)&&(day(x)>=23)){
+    print("水瓶座") 
+}else if((month(x)==02)&&(day(x)<=22)){
+    print("水瓶座") 
+}else if((month(x)==02)&&(day(x)>=23)){
+    print("雙魚座") 
+}else if((month(x)==03)&&(day(x)<=22)){
+    print("雙魚座") 
+}else if((month(x)==03)&&(day(x)>=23)){
+    print("牡羊座") 
+}else if((month(x)==04)&&(day(x)<=22)){
+    print("牡羊座") 
+}else if((month(x)==04)&&(day(x)>=23)){
+    print("金牛座") 
+}else if((month(x)==05)&&(day(x)<=22)){
+    print("金牛座") 
+}else if((month(x)==05)&&(day(x)>=23)){
+    print("雙子座") 
+}else if((month(x)==06)&&(day(x)<=22)){
+    print("雙子座") 
+}else if((month(x)==06)&&(day(x)>=23)){
+    print("巨蟹座") 
+}else if((month(x)==07)&&(day(x)<=22)){
+    print("巨蟹座") 
+}else if((month(x)==07)&&(day(x)>=23)){
+    print("獅子座") 
+}else if((month(x)==08)&&(day(x)<=22)){
+    print("獅子座") 
+}else if((month(x)==08)&&(day(x)>=23)){
+    print("處女座") 
+}else if((month(x)==09)&&(day(x)<=22)){
+    print("處女座") 
+}else if((month(x)==09)&&(day(x)>=23)){
+    print("天秤座") 
+}else if((month(x)==10)&&(day(x)<=22)){
+    print("天秤座") 
+}else if((month(x)==10)&&(day(x)>=23)){
+    print("天蠍座") 
+}else if((month(x)==11)&&(day(x)<=22)){
+    print("天蠍座") 
+}else if((month(x)==11)&&(day(x)>=23)){
+    print("射手座") 
+}else if((month(x)==12)&&(day(x)<=22)){
+    print("射手座") 
+}
+
+}
 
 ### test your code
-# get_zodiac("1996-09-25")
-# get_zodiac("1996-09-01")
-# get_zodiac(19970101)
-# get_zodiac("一九九八三月十四日")
+get_zodiac("1996-09-25")
+get_zodiac("1996-09-01")
+get_zodiac(19970101)
+get_zodiac("一九九八三月十四日")
 ```
 
 

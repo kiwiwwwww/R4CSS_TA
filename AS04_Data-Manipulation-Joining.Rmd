@@ -1,6 +1,6 @@
 ---
 title: "AS04_Data-Manipulation-Joining"
-author: "你是誰 R09342000 新聞所碩五"
+author: "林綺薇 R09342008 新聞所碩一"
 date: "2021/03/23"
 output:
   html_document:
@@ -49,31 +49,36 @@ df_education <- df_education_raw %>%
 
 ### 1. `pivot_longer()`:
 
-現在的資料是一個寬表格(wide)，請利用 `pivot_longer()` 或是 `gather()` 將它轉換成長表格(long)，儲存為 `df_education_long` ，並將 `df_education_long` 印出。
+現在的資料是一個寬表格(wide)，請利用 `pivot_longer()` 或是 `gather()` 將它轉換成長表格(long)，儲存為 `df_education_wide` ，並將 `df_education_wide` 印出。
 
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+df_education_wide <- df_education %>%
+                      gather("key","value",4:ncol(.)) 
+
+as_tibble(df_education_wide)
+
 ### your result should be
-#> # A tibble: 356,960 x 5
-#>    district_code site_id      village key                        value
-#>    <chr>         <chr>        <chr>   <chr>                      <int>
-#>  1 65000010001   新北市板橋區 留侯里  edu_doctor_graduated_m         4
-#>  2 65000010001   新北市板橋區 留侯里  edu_doctor_graduated_f         0
-#>  3 65000010001   新北市板橋區 留侯里  edu_doctor_ungraduated_m       1
-#>  4 65000010001   新北市板橋區 留侯里  edu_doctor_ungraduated_f       2
-#>  5 65000010001   新北市板橋區 留侯里  edu_master_graduated_m        52
-#>  6 65000010001   新北市板橋區 留侯里  edu_master_graduated_f        31
-#>  7 65000010001   新北市板橋區 留侯里  edu_master_ungraduated_m      12
-#>  8 65000010001   新北市板橋區 留侯里  edu_master_ungraduated_f       7
-#>  9 65000010001   新北市板橋區 留侯里  edu_university_graduated_m   150
-#> 10 65000010001   新北市板橋區 留侯里  edu_university_graduated_f   167
-#> # … with 356,950 more rows
+#> # A tibble: 349,200 x 6
+#>    district_code site_id    village edu_doctor_graduate… key               value
+#>    <chr>         <chr>      <chr>                  <int> <chr>             <int>
+#>  1 65000010001   新北市板橋區… 留侯里                     4 edu_doctor_gradu…     0
+#>  2 65000010001   新北市板橋區… 留侯里                     4 edu_doctor_ungra…     1
+#>  3 65000010001   新北市板橋區… 留侯里                     4 edu_doctor_ungra…     2
+#>  4 65000010001   新北市板橋區… 留侯里                     4 edu_master_gradu…    52
+#>  5 65000010001   新北市板橋區… 留侯里                     4 edu_master_gradu…    31
+#>  6 65000010001   新北市板橋區… 留侯里                     4 edu_master_ungra…    12
+#>  7 65000010001   新北市板橋區… 留侯里                     4 edu_master_ungra…     7
+#>  8 65000010001   新北市板橋區… 留侯里                     4 edu_university_g…   150
+#>  9 65000010001   新北市板橋區… 留侯里                     4 edu_university_g…   167
+#> 10 65000010001   新北市板橋區… 留侯里                     4 edu_university_u…    54
+#> # … with 349,190 more rows
 ```
 
 ### 2. `separate()`:
 
-請觀察 `df_education_long` 當中 `key` 欄位的值，將 key 利用 `separate()` 切開成四個欄位，分別是`edu`, `level`, `edu_status`, `gender`，各自代表教育前綴詞、學位、教育狀態、性別。最後將結果儲存在 `df_education_long_cut` 當中，並將 `df_education_long_cut` 印出。如果你不懂這邊在說什麼，請參考老師本週第一支影片(R04_1_1 Loading MOI demographic data)，基本上就是按照裡面的流程進行。底下會遇到好切跟不好切的情況，遇到不好切的情況時可以使用 `str_replace()` 函數。
+請觀察 `df_education_wide` 當中 `key` 欄位的值，將 key 利用 `separate()` 切開成四個欄位，分別是`edu`, `level`, `edu_status`, `gender`，各自代表教育前綴詞、學位、教育狀態、性別。最後將結果儲存在 `df_education_wide_cut` 當中，並將 `df_education_wide_cut` 印出。如果你不懂這邊在說什麼，請參考老師本週第一支影片(R04_1_1 Loading MOI demographic data)，基本上就是按照裡面的流程進行。底下會遇到好切跟不好切的情況，遇到不好切的情況時可以使用 `str_replace()` 函數。
 
 提示：
 
@@ -84,42 +89,115 @@ df_education <- df_education_raw %>%
 
 ```{r message=FALSE, warning=FALSE}
 ### 這邊讓你看 key 的長相
-# df_education_long %>% count(key)
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+df_education_wide %>% count(key)
+
+as.tibble(df_education_wide %>%
+  mutate(key = str_replace(key,"edu_illiterate_f","edu_illiterate_all_f"))%>%
+  mutate(key = str_replace(key,"edu_juniorcollege_2ys_graduated_m","edu_juniorcollege2ys_graduated_m"))%>%
+  separate(key,c("edu","level","edu_status","gender")))
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
+=======
+# df_education_wide %>% count(key)
+>>>>>>> parent of b16c82b... update AS04 expected result
 
 ### count 結果借你看
-#> # A tibble: 46 x 2
-#>    key                          n
-#>  * <chr>                    <int>
-#>  1 edu_doctor_graduated_f    7760
-#>  2 edu_doctor_graduated_m    7760
-#>  3 edu_doctor_ungraduated_f  7760
-#>  4 edu_doctor_ungraduated_m  7760
-#>  5 edu_illiterate_f          7760
-#>  6 edu_illiterate_m          7760
-#>  7 edu_junior_graduated_f    7760
-#>  8 edu_junior_graduated_m    7760
-#>  9 edu_junior_ungraduated_f  7760
-#> 10 edu_junior_ungraduated_m  7760
-#> # … with 36 more rows
+#> # A tibble: 45 x 2
+#>    key                                   n
+#>  * <chr>                             <int>
+#>  1 edu_doctor_graduated_f             7760
+#>  2 edu_doctor_ungraduated_f           7760
+#>  3 edu_doctor_ungraduated_m           7760
+#>  4 edu_illiterate_f                   7760
+#>  5 edu_illiterate_m                   7760
+#>  6 edu_junior_graduated_f             7760
+#>  7 edu_junior_graduated_m             7760
+#>  8 edu_junior_ungraduated_f           7760
+#>  9 edu_junior_ungraduated_m           7760
+#> 10 edu_juniorcollege_2ys_graduated_f  7760
+#> # … with 35 more rows
 
 ### your code
 
 
 ### your result should be
-#> # A tibble: 356,960 x 8
-#>    district_code site_id      village edu   level      graduate    gender value
-#>    <chr>         <chr>        <chr>   <chr> <chr>      <chr>       <chr>  <int>
-#>  1 65000010001   新北市板橋區 留侯里  edu   doctor     graduated   m          4
-#>  2 65000010001   新北市板橋區 留侯里  edu   doctor     graduated   f          0
-#>  3 65000010001   新北市板橋區 留侯里  edu   doctor     ungraduated m          1
-#>  4 65000010001   新北市板橋區 留侯里  edu   doctor     ungraduated f          2
-#>  5 65000010001   新北市板橋區 留侯里  edu   master     graduated   m         52
-#>  6 65000010001   新北市板橋區 留侯里  edu   master     graduated   f         31
-#>  7 65000010001   新北市板橋區 留侯里  edu   master     ungraduated m         12
-#>  8 65000010001   新北市板橋區 留侯里  edu   master     ungraduated f          7
-#>  9 65000010001   新北市板橋區 留侯里  edu   university graduated   m        150
-#> 10 65000010001   新北市板橋區 留侯里  edu   university graduated   f        167
-#> # … with 356,950 more rows
+#> # A tibble: 349,200 x 9
+#>    district_code site_id  village edu_doctor_gradu… edu   level  graduate gender
+#>    <chr>         <chr>    <chr>               <int> <chr> <chr>  <chr>    <chr> 
+#>  1 65000010001   新北市板橋區… 留侯里                  4 edu   doctor graduat… f     
+#>  2 65000010001   新北市板橋區… 留侯里                  4 edu   doctor ungradu… m     
+#>  3 65000010001   新北市板橋區… 留侯里                  4 edu   doctor ungradu… f     
+#>  4 65000010001   新北市板橋區… 留侯里                  4 edu   master graduat… m     
+#>  5 65000010001   新北市板橋區… 留侯里                  4 edu   master graduat… f     
+#>  6 65000010001   新北市板橋區… 留侯里                  4 edu   master ungradu… m     
+#>  7 65000010001   新北市板橋區… 留侯里                  4 edu   master ungradu… f     
+#>  8 65000010001   新北市板橋區… 留侯里                  4 edu   unive… graduat… m     
+#>  9 65000010001   新北市板橋區… 留侯里                  4 edu   unive… graduat… f     
+#> 10 65000010001   新北市板橋區… 留侯里                  4 edu   unive… ungradu… m     
+#> # … with 349,190 more rows, and 1 more variable: value <int>
 ```
 
 
@@ -134,16 +212,16 @@ df_education <- df_education_raw %>%
 #> # A tibble: 370 x 7
 #>    site_id      n_sum n_female n_higher n_higher_female n_self n_illiterate
 #>  * <chr>        <int>    <int>    <int>           <int>  <int>        <int>
-#>  1 南投縣中寮鄉 13571     6187     2339            1141     38          380
-#>  2 南投縣仁愛鄉 13158     6386     2029            1088     31           51
-#>  3 南投縣信義鄉 13847     6418     2482            1210     64           76
-#>  4 南投縣南投市 87696    44119    28352           13650     88          791
-#>  5 南投縣名間鄉 34622    16354     7706            3726    108          306
-#>  6 南投縣國姓鄉 17132     7860     2937            1386     34          410
-#>  7 南投縣埔里鎮 71529    36009    17679            8941     99          749
-#>  8 南投縣水里鄉 15960     7561     3131            1489     38          266
-#>  9 南投縣竹山鎮 48789    23780    11115            5336    785            0
-#> 10 南投縣草屯鎮 86210    42768    25906           12396    135         1040
+#>  1 南投縣中寮鄉 13564     6187     2332            1141     38          380
+#>  2 南投縣仁愛鄉 13153     6386     2024            1088     31           51
+#>  3 南投縣信義鄉 13846     6418     2481            1210     64           76
+#>  4 南投縣南投市 87483    44119    28139           13650     88          791
+#>  5 南投縣名間鄉 34587    16354     7671            3726    108          306
+#>  6 南投縣國姓鄉 17120     7860     2925            1386     34          410
+#>  7 南投縣埔里鎮 71394    36009    17544            8941     99          749
+#>  8 南投縣水里鄉 15948     7561     3119            1489     38          266
+#>  9 南投縣竹山鎮 48727    23780    11053            5336    785            0
+#> 10 南投縣草屯鎮 86042    42768    25738           12396    135         1040
 #> # … with 360 more rows
 ```
 
@@ -173,16 +251,16 @@ ref10 <- read_csv("data/AS04/ref10_town.csv") %>%
 #> # A tibble: 368 x 13
 #>    site_id     n_sum n_female n_higher n_higher_female n_self n_illiterate agree
 #>    <chr>       <int>    <int>    <int>           <int>  <int>        <int> <dbl>
-#>  1 南投縣中寮鄉… 13571     6187     2339            1141     38          380  5748
-#>  2 南投縣仁愛鄉… 13158     6386     2029            1088     31           51  5702
-#>  3 南投縣信義鄉… 13847     6418     2482            1210     64           76  6891
-#>  4 南投縣南投市… 87696    44119    28352           13650     88          791 37547
-#>  5 南投縣名間鄉… 34622    16354     7706            3726    108          306 14533
-#>  6 南投縣國姓鄉… 17132     7860     2937            1386     34          410  7089
-#>  7 南投縣埔里鎮… 71529    36009    17679            8941     99          749 29571
-#>  8 南投縣水里鄉… 15960     7561     3131            1489     38          266  6392
-#>  9 南投縣竹山鎮… 48789    23780    11115            5336    785            0 19254
-#> 10 南投縣草屯鎮… 86210    42768    25906           12396    135         1040 35215
+#>  1 南投縣中寮鄉… 13564     6187     2332            1141     38          380  5748
+#>  2 南投縣仁愛鄉… 13153     6386     2024            1088     31           51  5702
+#>  3 南投縣信義鄉… 13846     6418     2481            1210     64           76  6891
+#>  4 南投縣南投市… 87483    44119    28139           13650     88          791 37547
+#>  5 南投縣名間鄉… 34587    16354     7671            3726    108          306 14533
+#>  6 南投縣國姓鄉… 17120     7860     2925            1386     34          410  7089
+#>  7 南投縣埔里鎮… 71394    36009    17544            8941     99          749 29571
+#>  8 南投縣水里鄉… 15948     7561     3119            1489     38          266  6392
+#>  9 南投縣竹山鎮… 48727    23780    11053            5336    785            0 19254
+#> 10 南投縣草屯鎮… 86042    42768    25738           12396    135         1040 35215
 #> # … with 358 more rows, and 5 more variables: disagree <dbl>, legalVote <dbl>,
 #> #   illegalVote <dbl>, vote <dbl>, legalPopulation <dbl>
 ```

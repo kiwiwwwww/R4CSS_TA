@@ -1,6 +1,6 @@
 ---
 title: "AS06_Visualizing-Text-Data"
-author: "你是誰 R09342000 新聞所碩五"
+author: "林綺薇 R09342008 新聞所碩一"
 date: "2021/04/27"
 output:
   html_document:
@@ -47,6 +47,26 @@ df_speech %>% glimpse()
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+cutter <- worker()
+tagger <- worker("tag")
+stopWords <- readRDS("data/AS06/stopWords.rds")
+no_word <- c("掌聲","一個","政府","未來","我們","使","今日","乃是","亦","再","唯","公","人","此一","公","新","過去","四年","中","持續","今天","之上","年","一百三十","萬","支柱","一塊","我會","事情","更好","相同","邁進","之間","兩千","經由","現場","最","應該","我要","前","一起")
+segment_not <- c("台灣","臺灣","馬英九","李登輝","蔡英文","蔣經國")
+
+new_user_word(cutter, segment_not)
+new_user_word(tagger, segment_not)
+
+unnested.df <- df_speech%>%
+  mutate(word = purrr::map(text, function(x)segment(x, tagger))) %>%
+  select(id,president,year,word) %>%
+  mutate(word = purrr::map(word, function(x)str_c(names(x),"_",x))) %>%
+  unnest(word) %>% 
+  separate(word,c("pos","word"),sep = "_" ) %>%
+  filter(word != "　") %>%
+  filter(!(word %in% stopWords$word)) %>%
+  filter(!(word %in% no_word)) %>%
+  filter(!str_detect(word, "[a-zA-Z0-9]+")) %>%
+  mutate(word = str_replace(word,"臺灣","台灣"))
 ```
 
 ### 1. 整體熱門詞彙:
@@ -56,9 +76,35 @@ df_speech %>% glimpse()
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+unnested.df %>%
+  count(word,sort = T) %>%
+  slice(1:10)
+
+ten_word <- c("台灣", "國家", "民主", "發展", "社會", "國際", "經濟", "自由", "和平","中華民國")
+
+unnested.df %>%
+  filter(word %in% c("台灣", "國家", "民主", "發展", "社會", "國際", "經濟", "自由", "和平", "中華民國")) %>%
+  count(year,word) %>%
+  select("次數" = n , year, word) %>%
+  mutate(year = as.factor(year)) %>%
+  ggplot(aes(x = year , y = word , fill = 次數)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white",high = "red")+
+  ylab("詞彙")+
+  xlab("年份")+
+  theme_bw()+
+  theme(text=element_text(family="黑體-繁 中黑", size=10),
+        #legend.title=element_blank(),
+        legend.position = "top",
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank())+
+  labs(title = "歷屆總統就職演說熱門詞彙")
+
+#scale_x_discrete(limits=c("1948","1954","1960","1966","1972","1978","1984","1990","1996","2000","2004","2008","2012","2016","2020"))+
+            
 ### your result should be
 # 自己畫就好唷
-
 ```
 
 ```{r, echo=FALSE}
@@ -72,6 +118,25 @@ knitr::include_graphics('data/AS06/plot01.png')
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+unnested.df %>%
+  group_by(president) %>%
+  count(word,sort = T) %>%
+  slice(1:10) %>%
+  mutate(word = fct_reorder(word,n)) %>%
+  ggplot(aes(x = word, y = n))+
+  geom_col()+
+  coord_flip() + 
+  facet_wrap(~president, scales = "free_y")+
+  ylab("詞彙")+
+  xlab("次數")+
+  theme_bw()+
+  theme(text=element_text(family="黑體-繁 中黑", size=10),
+        legend.title=element_blank(),
+        legend.position = "top",
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank())+
+  labs(title = "歷屆總統就職演說熱門詞彙")
+  
 ### your result should be
 # 自己畫就好唷
 
@@ -89,6 +154,31 @@ knitr::include_graphics('data/AS06/plot02.png')
 ```{r message=FALSE, warning=FALSE}
 ### your code
 
+
+unnested.df %>%
+  group_by(word) %>%
+  filter(n() > 5) %>%
+  ungroup() %>%
+  count(president, word) %>% 
+  bind_tf_idf(word, president, n) %>%
+  group_by(president) %>%
+  arrange(-tf_idf) %>%
+  slice(1:10) %>%
+  mutate(word = fct_reorder(word,n)) %>%
+  ungroup() %>%
+  ggplot(aes(x = tf , y = word))+
+  geom_col() +
+  facet_wrap(~president, scales = "free_y")+
+  ylab("詞彙")+
+  xlab("tf_idf")+
+  theme_bw()+
+  theme(text=element_text(family="黑體-繁 中黑", size=10),
+        legend.title=element_blank(),
+        legend.position = "top",
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank())+
+  labs(title = "歷屆總統演說＿TFIDF")
+
 ### your result should be
 # 自己畫就好唷
 
@@ -105,6 +195,31 @@ knitr::include_graphics('data/AS06/plot03.png')
 
 ```{r message=F, warning=F}
 ### your code
+
+unnested.df %>%
+  filter(president == c("蔡英文","馬英九")) %>%
+  count(word,president) %>%
+  spread(president, n, fill = 0) %>%
+  mutate(diff = 蔡英文-馬英九) %>%
+  arrange(-diff) %>%
+  group_by(diff > 0) %>%
+  top_n(10, abs(diff)) %>%
+  ungroup() %>%
+  mutate(word = reorder(word, diff)) %>%
+  ggplot() + aes(word, diff, fill =ifelse (diff > 0, "蔡英文","馬英九")) + 
+  scale_fill_manual(values =c("#4F9D9D","#005AB5"))+
+  scale_y_continuous(limits = c(-20,20),breaks = seq(-20,20,10))+
+  geom_col() + 
+  coord_flip() + 
+  xlab("詞彙")+
+  ylab("使用次數差異")+
+  theme_bw()+
+  theme(text=element_text(family="黑體-繁 中黑", size=10),
+        legend.title=element_blank(),
+        legend.position = "top",
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank())+
+  labs(title = "馬英九與蔡英文使用差異最大詞彙")
 
 ### your result should be
 # 自己畫就好唷
