@@ -1,6 +1,6 @@
 ---
 title: "AS09_Wrap-Up"
-author: "你是誰 R09342000 新聞所碩五"
+author: "林綺薇 R09342008 新聞所碩一"
 date: "2021/06/01"
 output:
   html_document:
@@ -15,6 +15,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, results = 'markup', comment = '#>', error = TRUE)
+options(scipen = 999)
 ```
 
 ## 作業目的: Wrap Up
@@ -44,32 +45,324 @@ knitr::opts_chunk$set(echo = TRUE, results = 'markup', comment = '#>', error = T
 # - 美國大選相關新聞 from 幾間媒體
 # - 韓國瑜蔡英文演講逐字稿 from 新聞/公開資料
 library(tidyverse)
+library(tidyr) 
+library(stringr)
+library(jiebaR)
+library(dplyr)
+library(tidytext)
+library(topicmodels)
+library(lubridate)
 
 ### 公投相關社會政治廣告
 df_fbad <- read_csv("data/AS09/fbad/results_gongtou_ad.csv")
 df_fbad_demo <- read_csv("data/AS09/fbad/results_gongtou_demo.csv")
 df_fbad_region <- read_csv("data/AS09/fbad/results_gongtou_region.csv")
 
-### 美國大選相關新聞
-df_uselection_index_udn <- read_rds("data/AS09/us_election/df_index_udn.rds")
-df_uselection_index_ltn <- read_rds("data/AS09/us_election/df_index_ltn.rds")
-df_uselection_index_chinatimes <- read_rds("data/AS09/us_election/df_index_chinatimes.rds")
-df_uselection_index_setn <- read_rds("data/AS09/us_election/df_index_setn.rds")
-
-df_uselection_udn <- read_rds("data/AS09/us_election/df_main_udn.rds")
-df_uselection_ltn <- read_rds("data/AS09/us_election/df_main_ltn.rds")
-df_uselection_chinatimes <- read_rds("data/AS09/us_election/df_main_chinatimes.rds")
-df_uselection_setn <- read_rds("data/AS09/us_election/df_main_setn.rds")
-
-### 韓國瑜蔡英文演講逐字稿
-df_han_raw <- read_rds("data/AS09/han/df_han_raw.rds")
-df_tsai_raw <- read_rds("data/AS09/han/df_tsai_raw.rds")
 ```
 
 ### 作答區 - 你的程式碼和分析
 
+### 公投大亂鬥，臉書廣告看什麼？
+
+Facebook使用者眾多，根據過去的調查，許多台灣民眾接觸新知的管道為臉書，也因此臉書成了廣告所集之地。利用Facebook提供之公投相關廣告資料，可以了解熱門議題有哪些，以及你平常都吃了誰餵的廣告，一起來看，GOGO！\n
+
+從下方折線圖可觀察出近年台灣Facebook廣告的高峰，分別為2020年一月的立法委員合併總統選舉、同年六月，同性婚姻支持團體也在臉書大量下各種廣告，宣傳同婚週年與「不再恐同計畫」，2021年在臉書下最多廣告的則是藻礁連署。
+
+```{r}
+#臉書公投廣告大爆量
+
+df_fbad %>%
+  mutate(time = as_date(df_fbad$ad_delivery_start_time)) %>%
+  select(ad_creative_body,time) %>%
+  group_by(time) %>%
+  count(n = n()) %>% 
+  select(time,nn) %>%
+  ggplot(aes(x = time, y= nn))+
+  geom_line(color = "#85C1E9",size = 0.5)+
+  annotate("text", x = ymd("2020-01-08") ,y=17, label= "選舉廣告大亂鬥",family="Heiti TC Light") + 
+  annotate("text", x = ymd("2020-06-11") ,y=22, label= "同婚週年",family="Heiti TC Light") + 
+  annotate("text", x = ymd("2021-02-18") ,y=26, label= "藻礁連署",family="Heiti TC Light") +
+  ylab("廣告數量（則）")+
+  xlab("年")+
+  theme_bw()+
+  theme(text=element_text(family="Heiti TC Light", size=10),
+        legend.title=element_blank(),
+        legend.position = "top",
+        panel.border = element_blank())+
+  labs(title = "FB公投相關廣告數量",
+       caption = "資料來源：Facebook")
+
+# df_fbad %>%
+#   mutate(time = as_date(df_fbad$ad_delivery_start_time)) %>%
+#   select(ad_creative_body,time) %>%
+#   group_by(time) %>%
+#   count(n = n()) %>%
+#   select(time,time_n = nn) %>%
+#   arrange(desc(time_n)) %>%
+#   head(10) %>%view
+
+#2021-02-18 藻礁
+#2020-06-11、2020-07-30 婚姻平權
+#2020-01-08 朱智德、余筱菁選舉廣告
+
+```
+
+
+### 熱門議題佔據臉書，你follow到幾個？
+
+近三年FB所呈現之公投相關廣告主題多圍繞民進黨的政策討論，包含大潭藻礁、同性婚姻、重啟核四、開放美豬進口等議題，各議題不論支持或反對方都善加利用臉書廣告投放以獲得曝光度。\n
+
+此外，泰國學運與香港反送中運動也透過臉書廣告獲得一定的關注。
+
 ```{r message=FALSE, warning=FALSE}
 ### your code
+
+cutter <- worker()
+segment_not <- c("蔡英文", "台灣人", "傅崐萁","藻礁","台灣","臺灣","國民黨","民進黨","一個人","新竹市","新憲法","遊戲場")
+new_user_word(cutter, segment_not)
+stopWords <- readRDS("data/stopWords.rds")
+
+unnested.df_fbad <- df_fbad %>%
+  select(adlib_id,ad_creative_body) %>%
+  mutate(word = purrr::map(ad_creative_body, function(x)segment(x, cutter))) %>%
+  unnest(word) %>%
+	filter(!is.na(word)) %>%
+  filter(!(word %in% stopWords$word)) %>%
+  filter(!str_detect(word, "[a-zA-Z0-9]+"))
+
+doc_term_count <- unnested.df_fbad %>%
+  filter(!word %in% c("我們","台灣","臺灣","年","一個","詳見","一起","人","卻","中","後")) %>%
+  group_by(adlib_id,word) %>%
+  filter(n() > 1) %>%
+  ungroup() %>%
+  count(adlib_id, word) 
+
+dtm <- doc_term_count %>%
+         cast_dtm(adlib_id,word, n)
+
+dtm_lda <- LDA(dtm, k = 9, control = list(seed = 1234))
+
+dtm_topics <- tidy(dtm_lda, matrix = "beta")
+
+top_terms <- dtm_topics %>%
+	group_by(topic) %>%
+	top_n(10, beta) %>%
+	ungroup() %>%
+	arrange(topic, -beta)
+
+top_terms %>%
+	mutate(term = reorder(term, beta)) %>%
+	ggplot(aes(term, beta, fill = factor(topic))) +
+	geom_col(show.legend = FALSE) +
+	facet_wrap(~ topic, scales = "free") +
+  scale_fill_manual(values = c("#D98880","#C39BD3","#7FB3D5","#76D7C4","#7DCEA0","#F7DC6F","#E59866","#BFC9CA","#85929E"))+
+	coord_flip() +
+  theme_bw()+
+  xlab(NULL)+
+  ylab(NULL)+
+	theme(axis.text.y=element_text(colour="black", family="Heiti TC Light"),
+	      text=element_text(family="Heiti TC Light", size=10),
+	      legend.title=element_blank(),
+        legend.position = "top",
+        panel.border = element_blank()) +
+  labs(title = "2018-2021 FB公投相關廣告主題",
+       caption = "資料來源：Facebook")
+
+```
+
+### 誰是臉書的金主爸爸媽媽？
+
+公投議題眾多，廣告花費不同，曝光度自然也不同。核四商轉公投花費14萬下廣告，提倡國民黨所支持的「以核養綠」概念，為資料中最多，其次是以反對LGBT權利運動為主要理念的基督教右翼政黨「安定力量」所投注的宣傳廣告，花費近八萬，實在是非常有錢。\n
+
+其中也不乏藍綠兩大黨人物的廣告，民進黨柯建銘與國民黨江啟臣也分別花近2.5萬與1.5萬元台幣投注廣告，表達各自政治立場與主張。
+
+```{r}
+
+TWD_df_fbad <- df_fbad %>%
+  select(page_name,ad_creative_body,currency,spend_upper,adlib_id) %>%
+  filter(currency == "TWD") %>%
+  arrange(desc(spend_upper)) %>%
+  head(10)
+
+df_fbad %>%
+  select(page_name,ad_creative_body,currency,spend_upper,adlib_id) %>%
+  filter(currency == "USD") %>%
+  arrange(desc(spend_upper)) %>%
+  head(10) %>%
+  mutate(spend_upper = spend_upper*30) %>%
+  bind_rows(TWD_df_fbad) %>%
+  arrange(desc(spend_upper)) %>%
+  group_by(page_name) %>%
+  summarise(all_spend_upper = sum(spend_upper)) %>%
+  filter(all_spend_upper >10000) %>%
+  ggplot(aes(x = reorder(page_name,as.numeric(all_spend_upper)) , y =as.numeric(all_spend_upper)))+
+  ylab("最高花費金額(單位：新台幣)")+
+  xlab(NULL)+
+  scale_y_continuous(breaks = seq(0,150000,10000))+
+  geom_col(fill = "#85C1E9",size = 5)+
+  coord_flip()+
+  theme_bw()+
+  theme(text=element_text(family="Heiti TC Light", size=8),
+        legend.title = element_blank(),
+        panel.border = element_blank())+
+  labs(title = "2018-2021廣告花費破萬者",
+       subtitle = "花費金額數字為Facebook公布之該廣告金額範圍上限",
+       caption = "資料來源：Facebook")
+    
+```
+
+### 被哪一類的廣告K到，可以看出你的年齡
+
+除了花多少錢，「對誰下廣告」、「是否瞭解受眾面貌」也是能否將廣告效益極大化的關鍵。Facebook提供的資料中，紀錄了每則廣告的受眾年齡與分布比例。\n
+
+根據分析結果，18到44歲、較為年輕的臉書使用者，看到的廣告主題多為同性婚姻、泰國學運的討論，政治人物自我宣傳相關廣告較其他年齡層多元，除了民進黨，也出現綠黨、時代力量高鈺婷等不同政黨的候選人。\n
+
+而主題為重啟核四、瘦肉精、反萊豬、國民黨主席江啟臣等廣告，從內文觀察，多為泛藍陣營的意見較多，主要針對45到64歲的臉書使用者投放，可看出與18到44歲所接受的廣告有所落差。至於藻礁公投連署的廣告，則是不分年齡層，存在感都很高。
+
+```{r}
+
+#哪個議題誰看最多、受眾？
+all_df_fbad <- df_fbad %>%
+  left_join(df_fbad_demo, by = "adlib_id") %>%
+  left_join(df_fbad_region, by = "adlib_id") %>%
+  rename(age_percentage = percentage.x,
+         region_percentage = percentage.y) 
+
+#年輕人看什麼
+young_head <- all_df_fbad %>%
+  filter(age == "18-24"|age == "25-34"|age == "35-44") %>%
+  select(ad_creative_body,age,gender,age_percentage,adlib_id) %>%
+  arrange(desc(age_percentage)) %>%
+  distinct(ad_creative_body,age_percentage,adlib_id) %>%
+  head(500)
+  #filter(age_percentage > 0.1)
+
+cutter <- worker()
+segment_not <- c("蔡英文", "台灣人", "傅崐萁","藻礁","台灣","臺灣","國民黨","民進黨","一個人","新竹市","新憲法","遊戲場","韓國瑜")
+new_user_word(cutter, segment_not)
+stopWords <- readRDS("data/stopWords.rds")
+
+unnested.young_head <- young_head %>%
+  select(adlib_id,ad_creative_body) %>%
+  mutate(word = purrr::map(ad_creative_body, function(x)segment(x, cutter))) %>%
+  unnest(word) %>%
+	filter(!is.na(word)) %>%
+  filter(!(word %in% stopWords$word)) %>%
+  filter(!str_detect(word, "[a-zA-Z0-9]+"))
+
+doc_term_count1 <- unnested.young_head %>%
+  filter(!word %in% c("我們","台灣","臺灣","年","一個","詳見","一起","人","卻","中","後")) %>%
+  group_by(adlib_id,word) %>%
+  filter(n() > 1) %>%
+  ungroup() %>%
+  count(adlib_id, word) 
+
+dtm1 <- doc_term_count1 %>%
+         cast_dtm(adlib_id,word, n)
+
+dtm_lda1 <- LDA(dtm1, k = 6, control = list(seed = 1234))
+
+dtm_topics1 <- tidy(dtm_lda1, matrix = "beta")
+
+top_terms1 <- dtm_topics1 %>%
+	group_by(topic) %>%
+	top_n(10, beta) %>%
+	ungroup() %>%
+	arrange(topic, -beta)
+
+top_terms1 %>%
+	mutate(term = reorder(term, beta)) %>%
+	ggplot(aes(term, beta, fill = factor(topic))) +
+	geom_col(show.legend = FALSE) +
+	facet_wrap(~ topic, scales = "free") +
+  scale_fill_manual(values = c("#E59866","#F7DC6F","#73C6B6","#85C1E9","#BB8FCE","#F1948A"))+
+	coord_flip() +
+  theme_bw()+
+  xlab(NULL)+
+  ylab(NULL)+
+	theme(axis.text.y=element_text(colour="black", family="Heiti TC Light"),
+	      text=element_text(family="Heiti TC Light", size=10),
+	      legend.title=element_blank(),
+        legend.position = "top",
+        panel.border = element_blank()) +
+  labs(title = "2018-2021 受眾為18-44歲FB的公投廣告主題",
+       caption = "資料來源：Facebook")
+
+# young_tail <- all_df_fbad %>%
+#   filter(age == "18-24"|age == "25-34"|age == "35-44") %>%
+#   select(ad_creative_body,age,gender,age_percentage,adlib_id) %>%
+#   arrange(desc(age_percentage)) %>%
+#   distinct(ad_creative_body,age_percentage,adlib_id) %>%
+#   tail(30)
+#   #filter(age_percentage < 0.1)
+
+#中生代看什麼
+old_head <- all_df_fbad %>%
+  filter(age == "45-54"|age == "55-64") %>%
+  select(ad_creative_body,age,gender,age_percentage,adlib_id) %>%
+  arrange(desc(age_percentage)) %>%
+  distinct(ad_creative_body,age_percentage,adlib_id) %>%
+  head(500)
+  #filter(age_percentage > 0.1)
+
+# old_tail <- all_df_fbad %>%
+#   filter(age == "45-54"|age == "55-64") %>%
+#   select(ad_creative_body,age,gender,age_percentage,adlib_id) %>%
+#   arrange(desc(age_percentage)) %>%
+#   distinct(ad_creative_body,age_percentage,adlib_id) %>%
+#   tail(30)
+#   #filter(age_percentage > 0.1)
+
+cutter <- worker()
+segment_not <- c("蔡英文", "台灣人", "傅崐萁","藻礁","台灣","臺灣","國民黨","民進黨","一個人","新竹市","新憲法","遊戲場","韓國瑜")
+new_user_word(cutter, segment_not)
+stopWords <- readRDS("data/stopWords.rds")
+
+unnested.old_head <- old_head %>%
+  select(adlib_id,ad_creative_body) %>%
+  mutate(word = purrr::map(ad_creative_body, function(x)segment(x, cutter))) %>%
+  unnest(word) %>%
+	filter(!is.na(word)) %>%
+  filter(!(word %in% stopWords$word)) %>%
+  filter(!str_detect(word, "[a-zA-Z0-9]+"))
+
+doc_term_count2 <- unnested.old_head %>%
+  filter(!word %in% c("我們","台灣","臺灣","年","一個","詳見","一起","人","卻","中","後")) %>%
+  group_by(adlib_id,word) %>%
+  filter(n() > 1) %>%
+  ungroup() %>%
+  count(adlib_id, word) 
+
+dtm2 <- doc_term_count2 %>%
+         cast_dtm(adlib_id,word, n)
+
+dtm_lda2 <- LDA(dtm2, k = 6, control = list(seed = 1234))
+
+dtm_topics2 <- tidy(dtm_lda2, matrix = "beta")
+
+top_terms2 <- dtm_topics2 %>%
+	group_by(topic) %>%
+	top_n(10, beta) %>%
+	ungroup() %>%
+	arrange(topic, -beta)
+
+top_terms2 %>%
+	mutate(term = reorder(term, beta)) %>%
+	ggplot(aes(term, beta, fill = factor(topic))) +
+	geom_col(show.legend = FALSE) +
+	facet_wrap(~ topic, scales = "free") +
+  scale_fill_manual(values = c("#E59866","#F7DC6F","#73C6B6","#85C1E9","#BB8FCE","#F1948A"))+
+	coord_flip() +
+  theme_bw()+
+  xlab(NULL)+
+  ylab(NULL)+
+	theme(axis.text.y=element_text(colour="black", family="Heiti TC Light"),
+	      text=element_text(family="Heiti TC Light", size=10),
+	      legend.title=element_blank(),
+        legend.position = "top",
+        panel.border = element_blank()) +
+  labs(title = "2018-2021 受眾為45-64歲FB的公投廣告主題",
+       caption = "資料來源：Facebook")
 
 ```
 
